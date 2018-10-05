@@ -1,1 +1,1 @@
-# project-7-arek-jagoda-slawek
+# project-7-arek-jagoda-slawek-tomek
