@@ -47,7 +47,7 @@
               <artifactId>maven-site-plugin</artifactId>
               <version>3.7.1</version>
             </plugin>
-             <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.0.0</version>
@@ -72,8 +72,7 @@
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                 </configuration>
-              </plugin>
-
+            </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
