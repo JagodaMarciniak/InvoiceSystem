@@ -5,17 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class SampleTest {
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-  @Test
-  public void sampleTest() {
-
-  }
-=======
-=======
-
->>>>>>> master
    @Test
     public void sampleTest(){
        //given
@@ -28,5 +18,4 @@ public class SampleTest {
        //then
        assertEquals(expected, result);
    }
->>>>>>> master
 }

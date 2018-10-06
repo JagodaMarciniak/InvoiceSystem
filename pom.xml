@@ -28,42 +28,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-site-plugin</artifactId>
-              <version>3.7.1</version>
-            </plugin>
-             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>verify</id>
-                        <phase>verify</phase>
-                        <configuration>
-                            <failsOnError>true</failsOnError>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <failsOnError>true</failsOnError>
-                    <failOnViolation>true</failOnViolation>
-                    <violationSeverity>warning</violationSeverity>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <configLocation>checkstyle-config/checkstyle-checker.xml</configLocation>
-                    <encoding>UTF-8</encoding>
-                    <consoleOutput>true</consoleOutput>
-                </configuration>
-              </plugin>
-=======
->>>>>>> master
-=======
 
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -113,7 +77,6 @@
                     </execution>
                 </executions>
             </plugin>
->>>>>>> master
         </plugins>
     </build>
 </project>
