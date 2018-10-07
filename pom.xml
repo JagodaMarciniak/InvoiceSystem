@@ -10,6 +10,7 @@
 
     <properties>
         <checkstyleplugin.version>3.0.0</checkstyleplugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
