@@ -1,16 +1,19 @@
 package pl.coderstrust;
 
 public class Company {
+
+
     
     private String name;
-    private String taxIdentificationNumber;
-    private String streetNameAndHouseNumber; //?
+    private String taxIdentificationNumber; //class daneplatnika
+    private String streetNameAnd
+    HouseNumber; //?
     private String postalCode; //?
     private String city; //?
-    private String bankAccountNumber;
+    private String bankAccountNumber; //class daneplatnika
     private String country;
-    private String email;
-    private String phoneNumber;
+    private String email;  // class contact
+    private String phoneNumber; //class contact
 
     public Company(String name, String taxIdentificationNumber, String streetNameAndHouseNumber, String postalCode, String city, String bankAccountNumber, String country, String email, String phoneNumber) {
         this.name = name;
