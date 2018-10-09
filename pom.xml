@@ -7,10 +7,14 @@
     <groupId>pl.coderstrust</groupId>
     <artifactId>project-7-arek-jagoda-slawek-tomek</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <url>http://localhost:8080</url>
 
     <properties>
-        <checkstyleplugin.version>3.0.0</checkstyleplugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <linkXRef>false</linkXRef>
+
+        <!-- Plugin Versions -->
+        <checkstyleplugin.version>3.0.0</checkstyleplugin.version>
     </properties>
 
     <dependencies>
@@ -40,6 +44,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${checkstyleplugin.version}</version>
+                <configuration>
+                    <failsOnError>true</failsOnError>
+                    <failOnViolation>true</failOnViolation>
+                    <violationSeverity>warning</violationSeverity>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <configLocation>checkstyle-config/google_style_settings.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -53,8 +66,11 @@
 
     <build>
         <plugins>
-            <!-- Part of Maven - specified version explicitly for compatibility
-               with the maven-project-info-reports-plugin 3.0.0-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
