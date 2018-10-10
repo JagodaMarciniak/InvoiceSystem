@@ -1,11 +1,12 @@
 package pl.coderstrust;
 
 import lombok.AllArgsConstructor;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NonNull;
 
-@ToString
+@Data
 @AllArgsConstructor
 public class ContactDataPayer {
-    private String email;
-    private String phoneNumber;
+    private @NonNull String email;
+    private @NonNull String phoneNumber;
 }
