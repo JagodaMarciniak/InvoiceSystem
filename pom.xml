@@ -43,7 +43,6 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${checkstyleplugin.version}</version>
                 <configuration>
-                    <failsOnError>true</failsOnError>
                     <failOnViolation>true</failOnViolation>
                     <violationSeverity>warning</violationSeverity>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
