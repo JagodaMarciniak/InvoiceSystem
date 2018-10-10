@@ -2,28 +2,13 @@ package pl.coderstrust;
 
 public class Company {
 
+    private AddressDataPayer addressDataPayer;
+    private ContactDataPayer contactDataPayer;
+    private FinancialDataPayer financialDataPayer;
 
-    
-    private String name;
-    private String taxIdentificationNumber; //class daneplatnika
-    private String streetNameAnd
-    HouseNumber; //?
-    private String postalCode; //?
-    private String city; //?
-    private String bankAccountNumber; //class daneplatnika
-    private String country;
-    private String email;  // class contact
-    private String phoneNumber; //class contact
-
-    public Company(String name, String taxIdentificationNumber, String streetNameAndHouseNumber, String postalCode, String city, String bankAccountNumber, String country, String email, String phoneNumber) {
-        this.name = name;
-        this.taxIdentificationNumber = taxIdentificationNumber;
-        this.streetNameAndHouseNumber = streetNameAndHouseNumber;
-        this.postalCode = postalCode;
-        this.city = city;
-        this.bankAccountNumber = bankAccountNumber;
-        this.country = country;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
+    public Company(AddressDataPayer addressDataPayer, ContactDataPayer contactDataPayer, FinancialDataPayer financialDataPayer){
+        this.addressDataPayer = addressDataPayer;
+        this.contactDataPayer = contactDataPayer;
+        this.financialDataPayer = financialDataPayer;
     }
 }
