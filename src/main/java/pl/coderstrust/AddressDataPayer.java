@@ -1,14 +1,15 @@
 package pl.coderstrust;
 
 import lombok.AllArgsConstructor;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NonNull;
 
-@ToString
+@Data
 @AllArgsConstructor
 public class AddressDataPayer {
-    private String streetName;
-    private String houseNumber;
-    private String postalCode;
-    private String city;
-    private String country;
+    private @NonNull String streetName;
+    private @NonNull String houseNumber;
+    private @NonNull String postalCode;
+    private @NonNull String city;
+    private @NonNull String country;
 }

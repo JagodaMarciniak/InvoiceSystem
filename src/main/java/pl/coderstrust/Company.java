@@ -1,12 +1,13 @@
 package pl.coderstrust;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 @AllArgsConstructor
 public class Company {
-    private AddressDataPayer addressDataPayer;
-    private ContactDataPayer contactDataPayer;
-    private FinancialDataPayer financialDataPayer;
+    private @NonNull AddressDataPayer addressDataPayer;
+    private @NonNull ContactDataPayer contactDataPayer;
+    private @NonNull FinancialDataPayer financialDataPayer;
 
     @Override
     public String toString() {
