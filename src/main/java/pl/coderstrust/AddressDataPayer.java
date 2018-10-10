@@ -15,4 +15,15 @@ public class AddressDataPayer {
         this.city = city;
         this.country = country;
     }
+
+    @Override
+    public String toString() {
+        return "AddressDataPayer{" +
+                "streetName='" + streetName + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                '}';
+    }
 }

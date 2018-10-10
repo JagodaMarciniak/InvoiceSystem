@@ -9,4 +9,12 @@ public class ContactDataPayer {
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
+
+    @Override
+    public String toString() {
+        return "ContactDataPayer{" +
+                "email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }
