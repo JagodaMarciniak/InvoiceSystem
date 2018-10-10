@@ -1,10 +1,10 @@
 package pl.coderstrust;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.ToString;
 
-@ToString
+@Data
 @AllArgsConstructor
 public class FinancialDataPayer {
     private @NonNull String companyName;
