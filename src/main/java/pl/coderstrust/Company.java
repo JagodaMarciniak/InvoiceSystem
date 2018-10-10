@@ -11,4 +11,13 @@ public class Company {
         this.contactDataPayer = contactDataPayer;
         this.financialDataPayer = financialDataPayer;
     }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                addressDataPayer.toString() +
+                contactDataPayer.toString() +
+                financialDataPayer.toString() +
+                '}';
+    }
 }
