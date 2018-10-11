@@ -1,8 +1,10 @@
 package pl.coderstrust;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 
+@Getter
 @AllArgsConstructor
 public class Company {
     private @NonNull AddressDataPayer addressDataPayer;
