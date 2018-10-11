@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class FinancialDataPayer {
-    private @NonNull String companyName;
-    private @NonNull String taxIdentificationNumber;
-    private @NonNull String bankAccountNumber;
+  private @NonNull String companyName;
+  private @NonNull String taxIdentificationNumber;
+  private @NonNull String bankAccountNumber;
 }
