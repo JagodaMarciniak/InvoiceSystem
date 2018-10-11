@@ -7,16 +7,16 @@ import lombok.NonNull;
 @Getter
 @AllArgsConstructor
 public class Company {
-    private @NonNull AddressDataPayer addressDataPayer;
-    private @NonNull ContactDataPayer contactDataPayer;
-    private @NonNull FinancialDataPayer financialDataPayer;
+  private @NonNull AddressDataPayer addressDataPayer;
+  private @NonNull ContactDataPayer contactDataPayer;
+  private @NonNull FinancialDataPayer financialDataPayer;
 
-    @Override
-    public String toString() {
-        return "Company{" +
-                addressDataPayer.toString() +
-                contactDataPayer.toString() +
-                financialDataPayer.toString() +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Company{"
+        + addressDataPayer.toString()
+        + contactDataPayer.toString()
+        + financialDataPayer.toString()
+        + '}';
+  }
 }

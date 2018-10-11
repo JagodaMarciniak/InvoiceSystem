@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class ContactDataPayer {
-    private @NonNull String email;
-    private @NonNull String phoneNumber;
+  private @NonNull String email;
+  private @NonNull String phoneNumber;
 }
