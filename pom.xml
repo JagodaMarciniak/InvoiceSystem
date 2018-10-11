@@ -13,6 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <linkXRef>false</linkXRef>
         <checkstyleplugin.version>3.0.0</checkstyleplugin.version>
+        <checkstyle.location>checkstyle-config/google_style_settings.xml</checkstyle.location>
     </properties>
 
     <dependencies>
@@ -43,12 +44,10 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${checkstyleplugin.version}</version>
                 <configuration>
-                    <failOnViolation>true</failOnViolation>
                     <violationSeverity>warning</violationSeverity>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <configLocation>checkstyle-config/google_style_settings.xml</configLocation>
+                    <configLocation>${checkstyle.location</configLocation>
                     <encoding>UTF-8</encoding>
-                    <consoleOutput>true</consoleOutput>
                 </configuration>
                 <reportSets>
                     <reportSet>
@@ -167,7 +166,7 @@
                     <failOnViolation>true</failOnViolation>
                     <violationSeverity>warning</violationSeverity>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <configLocation>checkstyle-config/google_style_settings.xml</configLocation>
+                    <configLocation>${checkstyle.location}</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                 </configuration>
