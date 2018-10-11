@@ -12,8 +12,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <linkXRef>false</linkXRef>
-        <checkstyleplugin.version>3.0.0</checkstyleplugin.version>
-        <checkstyle.location>checkstyle-config/google_style_settings.xml</checkstyle.location>
+        <jacocoPlugin.version>0.8.2</jacocoPlugin.version>
+        <checkstylePlugin.version>3.0.0</checkstylePlugin.version>
+        <checkstyle.config.location>checkstyle-config/google_style_settings.xml</checkstyle.config.location>
     </properties>
 
     <dependencies>
@@ -42,11 +43,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyleplugin.version}</version>
+                <version>${checkstylePlugin.version}</version>
                 <configuration>
                     <violationSeverity>warning</violationSeverity>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <configLocation>${checkstyle.location</configLocation>
                     <encoding>UTF-8</encoding>
                 </configuration>
                 <reportSets>
@@ -60,6 +60,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacocoPlugin.version}</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -100,7 +101,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
+                <version>${jacocoPlugin.version}</version>
                 <executions>
                     <execution>
                         <id>jacoco-report</id>
@@ -148,7 +149,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyleplugin.version}</version>
+                <version>${checkstylePlugin.version}</version>
                 <executions>
                     <execution>
                         <id>verify</id>
@@ -166,7 +167,6 @@
                     <failOnViolation>true</failOnViolation>
                     <violationSeverity>warning</violationSeverity>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <configLocation>${checkstyle.location}</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                 </configuration>
