@@ -1,10 +1,12 @@
 package pl.coderstrust;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
 
-@Data
+@Getter
+@ToString
 @AllArgsConstructor
 public class AddressDataPayer {
     private @NonNull String streetName;
