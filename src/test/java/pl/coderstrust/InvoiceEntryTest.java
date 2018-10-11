@@ -35,6 +35,6 @@ class InvoiceEntryTest {
   @Test
   public void testInvoiceEntryConstructorWithNulls() {
     assertThrows(NullPointerException.class, () ->
-        new InvoiceEntry(null, 2, PIECE, new BigDecimal(4500), VAT_23);
+        new InvoiceEntry(null, 2, PIECE, new BigDecimal(4500), VAT_23));
   }
 }
