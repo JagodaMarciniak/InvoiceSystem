@@ -1,22 +1,25 @@
 package pl.coderstrust;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class InvoiceEntry {
 
   private String item;
-  private String quantity;
+  private Integer quantity;
   private UnitType unit;
-  private BigDecimal price;
   private Vat vat;
+  private BigDecimal price, netValue, grossValue;
 
-  public InvoiceEntry(String item, String quantity, UnitType unit, BigDecimal price, Vat vat) {
-    this.item = item;
-    this.quantity = quantity;
-    this.unit = unit;
-    this.price = price;
-    this.vat = vat;
+  public InvoiceEntry(String item, Integer quantity, UnitType unit, BigDecimal price, Vat vat) {
+    this.item = Objects.requireNonNull(item, "Item must not be null.");
+    this.quantity = Objects.requireNonNull(quantity, "Quantity must not be null.");
+    this.unit = Objects.requireNonNull(unit, "Unit must not be null.");
+    this.price = Objects.requireNonNull(price, "Price must not be null.");
+    this.vat = Objects.requireNonNull(vat, "Vat must not be null.");
+    this.netValue = updateNetValue();
+    this.grossValue = updateGrossValue();
   }
 
   public String getItem() {
@@ -24,15 +27,15 @@ public class InvoiceEntry {
   }
 
   public void setItem(String item) {
-    this.item = item;
+    this.item = Objects.requireNonNull(item, "Item must not be null.");
   }
 
-  public String getQuantity() {
+  public Integer getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(String quantity) {
-    this.quantity = quantity;
+  public void setQuantity(Integer quantity) {
+    this.quantity = Objects.requireNonNull(quantity, "Quantity must not be null.");
   }
 
   public UnitType getUnit() {
@@ -40,7 +43,7 @@ public class InvoiceEntry {
   }
 
   public void setUnit(UnitType unit) {
-    this.unit = unit;
+    this.unit = Objects.requireNonNull(unit, "Unit must not be null.");
   }
 
   public BigDecimal getPrice() {
@@ -48,7 +51,7 @@ public class InvoiceEntry {
   }
 
   public void setPrice(BigDecimal price) {
-    this.price = price;
+    this.price = Objects.requireNonNull(price, "Price must not be null.");
   }
 
   public Vat getVat() {
@@ -56,7 +59,33 @@ public class InvoiceEntry {
   }
 
   public void setVat(Vat vat) {
-    this.vat = vat;
+    this.vat = Objects.requireNonNull(vat, "Vat must not be null.");
+  }
+
+  public BigDecimal getNetValue() {
+    return netValue;
+  }
+
+  public void setNetValue(BigDecimal netValue) {
+    this.netValue = Objects.requireNonNull(netValue, "NetValue must not be null.");
+  }
+
+  public BigDecimal getGrossValue() {
+    return grossValue;
+  }
+
+  public void setGrossValue(BigDecimal grossValue) {
+    this.grossValue = Objects.requireNonNull(grossValue, "GrossValue must not be null.");
+  }
+
+  public BigDecimal updateNetValue() {
+    return new BigDecimal(quantity).multiply(price);
+  }
+
+  public BigDecimal updateGrossValue() {
+    BigDecimal multiplier = new BigDecimal(1).add(vat.getRate());
+    BigDecimal grossValueUnformatted = updateNetValue().multiply(multiplier);
+    return grossValueUnformatted.setScale(2, RoundingMode.HALF_UP);
   }
 
   @Override
@@ -88,6 +117,8 @@ public class InvoiceEntry {
         + ", unit=" + unit
         + ", price=" + price
         + ", vat=" + vat
+        + ", netValue=" + netValue
+        + ", grossValue=" + grossValue
         + '}';
   }
 }
