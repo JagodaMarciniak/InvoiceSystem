@@ -8,9 +8,8 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class AddressDataPayer {
-  private @NonNull String streetName;
-  private @NonNull String houseNumber;
+public class AddressData {
+  private @NonNull String streetNameAndHouseNumber;
   private @NonNull String postalCode;
   private @NonNull String city;
   private @NonNull String country;

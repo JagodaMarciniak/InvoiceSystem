@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class FinancialDataPayer {
+public class FinancialData {
   private @NonNull String companyName;
   private @NonNull String taxIdentificationNumber;
   private @NonNull String bankAccountNumber;

@@ -1,22 +1,24 @@
 package pl.coderstrust;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
+@EqualsAndHashCode
 @AllArgsConstructor
 public class Company {
-  private @NonNull AddressDataPayer addressDataPayer;
-  private @NonNull ContactDataPayer contactDataPayer;
-  private @NonNull FinancialDataPayer financialDataPayer;
+  private @NonNull AddressData addressData;
+  private @NonNull ContactData contactData;
+  private @NonNull FinancialData financialData;
 
   @Override
   public String toString() {
     return "Company{"
-        + addressDataPayer.toString()
-        + contactDataPayer.toString()
-        + financialDataPayer.toString()
+        + addressData.toString()
+        + contactData.toString()
+        + financialData.toString()
         + '}';
   }
 }
