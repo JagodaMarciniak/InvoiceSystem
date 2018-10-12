@@ -8,7 +8,9 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class ContactDataPayer {
+public class ContactData {
   private @NonNull String email;
   private @NonNull String phoneNumber;
+  private @NonNull String wwwPage;
+  private @NonNull String additionalInformation;
 }
