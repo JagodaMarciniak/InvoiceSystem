@@ -13,7 +13,7 @@ public enum UnitType {
     this.unit = unit;
   }
 
-  public String getUnit() {
+  public String getText() {
     return unit;
   }
 }

@@ -10,7 +10,9 @@ public class InvoiceEntry {
   private Integer quantity;
   private UnitType unit;
   private Vat vat;
-  private BigDecimal price, netValue, grossValue;
+  private BigDecimal price;
+  private BigDecimal netValue;
+  private BigDecimal grossValue;
 
   public InvoiceEntry(String item, Integer quantity, UnitType unit, BigDecimal price, Vat vat) {
     this.item = Objects.requireNonNull(item, "Item must not be null.");
@@ -18,8 +20,8 @@ public class InvoiceEntry {
     this.unit = Objects.requireNonNull(unit, "Unit must not be null.");
     this.price = Objects.requireNonNull(price, "Price must not be null.");
     this.vat = Objects.requireNonNull(vat, "Vat must not be null.");
-    this.netValue = updateNetValue();
-    this.grossValue = updateGrossValue();
+    this.netValue = calculateNetValue();
+    this.grossValue = calculateGrossValue();
   }
 
   public String getItem() {
@@ -66,26 +68,27 @@ public class InvoiceEntry {
     return netValue;
   }
 
-  public void setNetValue(BigDecimal netValue) {
-    this.netValue = Objects.requireNonNull(netValue, "NetValue must not be null.");
-  }
-
   public BigDecimal getGrossValue() {
     return grossValue;
   }
 
-  public void setGrossValue(BigDecimal grossValue) {
-    this.grossValue = Objects.requireNonNull(grossValue, "GrossValue must not be null.");
+  private BigDecimal calculateNetValue() {
+    BigDecimal netValueUnformatted = new BigDecimal(quantity).multiply(price);
+    return netValueUnformatted.setScale(2, RoundingMode.HALF_UP);
   }
 
-  public BigDecimal updateNetValue() {
-    return new BigDecimal(quantity).multiply(price);
+  public void updateNetValue() {
+    this.netValue = calculateNetValue();
   }
 
-  public BigDecimal updateGrossValue() {
+  private BigDecimal calculateGrossValue() {
     BigDecimal multiplier = new BigDecimal(1).add(vat.getRate());
-    BigDecimal grossValueUnformatted = updateNetValue().multiply(multiplier);
+    BigDecimal grossValueUnformatted = calculateNetValue().multiply(multiplier);
     return grossValueUnformatted.setScale(2, RoundingMode.HALF_UP);
+  }
+
+  public void updateGrossValue() {
+    this.grossValue = calculateGrossValue();
   }
 
   @Override
@@ -100,25 +103,28 @@ public class InvoiceEntry {
     return Objects.equals(item, that.item)
         && Objects.equals(quantity, that.quantity)
         && unit == that.unit
+        && vat == that.vat
         && Objects.equals(price, that.price)
-        && vat == that.vat;
+        && Objects.equals(netValue, that.netValue)
+        && Objects.equals(grossValue, that.grossValue);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(item, quantity, unit, price, vat);
+    return Objects.hash(item, quantity, unit, vat, price, netValue, grossValue);
   }
 
   @Override
   public String toString() {
-    return "InvoiceEntry{"
+    return getClass().getSimpleName()
+        + "{"
         + "item='" + item + '\''
-        + ", quantity='" + quantity + '\''
+        + ", quantity='" + quantity
         + ", unit=" + unit
         + ", price=" + price
         + ", vat=" + vat
         + ", netValue=" + netValue
         + ", grossValue=" + grossValue
-        + '}';
+        + "}";
   }
 }
