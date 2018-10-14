@@ -1,6 +1,6 @@
 package pl.coderstrust;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -19,33 +19,33 @@ class AddressDataTest {
     String result = addressData.getStreetNameAndHouseNumber();
 
     //then
-    assertSame(givenStreetAndHouseAddress, result);
+    assertEquals(givenStreetAndHouseAddress, result);
   }
 
   @ParameterizedTest
   @ValueSource(strings = {"88-388", "1-150", "10-200"})
   public void testForValidPostalCode(String givenPostalCode) {
     //given
-    AddressData addressData = new AddressData("Example", "Example", givenPostalCode, "Example");
+    AddressData addressData = new AddressData("Example", givenPostalCode, "Example", "Example");
 
     //when
     String result = addressData.getPostalCode();
 
     //then
-    assertSame(givenPostalCode, result);
+    assertEquals(givenPostalCode, result);
   }
 
   @ParameterizedTest
   @ValueSource(strings = {"Olsztyn", "Nowy Dwór", "Mąkowarsko"})
   public void testForValidCityName(String givenCityName) {
     //given
-    AddressData addressData = new AddressData("Example", "Example", "Example", givenCityName);
+    AddressData addressData = new AddressData("Example", "Example", givenCityName, "Example");
 
     //when
     String result = addressData.getCity();
 
     //then
-    assertSame(givenCityName, result);
+    assertEquals(givenCityName, result);
   }
 
   @ParameterizedTest
@@ -58,7 +58,7 @@ class AddressDataTest {
     String result = addressData.getCountry();
 
     //then
-    assertSame(givenCountryName, result);
+    assertEquals(givenCountryName, result);
   }
 
   @Test

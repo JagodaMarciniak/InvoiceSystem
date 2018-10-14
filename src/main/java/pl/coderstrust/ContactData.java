@@ -11,6 +11,6 @@ import lombok.ToString;
 public class ContactData {
   private @NonNull String email;
   private @NonNull String phoneNumber;
-  private @NonNull String wwwPage;
+  private @NonNull String website;
   private @NonNull String additionalInformation;
 }

@@ -1,6 +1,7 @@
 package pl.coderstrust;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +19,7 @@ class ContactDataTest {
     String result = contactData.getEmail();
 
     //then
-    assertSame(givenEmailAddress, result);
+    assertEquals(givenEmailAddress, result);
   }
 
   @ParameterizedTest
@@ -31,7 +32,7 @@ class ContactDataTest {
     String result = contactData.getPhoneNumber();
 
     //then
-    assertSame(givenPhoneNumber, result);
+    assertEquals(givenPhoneNumber, result);
   }
 
   @ParameterizedTest
@@ -41,10 +42,10 @@ class ContactDataTest {
     ContactData contactData = new ContactData("Example", "Example", givenWwwPageAddress, "Example");
 
     //when
-    String result = contactData.getWwwPage();
+    String result = contactData.getWebsite();
 
     //then
-    assertSame(givenWwwPageAddress, result);
+    assertEquals(givenWwwPageAddress, result);
   }
 
   @ParameterizedTest
@@ -57,7 +58,7 @@ class ContactDataTest {
     String result = contactData.getAdditionalInformation();
 
     //then
-    assertSame(givenAdditionalInformation, result);
+    assertEquals(givenAdditionalInformation, result);
   }
 
   @Test

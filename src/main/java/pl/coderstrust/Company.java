@@ -9,6 +9,7 @@ import lombok.NonNull;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class Company {
+  private @NonNull String name;
   private @NonNull AddressData addressData;
   private @NonNull ContactData contactData;
   private @NonNull FinancialData financialData;
@@ -16,6 +17,8 @@ public class Company {
   @Override
   public String toString() {
     return "Company{"
+        + "name='" + name + '\''
+        + ", "
         + addressData.toString()
         + contactData.toString()
         + financialData.toString()
