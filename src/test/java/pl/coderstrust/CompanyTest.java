@@ -14,12 +14,12 @@ class CompanyTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"Sample Wide, Sample, Sample S.p z o.o."})
-  public void testForValidCompanyName(String givenCompanyName) {
+  public void testValidCompanyName(String givenCompanyName) {
     //given
     Company company = new Company(givenCompanyName,
-        new AddressData("Example", "Example", "Example", "Example"),
-        new ContactData("Example", "Example", "Example", "Example"),
-        new FinancialData("Example", "Example"));
+        new AddressData("Test", "Test", "Test", "Test"),
+        new ContactData("Test", "Test", "Test", "Test"),
+        new FinancialData("Test", "Test"));
 
     //when
     String result = company.getName();
@@ -29,13 +29,13 @@ class CompanyTest {
   }
 
   @ParameterizedTest
-  @MethodSource("createArgumentsForAddressDataCorrectInstantiationInCompanyClass")
-  public void testForAddressDataCorrectInstantiationInCompanyClass(AddressData givenClassAddressClass, String expected) {
+  @MethodSource("createArgumentsFAddressDataCorrectInstantiation")
+  public void testAddressDataCorrectInstantiation(AddressData givenClass, String expected) {
     //given
-    Company company = new Company("Example",
-        givenClassAddressClass,
-        new ContactData("Example", "Example", "Example", "Example"),
-        new FinancialData("Example", "Example"));
+    Company company = new Company("Test",
+        givenClass,
+        new ContactData("Test", "Test", "Test", "Test"),
+        new FinancialData("Test", "Test"));
 
     //when
     String result = company.getAddressData().toString();
@@ -44,7 +44,7 @@ class CompanyTest {
     assertEquals(expected, result);
   }
 
-  private static Stream<Arguments> createArgumentsForAddressDataCorrectInstantiationInCompanyClass() {
+  private static Stream<Arguments> createArgumentsFAddressDataCorrectInstantiation() {
     return Stream.of(
         Arguments.of(new AddressData("Ogrodowa 8/2", "88-300", "Warszawa", "Polska"),
             new AddressData("Ogrodowa 8/2", "88-300", "Warszawa", "Polska").toString()),
@@ -53,13 +53,13 @@ class CompanyTest {
   }
 
   @ParameterizedTest
-  @MethodSource("createArgumentsForContactDataCorrectInstantiationInCompanyClass")
-  public void testForContactDataCorrectInstantiationInCompanyClass(ContactData givenContactData, String expected) {
+  @MethodSource("createArgumentsFContactDataCorrectInstantiation")
+  public void testContactDataCorrectInstantiation(ContactData givenClass, String expected) {
     //given
-    Company company = new Company("Example",
-        new AddressData("Example", "Example", "Example", "Example"),
-        givenContactData,
-        new FinancialData("Example", "Example"));
+    Company company = new Company("Test",
+        new AddressData("Test", "Test", "Test", "Test"),
+        givenClass,
+        new FinancialData("Test", "Test"));
 
     //when
     String result = company.getContactData().toString();
@@ -68,22 +68,22 @@ class CompanyTest {
     assertEquals(expected, result);
   }
 
-  private static Stream<Arguments> createArgumentsForContactDataCorrectInstantiationInCompanyClass() {
+  private static Stream<Arguments> createArgumentsFContactDataCorrectInstantiation() {
     return Stream.of(
-        Arguments.of(new ContactData("janusz@wp.pl", "545999765", "www.test.com", "Additional Information"),
-            new ContactData("janusz@wp.pl", "545999765", "www.test.com", "Additional Information").toString()),
-        Arguments.of(new ContactData("testSample@gmail.com", "543-998-501", "https://pl.wikipedia.org/wiki/Page", "Additional Information"),
-            new ContactData("testSample@gmail.com", "543-998-501", "https://pl.wikipedia.org/wiki/Page", "Additional Information").toString()));
+        Arguments.of(new ContactData("janusz@wp.pl", "545999765", "www.test.com", "Test"),
+            new ContactData("janusz@wp.pl", "545999765", "www.test.com", "Test").toString()),
+        Arguments.of(new ContactData("testSample@gmail.com", "543-998-501", "https://pl.wikipedia.org/wiki/Page", "Test"),
+            new ContactData("testSample@gmail.com", "543-998-501", "https://pl.wikipedia.org/wiki/Page", "Test").toString()));
   }
 
   @ParameterizedTest
-  @MethodSource("createArgumentsForFinancialDataCorrectInstantiationInCompanyClass")
-  public void testForFinancialDataCorrectInstantiationInCompanyClass(FinancialData givenFinancialData, String expected) {
+  @MethodSource("createArgumentsFFinancialDataCorrectInstantiation")
+  public void testFinancialDataCorrectInstantiation(FinancialData givenClass, String expected) {
     //given
-    Company company = new Company("Example",
-        new AddressData("Example", "Example", "Example", "Example"),
-        new ContactData("Example", "Example", "Example", "Additional Information"),
-        givenFinancialData);
+    Company company = new Company("Test",
+        new AddressData("Test", "Test", "Test", "Test"),
+        new ContactData("Test", "Test", "Test", "Test"),
+        givenClass);
 
     //when
     String result = company.getFinancialData().toString();
@@ -92,7 +92,7 @@ class CompanyTest {
     assertEquals(expected, result);
   }
 
-  private static Stream<Arguments> createArgumentsForFinancialDataCorrectInstantiationInCompanyClass() {
+  private static Stream<Arguments> createArgumentsFFinancialDataCorrectInstantiation() {
     return Stream.of(
         Arguments.of(new FinancialData("457-825-99", "12345678901234567890123456"),
             new FinancialData("457-825-99", "12345678901234567890123456").toString()),
@@ -101,39 +101,48 @@ class CompanyTest {
   }
 
   @Test
-  public void testForExceptionWhenCompanyNameIsNull() {
+  public void testExceptionWhenCompanyNameIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new Company(null,
-          new AddressData("Example", "Example", "Example", "Example"),
-          new ContactData("Example", "Example", "Example", "Example"),
-          new FinancialData("Example", "Example"));
+          new AddressData("Test", "Test", "Test", "Test"),
+          new ContactData("Test", "Test", "Test", "Test"),
+          new FinancialData("Test", "Test"));
     });
   }
 
   @Test
-  public void testForExceptionWhenAddressDataClassIsNull() {
+  public void testExceptionWhenAddressDataClassIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      new Company("Example", null, new ContactData("Example", "Example", "Example", "Additional Information"), new FinancialData("Example", "Example"));
+      new Company("Test",
+          null,
+          new ContactData("Test", "Test", "Test", "Test"),
+          new FinancialData("Test", "Test"));
     });
   }
 
   @Test
-  public void testForExceptionWhenContactDataClassIsNull() {
+  public void testExceptionWhenContactDataClassIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      new Company("Example", new AddressData("Example", "Example", "Example", "Example"), null, new FinancialData("Example", "Example"));
+      new Company("Test",
+          new AddressData("Test", "Test", "Test", "Test"),
+          null,
+          new FinancialData("Test", "Test"));
     });
   }
 
   @Test
-  public void testForExceptionWhenFinancialDataClassIsNull() {
+  public void testExceptionWhenFinancialDataClassIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      new Company("Example", new AddressData("Example", "Example", "Example", "Example"), new ContactData("Example", "Example", "Example", "Example"), null);
+      new Company("Test",
+          new AddressData("Test", "Test", "Test", "Test"),
+          new ContactData("Test", "Test", "Test", "Test"),
+          null);
     });
   }
 
   @ParameterizedTest
-  @MethodSource("createArgumentsForToStringMethodTest")
-  public void testForToStringMethod(Company givenCompany, String expected) {
+  @MethodSource("createArgumentsFToStringMethodTest")
+  public void testToStringMethod(Company givenCompany, String expected) {
     //when
     String result = givenCompany.toString();
 
@@ -141,18 +150,24 @@ class CompanyTest {
     assertEquals(expected, result);
   }
 
-  private static Stream<Arguments> createArgumentsForToStringMethodTest() {
+  private static Stream<Arguments> createArgumentsFToStringMethodTest() {
     return Stream.of(
         Arguments.of(new Company("SampleCompanyName",
                 new AddressData("Ogrodowa 5", "65-976", "Warszawa", "Poland"),
-                new ContactData("janusz@wp.pl", "987-765-241", "www.test.com", "Additional Information"),
+                new ContactData("janusz@wp.pl", "987-765-241", "www.test.com", "Test"),
                 new FinancialData("656-234-87", "123456788901234567890123456")),
-            "Company{name='SampleCompanyName', AddressData(streetNameAndHouseNumber=Ogrodowa 5, postalCode=65-976, city=Warszawa, country=Poland)ContactData(email=janusz@wp.pl, phoneNumber=987-765-241, website=www.test.com, additionalInformation=Additional Information)FinancialData(taxId=656-234-87, accountNumber=123456788901234567890123456)}"),
+            "Company{name='SampleCompanyName', "
+                + "AddressData(streetNameAndHouseNumber=Ogrodowa 5, postalCode=65-976, city=Warszawa, country=Poland)"
+                + "ContactData(email=janusz@wp.pl, phoneNumber=987-765-241, website=www.test.com, additionalInformation=Test)"
+                + "FinancialData(taxId=656-234-87, accountNumber=123456788901234567890123456)}"),
         Arguments.of(new Company("SampleCompanyName Sp. z o.o.",
                 new AddressData("Wojska Polskiego 20/6", "12-987", "Gdańsk", "Poland"),
-                new ContactData("maria-konieczna@gmail.com", "675241836", "https://pl.wikipedia.org/wiki/Page", "Additional Information"),
+                new ContactData("maria-konieczna@gmail.com", "675241836", "https://pl.wikipedia.org/wiki/Page", "Test"),
                 new FinancialData("65623487", "123456788901234567890123456")),
-            "Company{name='SampleCompanyName Sp. z o.o.', AddressData(streetNameAndHouseNumber=Wojska Polskiego 20/6, postalCode=12-987, city=Gdańsk, country=Poland)ContactData(email=maria-konieczna@gmail.com, phoneNumber=675241836, website=https://pl.wikipedia.org/wiki/Page, additionalInformation=Additional Information)FinancialData(taxId=65623487, accountNumber=123456788901234567890123456)}")
+            "Company{name='SampleCompanyName Sp. z o.o.', "
+                + "AddressData(streetNameAndHouseNumber=Wojska Polskiego 20/6, postalCode=12-987, city=Gdańsk, country=Poland)"
+                + "ContactData(email=maria-konieczna@gmail.com, phoneNumber=675241836, website=https://pl.wikipedia.org/wiki/Page, additionalInformation=Test)"
+                + "FinancialData(taxId=65623487, accountNumber=123456788901234567890123456)}")
     );
   }
 }

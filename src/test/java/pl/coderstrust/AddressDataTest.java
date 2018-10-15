@@ -11,9 +11,9 @@ class AddressDataTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"Ogrodowa 2", "Wojska Polskiego 12/5", "Szarych Szeregów 3b"})
-  public void testForValidStreetName(String givenStreetAndHouseAddress) {
+  public void testValidStreetName(String givenStreetAndHouseAddress) {
     //given
-    AddressData addressData = new AddressData(givenStreetAndHouseAddress, "Example", "Example", "Example");
+    AddressData addressData = new AddressData(givenStreetAndHouseAddress, "Test", "Test", "Test");
 
     //when
     String result = addressData.getStreetNameAndHouseNumber();
@@ -24,9 +24,9 @@ class AddressDataTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"88-388", "1-150", "10-200"})
-  public void testForValidPostalCode(String givenPostalCode) {
+  public void testValidPostalCode(String givenPostalCode) {
     //given
-    AddressData addressData = new AddressData("Example", givenPostalCode, "Example", "Example");
+    AddressData addressData = new AddressData("Test", givenPostalCode, "Test", "Test");
 
     //when
     String result = addressData.getPostalCode();
@@ -37,9 +37,9 @@ class AddressDataTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"Olsztyn", "Nowy Dwór", "Mąkowarsko"})
-  public void testForValidCityName(String givenCityName) {
+  public void testValidCityName(String givenCityName) {
     //given
-    AddressData addressData = new AddressData("Example", "Example", givenCityName, "Example");
+    AddressData addressData = new AddressData("Test", "Test", givenCityName, "Test");
 
     //when
     String result = addressData.getCity();
@@ -50,9 +50,9 @@ class AddressDataTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"Polska", "Bośnia i Hercegowina", "Wielka Brytania"})
-  public void testForValidCountryName(String givenCountryName) {
+  public void testValidCountryName(String givenCountryName) {
     //given
-    AddressData addressData = new AddressData("Example", "Example", "Example", givenCountryName);
+    AddressData addressData = new AddressData("Test", "Test", "Test", givenCountryName);
 
     //when
     String result = addressData.getCountry();
@@ -62,30 +62,30 @@ class AddressDataTest {
   }
 
   @Test
-  public void testForExceptionWhenStreetAndHouseAddressIsNull() {
+  public void testExceptionWhenStreetAndHouseAddressIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      AddressData addressData = new AddressData(null, "Example", "Example", "Example");
+      AddressData addressData = new AddressData(null, "Test", "Test", "Test");
     });
   }
 
   @Test
-  public void testForExceptionWhenPostalCodeIsNull() {
+  public void testExceptionWhenPostalCodeIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      AddressData addressData = new AddressData("Example", null, "Example", "Example");
+      AddressData addressData = new AddressData("Test", null, "Test", "Test");
     });
   }
 
   @Test
-  public void testForExceptionWhenCityNameIsNull() {
+  public void testExceptionWhenCityNameIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      AddressData addressData = new AddressData("Example", "Example", null, "Example");
+      AddressData addressData = new AddressData("Test", "Test", null, "Test");
     });
   }
 
   @Test
-  public void testForExceptionWhenCountryNameIsNull() {
+  public void testExceptionWhenCountryNameIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      AddressData addressData = new AddressData("Example", "Example", "Example", null);
+      AddressData addressData = new AddressData("Test", "Test", "Test", null);
     });
   }
 }

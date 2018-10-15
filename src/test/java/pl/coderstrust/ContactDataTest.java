@@ -11,9 +11,9 @@ class ContactDataTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"janusz@interia.pl", "adam-malysz@gmail.com", "Poldek78@wp.pl"})
-  public void testForValidEmailAddress(String givenEmailAddress) {
+  public void testValidEmailAddress(String givenEmailAddress) {
     //given
-    ContactData contactData = new ContactData(givenEmailAddress, "Example", "Example", "Example");
+    ContactData contactData = new ContactData(givenEmailAddress, "Test", "Test", "Test");
 
     //when
     String result = contactData.getEmail();
@@ -24,9 +24,9 @@ class ContactDataTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"5275325", "600100900", "42500326715"})
-  public void testForValidPhoneNumber(String givenPhoneNumber) {
+  public void testValidPhoneNumber(String givenPhoneNumber) {
     //given
-    ContactData contactData = new ContactData("Example", givenPhoneNumber, "Example", "Example");
+    ContactData contactData = new ContactData("Test", givenPhoneNumber, "Test", "Test");
 
     //when
     String result = contactData.getPhoneNumber();
@@ -37,9 +37,9 @@ class ContactDataTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"www.wp.pl", "www.test.org.pl", "https://pl.wikipedia.org/wiki/Page"})
-  public void testForValidWwwPageAddress(String givenWwwPageAddress) {
+  public void testValidWwwPageAddress(String givenWwwPageAddress) {
     //given
-    ContactData contactData = new ContactData("Example", "Example", givenWwwPageAddress, "Example");
+    ContactData contactData = new ContactData("Test", "Test", givenWwwPageAddress, "Test");
 
     //when
     String result = contactData.getWebsite();
@@ -50,9 +50,9 @@ class ContactDataTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"A4 Paper for third floor", "Fuel E0 KASKA", "Nothing to add"})
-  public void testForValidAdditionalInformationMessage(String givenAdditionalInformation) {
+  public void testValidAdditionalInformationMessage(String givenAdditionalInformation) {
     //given
-    ContactData contactData = new ContactData("Example", "Example", "Example", givenAdditionalInformation);
+    ContactData contactData = new ContactData("Test", "Test", "Test", givenAdditionalInformation);
 
     //when
     String result = contactData.getAdditionalInformation();
@@ -62,30 +62,30 @@ class ContactDataTest {
   }
 
   @Test
-  public void testForExceptionWhenEmailAddressIsNull() {
+  public void testExceptionWhenEmailAddressIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      ContactData contactData = new ContactData(null, "Example", "Example", "Example");
+      ContactData contactData = new ContactData(null, "Test", "Test", "Test");
     });
   }
 
   @Test
-  public void testForExceptionWhenPhoneNumberIsNull() {
+  public void testExceptionWhenPhoneNumberIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      ContactData contactData = new ContactData("Example", null, "Example", "Example");
+      ContactData contactData = new ContactData("Test", null, "Test", "Test");
     });
   }
 
   @Test
-  public void testForExceptionWhenWwwPageAddressIsNull() {
+  public void testExceptionWhenWwwPageAddressIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      ContactData contactData = new ContactData("Example", "Example", null, "Example");
+      ContactData contactData = new ContactData("Test", "Test", null, "Test");
     });
   }
 
   @Test
-  public void testForExceptionWhenAdditionalInformationMassageIsNull() {
+  public void testExceptionWhenAdditionalInformationMassageIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      ContactData contactData = new ContactData("Example", "Example", "Example", null);
+      ContactData contactData = new ContactData("Test", "Test", "Test", null);
     });
   }
 }
