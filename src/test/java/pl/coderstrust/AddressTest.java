@@ -32,7 +32,7 @@ class AddressTest {
   }
 
   @Test
-  public void testExceptionWhenStreetNumberIsNull() {
+  public void testExceptionWhenStreetNameIsNull() {
     assertThrows(NullPointerException.class, () -> {
       Address address = new Address(null, "Test", "Test", "Test", "Test");
     });
