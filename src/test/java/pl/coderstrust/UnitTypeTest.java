@@ -9,6 +9,7 @@ import static pl.coderstrust.UnitType.PIECE;
 import org.junit.jupiter.api.Test;
 
 class UnitTypeTest {
+
   @Test
   void testPiece() {
     assertEquals("szt.", PIECE.getText());

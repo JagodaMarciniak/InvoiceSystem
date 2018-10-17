@@ -1,5 +1,10 @@
 package pl.coderstrust;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+
+@AllArgsConstructor
 public enum UnitType {
 
   PIECE("szt."),
@@ -7,13 +12,7 @@ public enum UnitType {
   DAY("dzień"),
   FLAT_RATE("ryczałt");
 
-  private String unit;
-
-  UnitType(String unit) {
-    this.unit = unit;
-  }
-
-  public String getText() {
-    return unit;
-  }
+  @NonNull
+  @Getter
+  private final String text;
 }
