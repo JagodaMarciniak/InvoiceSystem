@@ -7,6 +7,7 @@ import static pl.coderstrust.Vat.VAT_5;
 import static pl.coderstrust.Vat.VAT_8;
 
 import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
 
 class VatTest {

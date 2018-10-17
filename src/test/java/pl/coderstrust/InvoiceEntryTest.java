@@ -9,9 +9,11 @@ import static pl.coderstrust.Vat.VAT_23;
 import static pl.coderstrust.Vat.VAT_8;
 
 import com.google.common.testing.EqualsTester;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -209,24 +211,12 @@ class InvoiceEntryTest {
   public void testEquals() {
     //given
     EqualsTester equalsTester = new EqualsTester();
-    equalsTester.addEqualityGroup(
-        new InvoiceEntry("Kurs Java", 2, PIECE, new BigDecimal(4500), VAT_23),
-        new InvoiceEntry("Kurs Java", 2, PIECE, new BigDecimal(4500), VAT_23));
-    equalsTester.addEqualityGroup(
-        new InvoiceEntry("Kurs HTML", 2, PIECE, new BigDecimal(4500), VAT_23),
-        new InvoiceEntry("Kurs HTML", 2, PIECE, new BigDecimal(4500), VAT_23));
-    equalsTester.addEqualityGroup(
-        new InvoiceEntry("Kurs HTML", 4, PIECE, new BigDecimal(4500), VAT_23),
-        new InvoiceEntry("Kurs HTML", 4, PIECE, new BigDecimal(4500), VAT_23));
-    equalsTester.addEqualityGroup(
-        new InvoiceEntry("Kurs HTML", 4, HOUR, new BigDecimal(4500), VAT_23),
-        new InvoiceEntry("Kurs HTML", 4, HOUR, new BigDecimal(4500), VAT_23));
-    equalsTester.addEqualityGroup(
-        new InvoiceEntry("Kurs HTML", 4, HOUR, new BigDecimal(100), VAT_23),
-        new InvoiceEntry("Kurs HTML", 4, HOUR, new BigDecimal(100), VAT_23));
-    equalsTester.addEqualityGroup(
-        new InvoiceEntry("Kurs HTML", 4, HOUR, new BigDecimal(100), VAT_8),
-        new InvoiceEntry("Kurs HTML", 4, HOUR, new BigDecimal(100), VAT_8));
+    InvoiceEntry entryOne = new InvoiceEntry("Kurs Java", 2, PIECE, new BigDecimal(4500),
+        VAT_23);
+    InvoiceEntry entryTwo = new InvoiceEntry("Kurs Java", 2, PIECE, new BigDecimal(4500),
+        VAT_23);
+    equalsTester.addEqualityGroup(entryOne, entryTwo);
+
     //when
     equalsTester.testEquals();
   }
