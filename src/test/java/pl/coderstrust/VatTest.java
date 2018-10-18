@@ -13,22 +13,22 @@ import org.junit.jupiter.api.Test;
 class VatTest {
 
   @Test
-  void testVat0() {
+  void shouldReturnExpectedRateWhenGetRateOnVatZeroInvoked() {
     assertEquals(BigDecimal.valueOf(0.00), VAT_0.getRate());
   }
 
   @Test
-  void testVat5() {
+  void shouldReturnExpectedRateWhenGetRateOnVatFiveInvoked() {
     assertEquals(BigDecimal.valueOf(0.05), VAT_5.getRate());
   }
 
   @Test
-  void testVat8() {
+  void shouldReturnExpectedRateWhenGetRateOnVatEightInvoked() {
     assertEquals(BigDecimal.valueOf(0.08), VAT_8.getRate());
   }
 
   @Test
-  void testVat23() {
+  void shouldReturnExpectedRateWhenGetRateOnVatTwentyThreeInvoked() {
     assertEquals(BigDecimal.valueOf(0.23), VAT_23.getRate());
   }
 }

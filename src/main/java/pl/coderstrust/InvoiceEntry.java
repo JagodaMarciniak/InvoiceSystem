@@ -8,20 +8,13 @@ import lombok.Value;
 @Value
 public class InvoiceEntry {
 
-  @NonNull
-  String item;
-  @NonNull
-  Integer quantity;
-  @NonNull
-  UnitType unit;
-  @NonNull
-  BigDecimal price;
-  @NonNull
-  Vat vat;
-  @NonNull
-  BigDecimal netValue;
-  @NonNull
-  BigDecimal grossValue;
+  @NonNull String item;
+  @NonNull Integer quantity;
+  @NonNull UnitType unit;
+  @NonNull BigDecimal price;
+  @NonNull Vat vat;
+  @NonNull BigDecimal netValue;
+  @NonNull BigDecimal grossValue;
 
   @Override
   public String toString() {

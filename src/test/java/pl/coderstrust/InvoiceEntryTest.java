@@ -63,41 +63,6 @@ class InvoiceEntryTest {
   }
 
   @Test
-  void shouldReturnExpectedItemWhenGetItemIsInvoked() {
-    assertEquals("Kurs Java", invoiceEntry.getItem());
-  }
-
-  @Test
-  void shouldReturnExpectedQuantityWhenGetQuantityIsInvoked() {
-    assertEquals(Integer.valueOf(2), invoiceEntry.getQuantity());
-  }
-
-  @Test
-  void shouldReturnExpectedUnitWhenGetUnitIsInvoked() {
-    assertEquals(PIECE, invoiceEntry.getUnit());
-  }
-
-  @Test
-  void shouldReturnExpectedPriceWhenGetPriceIsInvoked() {
-    assertEquals(new BigDecimal(4500), invoiceEntry.getPrice());
-  }
-
-  @Test
-  void shouldReturnExpectedVatWhenGetVatIsInvoked() {
-    assertEquals(VAT_23, invoiceEntry.getVat());
-  }
-
-  @Test
-  void shouldReturnExpectedValueWhenGetValueIsInvoked() {
-    assertEquals(new BigDecimal(9000), invoiceEntry.getNetValue());
-  }
-
-  @Test
-  void shouldReturnExpectedGrossValueWhenGetGrossValueIsInvoked() {
-    assertEquals(new BigDecimal(11070), invoiceEntry.getGrossValue());
-  }
-
-  @Test
   void shouldReturnExpectedContentWhenToStringIsInvoked() {
     //when
     String actualContent = invoiceEntry.toString();
