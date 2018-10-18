@@ -3,86 +3,63 @@ package pl.coderstrust;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 class CompanyTest {
 
-  @ParameterizedTest
-  @MethodSource("createArgumentsForCheckFullyInitializationTest")
-  public void checkFullyInitialization(Company expectedCompany, String name, String taxId, ContactDetails contactDetails) {
+  @Test
+  public void checkFullyInitialization() {
     //given
-    Company company = new Company(name, taxId, new AccountNumber(), contactDetails);
+    String name = "SampleCompanyName";
+    String taxId = "573-213-99";
 
     //when
-    String resultName = company.getName();
-    String resultTaxId = company.getTaxIdentificationNumber();
-    ContactDetails resultContactDetails = company.getContactDetails();
+    Company company = new Company(name, taxId,
+        AccountNumberClassGenerator.getSampleAccountNumberClass(),
+        ContactDetailsClassGenerator.getSampleContactDetailsClass());
+    AccountNumber expectedAccountNumber = new AccountNumber("PL83620519463926400000847295");
+    ContactDetails expectedContactDetails = new ContactDetails("maria-nawik@gmail.com", "5239766", "www.maria-nawik.org.pl",
+        new Address("Wojska Polskiego", "4/6", "66-951", "Gdynia", "Poland"));
 
     //then
-    assertEquals(expectedCompany, company);
-    assertEquals(name, resultName);
-    assertEquals(taxId, resultTaxId);
-    assertEquals(contactDetails, resultContactDetails);
+    assertEquals(name, company.getName());
+    assertEquals(taxId, company.getTaxIdentificationNumber());
+    assertEquals(expectedAccountNumber, company.getAccountNumber());
+    assertEquals(expectedContactDetails, company.getContactDetails());
   }
-
-  private static Stream<Arguments> createArgumentsForCheckFullyInitializationTest() {
-    return Stream.of(
-        Arguments.of(new Company("SampleName", "664-968-81",
-                new AccountNumber(),
-                new ContactDetails("marian@wp.pl", "765917142", "www.sample.com", "Empty",
-                    new Address("Wojska Polskiego", "3", "66-976", "Tarnów", "Poland"))),
-            "SampleName", "664-968-81",
-            new ContactDetails("marian@wp.pl", "765917142", "www.sample.com", "Empty",
-                new Address("Wojska Polskiego", "3", "66-976", "Tarnów", "Poland"))),
-        Arguments.of(new Company("SampleName", "664-968-81",
-                new AccountNumber(),
-                new ContactDetails("karol-Szpak@gmail.com", "523976541", "www.sample-site.com", "Fuel Invoice",
-                    new Address("Derdowskiego", "3a", "12-368", "Racławki", "Poland"))),
-            "SampleName", "664-968-81",
-            new ContactDetails("karol-Szpak@gmail.com", "523976541", "www.sample-site.com", "Fuel Invoice",
-                new Address("Derdowskiego", "3a", "12-368", "Racławki", "Poland"))));
-  }
-
 
   @Test
-  public void testExceptionWhenCompanyNameIsNull() {
+  public void shouldThrowExceptionWhenCompanyNameIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new Company(null, "Test",
-          new AccountNumber(),
-          new ContactDetails("Test", "Test", "Test", "Test",
-              new Address("Test", "Test", "Test", "Test", "Test")));
+          AccountNumberClassGenerator.getSampleAccountNumberClass(),
+          ContactDetailsClassGenerator.getSampleContactDetailsClass());
     });
   }
 
   @Test
-  public void testExceptionWhenTaxIdentificationNumberIsNull() {
+  public void shouldThrowExceptionWhenTaxIdentificationNumberIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new Company("Test", null,
-          new AccountNumber(),
-          new ContactDetails("Test", "Test", "Test", "Test",
-              new Address("Test", "Test", "Test", "Test", "Test")));
+          AccountNumberClassGenerator.getSampleAccountNumberClass(),
+          ContactDetailsClassGenerator.getSampleContactDetailsClass());
     });
   }
 
   @Test
-  public void testExceptionWhenAccountNumberIsNull() {
+  public void shouldThrowExceptionWhenAccountNumberIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new Company("Test", "Test",
           null,
-          new ContactDetails("Test", "Test", "Test", "Test",
-              new Address("Test", "Test", "Test", "Test", "Test")));
+          ContactDetailsClassGenerator.getSampleContactDetailsClass());
     });
   }
 
   @Test
-  public void testExceptionWhenContactDetailIsNull() {
+  public void shouldThrowExceptionWhenContactDetailIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new Company("Test", "Test",
-          new AccountNumber(),
+          AccountNumberClassGenerator.getSampleAccountNumberClass(),
           null);
     });
   }

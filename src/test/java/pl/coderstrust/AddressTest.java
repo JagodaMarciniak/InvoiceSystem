@@ -3,17 +3,19 @@ package pl.coderstrust;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 class AddressTest {
 
-  @ParameterizedTest
-  @MethodSource("createArgumentsForAllGettersTest")
-  public void testForAllGetters(String street, String number, String postalCode, String city, String country) {
+  @Test
+  public void checkFullyInitialization() {
+    //given
+    String street = "Szarych Szeregów";
+    String number = "8b";
+    String postalCode = "66-843";
+    String city = "Tarnów";
+    String country = "Poland";
+
     //when
     Address address = new Address(street, number, postalCode, city, country);
 
@@ -25,44 +27,38 @@ class AddressTest {
     assertEquals(country, address.getCountry());
   }
 
-  private static Stream<Arguments> createArgumentsForAllGettersTest() {
-    return Stream.of(
-        Arguments.of("Ułanów", "4b", "88-100", "Gniezno", "Poland"),
-        Arguments.of("Widokowa", "4/5", "11-996", "Rybnik", "Poland"));
-  }
-
   @Test
-  public void testExceptionWhenStreetNameIsNull() {
+  public void shouldThrowExceptionWhenStreetNameIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      Address address = new Address(null, "Test", "Test", "Test", "Test");
+      new Address(null, "Test", "Test", "Test", "Test");
     });
   }
 
   @Test
-  public void testExceptionWhenNumberIsNull() {
+  public void shouldThrowExceptionWhenNumberIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      Address address = new Address("Test", null, "Test", "Test", "Test");
+      new Address("Test", null, "Test", "Test", "Test");
     });
   }
 
   @Test
-  public void testExceptionWhenPostalCodeIsNull() {
+  public void shouldThrowExceptionWhenPostalCodeIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      Address address = new Address("Test", "Test", null, "Test", "Test");
+      new Address("Test", "Test", null, "Test", "Test");
     });
   }
 
   @Test
-  public void testExceptionWhenCityNameIsNull() {
+  public void shouldThrowExceptionWhenCityNameIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      Address address = new Address("Test", "Test", "Test", null, "Test");
+      new Address("Test", "Test", "Test", null, "Test");
     });
   }
 
   @Test
-  public void testExceptionWhenCountryNameIsNull() {
+  public void shouldThrowExceptionWhenCountryNameIsNull() {
     assertThrows(NullPointerException.class, () -> {
-      Address address = new Address("Test", "Test", "Test", "Test", null);
+      new Address("Test", "Test", "Test", "Test", null);
     });
   }
 }

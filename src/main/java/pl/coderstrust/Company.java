@@ -1,16 +1,19 @@
 package pl.coderstrust;
 
-import lombok.*;
+import lombok.NonNull;
+import lombok.Value;
 
 @Value
-@AllArgsConstructor
 public class Company {
   @NonNull
   String name;
+
   @NonNull
   String taxIdentificationNumber;
+
   @NonNull
   AccountNumber accountNumber;
+
   @NonNull
   ContactDetails contactDetails;
 }
