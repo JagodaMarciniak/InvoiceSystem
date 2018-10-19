@@ -36,7 +36,8 @@ class AccountNumberTest {
       "123",
       "          ",
       "12345612345678901234567890",
-      "9123fsdkf1-329"})
+      "9123fsdkf1-329",
+      "pl83620519463926400000847295"})
   public void shouldThrowExceptionWhenIbanNumberIsIncorrect(String ibanNumber) {
     assertThrows(IllegalArgumentException.class, () -> {
       new AccountNumber(ibanNumber);
