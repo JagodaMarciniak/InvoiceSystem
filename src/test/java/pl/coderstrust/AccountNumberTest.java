@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class AccountNumberTest {
 
@@ -11,10 +13,10 @@ class AccountNumberTest {
   public void checkFullyInitialization() {
     //given
     String ibanNumber = "PL83620519463926400000847295";
+    String expectedLocalNumber = "83620519463926400000847295";
 
     //when
     AccountNumber accountNumber = new AccountNumber(ibanNumber);
-    String expectedLocalNumber = "83620519463926400000847295";
 
     //then
     assertEquals(ibanNumber, accountNumber.getIban());
@@ -25,6 +27,19 @@ class AccountNumberTest {
   public void shouldThrowExceptionWhenIbanNumberIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new AccountNumber(null);
+    });
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "",
+      "123",
+      "          ",
+      "12345612345678901234567890",
+      "9123fsdkf1-329"})
+  public void shouldThrowExceptionWhenIbanNumberIsIncorrect(String ibanNumber) {
+    assertThrows(IllegalArgumentException.class, () -> {
+      new AccountNumber(ibanNumber);
     });
   }
 }

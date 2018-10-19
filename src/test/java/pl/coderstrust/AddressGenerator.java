@@ -1,7 +1,7 @@
 package pl.coderstrust;
 
-public class AddressClassGenerator {
-  public static Address getSampleAddressClass() {
+public class AddressGenerator {
+  public static Address getSampleAddress() {
     return new Address("Wojska Polskiego", "4/6", "66-951", "Gdynia", "Poland");
   }
 }

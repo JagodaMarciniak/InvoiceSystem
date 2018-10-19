@@ -16,7 +16,7 @@ class ContactDetailsTest {
 
     //when
     ContactDetails contactDetails = new ContactDetails(email, phoneNumber, website,
-        AddressClassGenerator.getSampleAddressClass());
+        AddressGenerator.getSampleAddress());
 
     //then
     assertEquals(email, contactDetails.getEmail());
@@ -28,7 +28,7 @@ class ContactDetailsTest {
   public void shouldThrowExceptionWhenEmailAddressIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new ContactDetails(null, "Test", "Test",
-          AddressClassGenerator.getSampleAddressClass());
+          AddressGenerator.getSampleAddress());
     });
   }
 
@@ -36,7 +36,7 @@ class ContactDetailsTest {
   public void shouldThrowExceptionWhenPhoneNumberIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new ContactDetails("Test", null, "Test",
-          AddressClassGenerator.getSampleAddressClass());
+          AddressGenerator.getSampleAddress());
     });
   }
 
@@ -44,12 +44,12 @@ class ContactDetailsTest {
   public void shouldThrowExceptionWhenWebsiteIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new ContactDetails("Test", "Test", null,
-          AddressClassGenerator.getSampleAddressClass());
+          AddressGenerator.getSampleAddress());
     });
   }
 
   @Test
-  public void shouldThrowExceptionWhenAddressClassIsNull() {
+  public void shouldThrowExceptionWhenAddressIsNull() {
     assertThrows(NullPointerException.class, () -> {
       new ContactDetails("Test", "Test", "Test",
           null);
