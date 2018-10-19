@@ -27,8 +27,8 @@ class CompanyTest {
 
   @Test
   public void shouldThrowExceptionWhenCompanyNameIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Company(null, "Test",
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Company(null, "573-213-99",
           AccountNumberGenerator.getSampleAccountNumber(),
           ContactDetailsGenerator.getSampleContactDetails());
     });
@@ -36,8 +36,8 @@ class CompanyTest {
 
   @Test
   public void shouldThrowExceptionWhenTaxIdentificationNumberIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Company("Test", null,
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Company("SampleCompanyName", null,
           AccountNumberGenerator.getSampleAccountNumber(),
           ContactDetailsGenerator.getSampleContactDetails());
     });
@@ -45,8 +45,8 @@ class CompanyTest {
 
   @Test
   public void shouldThrowExceptionWhenAccountNumberIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Company("Test", "Test",
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Company("SampleCompanyName", "573-213-99",
           null,
           ContactDetailsGenerator.getSampleContactDetails());
     });
@@ -54,8 +54,8 @@ class CompanyTest {
 
   @Test
   public void shouldThrowExceptionWhenContactDetailIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Company("Test", "Test",
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Company("SampleCompanyName", "573-213-99",
           AccountNumberGenerator.getSampleAccountNumber(),
           null);
     });

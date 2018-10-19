@@ -11,7 +11,8 @@ public class AccountNumber {
   private String ibanNumber;
 
   public AccountNumber(@NonNull String ibanNumber) {
-    if (!ibanNumber.toUpperCase().matches("^([A-Z]{2}[0-9]{26})")) {
+    ibanNumber = ibanNumber.toUpperCase();
+    if (!ibanNumber.matches("^([A-Z]{2}[0-9]{26})")) {
       throw new IllegalArgumentException("Incorrect iban number");
     }
     this.ibanNumber = ibanNumber;

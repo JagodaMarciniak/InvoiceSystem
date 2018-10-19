@@ -29,36 +29,36 @@ class AddressTest {
 
   @Test
   public void shouldThrowExceptionWhenStreetNameIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Address(null, "Test", "Test", "Test", "Test");
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Address(null, "4/6", "66-951", "Gdynia", "Poland");
     });
   }
 
   @Test
   public void shouldThrowExceptionWhenNumberIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Address("Test", null, "Test", "Test", "Test");
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Address("Wojska Polskiego", null, "66-951", "Gdynia", "Poland");
     });
   }
 
   @Test
   public void shouldThrowExceptionWhenPostalCodeIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Address("Test", "Test", null, "Test", "Test");
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Address("Wojska Polskiego", "4/6", null, "Gdynia", "Poland");
     });
   }
 
   @Test
   public void shouldThrowExceptionWhenCityNameIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Address("Test", "Test", "Test", null, "Test");
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Address("Wojska Polskiego", "4/6", "66-951", null, "Poland");
     });
   }
 
   @Test
   public void shouldThrowExceptionWhenCountryNameIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new Address("Test", "Test", "Test", "Test", null);
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Address("Wojska Polskiego", "4/6", "66-951", "Gdynia", null);
     });
   }
 }

@@ -25,7 +25,7 @@ class AccountNumberTest {
 
   @Test
   public void shouldThrowExceptionWhenIbanNumberIsNull() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       new AccountNumber(null);
     });
   }

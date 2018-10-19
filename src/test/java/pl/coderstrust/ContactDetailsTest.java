@@ -26,32 +26,32 @@ class ContactDetailsTest {
 
   @Test
   public void shouldThrowExceptionWhenEmailAddressIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new ContactDetails(null, "Test", "Test",
+    assertThrows(IllegalArgumentException.class, () -> {
+      new ContactDetails(null, "5239766", "www.maria-nawik.org.pl",
           AddressGenerator.getSampleAddress());
     });
   }
 
   @Test
   public void shouldThrowExceptionWhenPhoneNumberIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new ContactDetails("Test", null, "Test",
+    assertThrows(IllegalArgumentException.class, () -> {
+      new ContactDetails("maria-nawik@gmail.com", null, "www.maria-nawik.org.pl",
           AddressGenerator.getSampleAddress());
     });
   }
 
   @Test
   public void shouldThrowExceptionWhenWebsiteIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new ContactDetails("Test", "Test", null,
+    assertThrows(IllegalArgumentException.class, () -> {
+      new ContactDetails("maria-nawik@gmail.com", "5239766", null,
           AddressGenerator.getSampleAddress());
     });
   }
 
   @Test
   public void shouldThrowExceptionWhenAddressIsNull() {
-    assertThrows(NullPointerException.class, () -> {
-      new ContactDetails("Test", "Test", "Test",
+    assertThrows(IllegalArgumentException.class, () -> {
+      new ContactDetails("maria-nawik@gmail.com", "5239766", "www.maria-nawik.org.pl",
           null);
     });
   }
