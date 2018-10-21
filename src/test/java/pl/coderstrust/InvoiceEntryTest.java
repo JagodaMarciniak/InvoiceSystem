@@ -1,76 +1,79 @@
 package pl.coderstrust;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.coderstrust.UnitType.PIECE;
-import static pl.coderstrust.Vat.VAT_23;
 import static pl.coderstrust.Vat.VAT_8;
 
 import java.math.BigDecimal;
-import java.util.stream.Stream;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 class InvoiceEntryTest {
 
-  private static InvoiceEntry invoiceEntry;
+  @Test
+  void checkFullInitialization() {
+    //given
+    String itemDescription = "Kurs Java";
+    Long quantity = 1L;
+    UnitType unit = PIECE;
+    BigDecimal price = new BigDecimal(100);
+    Vat vatRate = VAT_8;
+    BigDecimal netValue = new BigDecimal(100);
+    BigDecimal grossValue = new BigDecimal(108);
 
-  private static Stream<Arguments> constructorParameters() {
-    return Stream.of(
-        Arguments.of(null, 1, PIECE, new BigDecimal(100), VAT_8, new BigDecimal(100),
-            new BigDecimal(123)), Arguments.of("Kurs Java", null, PIECE, new BigDecimal(100),
-            VAT_8, new BigDecimal(100), new BigDecimal(123)),
-        Arguments.of("Kurs Java", 1, null, new BigDecimal(100), VAT_8, new BigDecimal(100),
-            new BigDecimal(123)),
-        Arguments.of("Kurs Java", 1, PIECE, null, VAT_8, new BigDecimal(100), new BigDecimal(123)),
-        Arguments.of("Kurs Java", 1, PIECE, new BigDecimal(100), null, new BigDecimal(100),
-            new BigDecimal(123)),
-        Arguments.of("Kurs Java", 1, PIECE, new BigDecimal(100), VAT_8, null, new BigDecimal(123)),
-        Arguments.of("Kurs Java", 1, PIECE, new BigDecimal(100), VAT_8, new BigDecimal(100), null));
-  }
+    //when
+    InvoiceEntry invoiceEntry = new InvoiceEntry(itemDescription, quantity, unit, price, vatRate,
+        netValue, grossValue);
 
-  @BeforeEach
-  void runBeforeEach() {
-    invoiceEntry = new InvoiceEntry("Kurs Java", 2, PIECE, new BigDecimal(4500), VAT_23,
-        new BigDecimal(9000), new BigDecimal(11070));
+    //then
+    assertEquals("Kurs Java", invoiceEntry.getItemDescription());
+    assertEquals(Long.valueOf(1), invoiceEntry.getQuantity());
+    assertEquals(PIECE, invoiceEntry.getUnit());
+    assertEquals(new BigDecimal(100), invoiceEntry.getPrice());
+    assertEquals(VAT_8, invoiceEntry.getVatRate());
+    assertEquals(new BigDecimal(100), invoiceEntry.getNetValue());
+    assertEquals(new BigDecimal(108), invoiceEntry.getGrossValue());
   }
 
   @Test
-  void shouldReturnInvoiceEntryObjectWithExpectedFields() {
-    //when
-    Object[] actualFields = new Object[] {invoiceEntry.getItem(), invoiceEntry.getQuantity(),
-        invoiceEntry.getUnit(), invoiceEntry.getPrice(), invoiceEntry.getVat(),
-        invoiceEntry.getNetValue(), invoiceEntry.getGrossValue()};
-
-    //then
-    Object[] expectedFields = new Object[] {"Kurs Java", 2, PIECE, new BigDecimal(4500), VAT_23,
-        new BigDecimal(9000), new BigDecimal(11070)};
-    assertArrayEquals(expectedFields, actualFields);
-  }
-
-  @ParameterizedTest
-  @MethodSource("constructorParameters")
-  void shouldThrowExceptionWhenWhenParameterIsNull(
-      String item, Integer quantity, UnitType unit, BigDecimal price, Vat vat,
-      BigDecimal netValue, BigDecimal grossValue) {
-    assertThrows(NullPointerException.class, () -> new InvoiceEntry(item, quantity, unit, price,
-        vat, netValue, grossValue));
+  public void shouldThrowExceptionWhenItemDescriptionIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> new InvoiceEntry(null, 1L, PIECE,
+        new BigDecimal(100), VAT_8, new BigDecimal(100), new BigDecimal(108)));
   }
 
   @Test
-  void shouldReturnExpectedContentWhenToStringIsInvoked() {
-    //when
-    String actualContent = invoiceEntry.toString();
+  public void shouldThrowExceptionWhenQuantityIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> new InvoiceEntry("Kurs Java", null, PIECE,
+        new BigDecimal(100), VAT_8, new BigDecimal(100), new BigDecimal(108)));
+  }
 
-    //then
-    String expectedContent =
-        "InvoiceEntry{item='Kurs Java', quantity='2, unit=PIECE, price=4500, vat=VAT_23,"
-            + " netValue=9000, grossValue=11070}";
-    assertEquals(expectedContent, actualContent);
+  @Test
+  public void shouldThrowExceptionWhenUnitIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> new InvoiceEntry("Kurs Java", 1L, null,
+        new BigDecimal(100), VAT_8, new BigDecimal(100), new BigDecimal(108)));
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenPriceIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> new InvoiceEntry("Kurs Java", 1L, PIECE,
+        null, VAT_8, new BigDecimal(100), new BigDecimal(108)));
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenVatIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> new InvoiceEntry("Kurs Java", 1L, PIECE,
+        new BigDecimal(100), null, new BigDecimal(100), new BigDecimal(108)));
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenNetValueIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> new InvoiceEntry("Kurs Java", 1L, PIECE,
+        new BigDecimal(100), VAT_8, null, new BigDecimal(108)));
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenGrossValueIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> new InvoiceEntry("Kurs Java", 1L, PIECE,
+        new BigDecimal(100), VAT_8, new BigDecimal(100), null));
   }
 }

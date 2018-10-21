@@ -11,22 +11,22 @@ import org.junit.jupiter.api.Test;
 class UnitTypeTest {
 
   @Test
-  void shouldReturnExpectedStringWhenGetTextOnPieceInvoked() {
-    assertEquals("szt.", PIECE.getText());
+  void shouldReturnExpectedStringWhenGetValueOnPieceInvoked() {
+    assertEquals("szt.", PIECE.getValue());
   }
 
   @Test
-  void shouldReturnExpectedStringWhenGetTextOnHourInvoked() {
-    assertEquals("godz.", HOUR.getText());
+  void shouldReturnExpectedStringWhenGetValueOnHourInvoked() {
+    assertEquals("godz.", HOUR.getValue());
   }
 
   @Test
-  void shouldReturnExpectedStringWhenGetTextOnDayInvoked() {
-    assertEquals("dzień", DAY.getText());
+  void shouldReturnExpectedStringWhenGetValueOnDayInvoked() {
+    assertEquals("dzień", DAY.getValue());
   }
 
   @Test
-  void shouldReturnExpectedStringWhenGetTextOnFlatRateInvoked() {
-    assertEquals("ryczałt", FLAT_RATE.getText());
+  void shouldReturnExpectedStringWhenGetValueOnFlatRateInvoked() {
+    assertEquals("ryczałt", FLAT_RATE.getValue());
   }
 }

@@ -7,12 +7,12 @@ import lombok.NonNull;
 @AllArgsConstructor
 public enum UnitType {
 
-  PIECE("szt."),
-  HOUR("godz."),
-  DAY("dzień"),
-  FLAT_RATE("ryczałt");
+  PIECE("piece"),
+  HOUR("hour"),
+  DAY("day"),
+  FLAT_RATE("flat rate");
 
   @NonNull
   @Getter
-  private final String text;
+  private final String value;
 }
