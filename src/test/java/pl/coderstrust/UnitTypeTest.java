@@ -12,21 +12,21 @@ class UnitTypeTest {
 
   @Test
   void shouldReturnExpectedStringWhenGetValueOnPieceInvoked() {
-    assertEquals("szt.", PIECE.getValue());
+    assertEquals("piece", PIECE.getValue());
   }
 
   @Test
   void shouldReturnExpectedStringWhenGetValueOnHourInvoked() {
-    assertEquals("godz.", HOUR.getValue());
+    assertEquals("hour", HOUR.getValue());
   }
 
   @Test
   void shouldReturnExpectedStringWhenGetValueOnDayInvoked() {
-    assertEquals("dzień", DAY.getValue());
+    assertEquals("day", DAY.getValue());
   }
 
   @Test
   void shouldReturnExpectedStringWhenGetValueOnFlatRateInvoked() {
-    assertEquals("ryczałt", FLAT_RATE.getValue());
+    assertEquals("flat rate", FLAT_RATE.getValue());
   }
 }

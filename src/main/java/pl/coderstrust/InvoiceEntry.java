@@ -7,7 +7,7 @@ import lombok.Value;
 @Value
 public class InvoiceEntry {
   @NonNull
-  String itemDescription;
+  String item;
 
   @NonNull
   Long quantity;

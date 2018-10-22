@@ -1,6 +1,5 @@
 package pl.coderstrust;
 
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
@@ -8,12 +7,12 @@ import lombok.NonNull;
 @AllArgsConstructor
 public enum Vat {
 
-  VAT_23(BigDecimal.valueOf(0.23)),
-  VAT_8(BigDecimal.valueOf(0.08)),
-  VAT_5(BigDecimal.valueOf(0.05)),
-  VAT_0(BigDecimal.valueOf(0.00));
+  VAT_23(0.23f),
+  VAT_8(0.08f),
+  VAT_5(0.05f),
+  VAT_0(0.00f);
 
   @NonNull
   @Getter
-  private final BigDecimal value;
+  private final float value;
 }

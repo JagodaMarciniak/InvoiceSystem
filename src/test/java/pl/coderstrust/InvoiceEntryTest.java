@@ -26,7 +26,7 @@ class InvoiceEntryTest {
         netValue, grossValue);
 
     //then
-    assertEquals("Kurs Java", invoiceEntry.getItemDescription());
+    assertEquals("Kurs Java", invoiceEntry.getItem());
     assertEquals(Long.valueOf(1), invoiceEntry.getQuantity());
     assertEquals(PIECE, invoiceEntry.getUnit());
     assertEquals(new BigDecimal(100), invoiceEntry.getPrice());

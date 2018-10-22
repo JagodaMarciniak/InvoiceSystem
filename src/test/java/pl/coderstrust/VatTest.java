@@ -6,28 +6,27 @@ import static pl.coderstrust.Vat.VAT_23;
 import static pl.coderstrust.Vat.VAT_5;
 import static pl.coderstrust.Vat.VAT_8;
 
-import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
 class VatTest {
 
   @Test
   void shouldReturnExpectedRateWhenGetValueOnVatZeroInvoked() {
-    assertEquals(BigDecimal.valueOf(0.00), VAT_0.getValue());
+    assertEquals(0.00f, VAT_0.getValue());
   }
 
   @Test
   void shouldReturnExpectedRateWhenGetValueOnVatFiveInvoked() {
-    assertEquals(BigDecimal.valueOf(0.05), VAT_5.getValue());
+    assertEquals(0.05f, VAT_5.getValue());
   }
 
   @Test
   void shouldReturnExpectedRateWhenGetValueOnVatEightInvoked() {
-    assertEquals(BigDecimal.valueOf(0.08), VAT_8.getValue());
+    assertEquals(0.08f, VAT_8.getValue());
   }
 
   @Test
   void shouldReturnExpectedRateWhenGetValueOnVatTwentyThreeInvoked() {
-    assertEquals(BigDecimal.valueOf(0.23), VAT_23.getValue());
+    assertEquals(0.23f, VAT_23.getValue());
   }
 }
