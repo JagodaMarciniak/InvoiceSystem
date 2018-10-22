@@ -13,7 +13,7 @@ class InvoiceEntryTest {
   @Test
   void checkFullInitialization() {
     //given
-    String itemDescription = "Kurs Java";
+    String item = "Kurs Java";
     Long quantity = 1L;
     UnitType unit = PIECE;
     BigDecimal price = new BigDecimal(100);
@@ -22,21 +22,21 @@ class InvoiceEntryTest {
     BigDecimal grossValue = new BigDecimal(108);
 
     //when
-    InvoiceEntry invoiceEntry = new InvoiceEntry(itemDescription, quantity, unit, price, vatRate,
+    InvoiceEntry invoiceEntry = new InvoiceEntry(item, quantity, unit, price, vatRate,
         netValue, grossValue);
 
     //then
-    assertEquals("Kurs Java", invoiceEntry.getItem());
-    assertEquals(Long.valueOf(1), invoiceEntry.getQuantity());
-    assertEquals(PIECE, invoiceEntry.getUnit());
-    assertEquals(new BigDecimal(100), invoiceEntry.getPrice());
-    assertEquals(VAT_8, invoiceEntry.getVatRate());
-    assertEquals(new BigDecimal(100), invoiceEntry.getNetValue());
-    assertEquals(new BigDecimal(108), invoiceEntry.getGrossValue());
+    assertEquals(item, invoiceEntry.getItem());
+    assertEquals(quantity, invoiceEntry.getQuantity());
+    assertEquals(unit, invoiceEntry.getUnit());
+    assertEquals(price, invoiceEntry.getPrice());
+    assertEquals(vatRate, invoiceEntry.getVatRate());
+    assertEquals(netValue, invoiceEntry.getNetValue());
+    assertEquals(grossValue, invoiceEntry.getGrossValue());
   }
 
   @Test
-  public void shouldThrowExceptionWhenItemDescriptionIsNull() {
+  public void shouldThrowExceptionWhenItemIsNull() {
     assertThrows(IllegalArgumentException.class, () -> new InvoiceEntry(null, 1L, PIECE,
         new BigDecimal(100), VAT_8, new BigDecimal(100), new BigDecimal(108)));
   }
