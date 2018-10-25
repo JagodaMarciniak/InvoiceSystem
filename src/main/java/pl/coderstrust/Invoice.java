@@ -1,5 +1,6 @@
 package pl.coderstrust;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.NonNull;
@@ -27,6 +28,12 @@ public class Invoice {
 
   @NonNull
   List<InvoiceEntry> entries;
+
+  @NonNull
+  BigDecimal totalNetValue;
+
+  @NonNull
+  BigDecimal totalGrossValue;
 
   String comments;
 }
