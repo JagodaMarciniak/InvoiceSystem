@@ -4,17 +4,19 @@ import java.util.List;
 
 public interface Database {
 
-    List<Invoice> getInvoices();
+    Invoice saveInvoice(Invoice invoice) throws DatabaseOperationException;
 
-    Invoice getInvoiceById(String invoiceId);
+    Invoice findOneInvoice(String invoiceId) throws DatabaseOperationException;
 
-    List<Invoice> getInvoiceBySellerName(String sellerName);
+    List<Invoice> findAllInvoices() throws DatabaseOperationException;
 
-    List<Invoice> getInvoiceByBuyerName(String buyerName);
+    List<Invoice> findAllInvoicesBySellerName(String sellerName) throws DatabaseOperationException;
 
-    void saveInvoice(Invoice invoice);
+    List<Invoice> findAllInvoicesByBuyerName(String buyerName) throws DatabaseOperationException;
 
-    void updateInvoice(Invoice invoice);
+    Long countInvoices() throws DatabaseOperationException;
 
-    void removeInvoice(String invoiceId);
+    void deleteInvoice(Invoice invoice) throws DatabaseOperationException;
+
+    boolean invoiceExists(String invoiceId) throws DatabaseOperationException;
 }
