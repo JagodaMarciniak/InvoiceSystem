@@ -1,6 +1,6 @@
 package pl.coderstrust;
 
-public class DatabaseOperationException extends Exception{
+public class DatabaseOperationException extends Exception {
     public DatabaseOperationException(String message) {
         super(message);
     }
