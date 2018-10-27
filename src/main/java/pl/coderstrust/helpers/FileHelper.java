@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface FileHelper {
 
+  void initialize() throws IOException, FileHelperException;
+
   void writeLines(List<String> lines) throws IOException;
 
   void writeLine(String line) throws IOException;
@@ -19,5 +21,5 @@ public interface FileHelper {
 
   boolean isEmpty() throws IOException;
 
-  void removeLine(long lineNumber) throws Exception;
+  void removeLine(long lineNumber) throws IOException, FileHelperException;
 }

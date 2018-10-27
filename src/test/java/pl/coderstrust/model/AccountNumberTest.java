@@ -19,7 +19,7 @@ class AccountNumberTest {
     AccountNumber accountNumber = new AccountNumber(ibanNumber);
 
     //then
-    assertEquals(ibanNumber, accountNumber.getIban());
+    assertEquals(ibanNumber, accountNumber.getIbanNumber());
     assertEquals(expectedLocalNumber, accountNumber.getLocalNumber());
   }
 

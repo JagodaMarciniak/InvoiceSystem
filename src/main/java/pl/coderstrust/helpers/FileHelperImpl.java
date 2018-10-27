@@ -1,5 +1,6 @@
 package pl.coderstrust.helpers;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -8,6 +9,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
+import pl.coderstrust.configuration.Configuration;
 
 @AllArgsConstructor
 public class FileHelperImpl implements FileHelper {
@@ -15,7 +17,15 @@ public class FileHelperImpl implements FileHelper {
   @NonNull
   private String filePath;
 
-  public void removeLine(long lineNumber) throws Exception {
+  public void initialize() throws IOException, FileHelperException {
+    File file = new File(filePath);
+    if (file.exists()) {
+      throw new FileHelperException("File already exists.");
+    }
+      file.createNewFile();
+    }
+
+  public void removeLine(long lineNumber) throws IOException, FileHelperException {
     if (lineNumber < 1) {
       throw new IllegalArgumentException("lineNumber cannot be lower than 1");
     }

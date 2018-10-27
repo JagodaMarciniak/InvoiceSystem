@@ -3,10 +3,10 @@ package pl.coderstrust.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.Value;
 
-@Value
+@Data
 public class Invoice {
   @NonNull
   int id;
@@ -35,5 +35,6 @@ public class Invoice {
   @NonNull
   BigDecimal totalGrossValue;
 
+  @NonNull
   String comments;
 }

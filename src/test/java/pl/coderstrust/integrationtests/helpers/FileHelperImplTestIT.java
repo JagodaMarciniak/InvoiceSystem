@@ -24,30 +24,52 @@ import pl.coderstrust.helpers.FileHelperImpl;
 
 class FileHelperImplTestIT {
 
-  private static final String inputFile = String.format("src%1$stest%1$sresources%1$shelpers%1$sinput_file", File.separator);
-  private static final String expectedFile = String.format("src%1$stest%1$sresources%1$shelpers%1$sexpected_file", File.separator);
+  private static final String INPUT_FILE = String.format("src%1$stest%1$sresources%1$shelpers%1$sinput_file", File.separator);
+  private static final String EXPECTED_FILE = String.format("src%1$stest%1$sresources%1$shelpers%1$sexpected_file", File.separator);
 
   @BeforeEach
   private void removeTestFiles() {
-    File fileIn = new File(inputFile);
+    File fileIn = new File(INPUT_FILE);
     if (fileIn.exists()) {
       fileIn.delete();
     }
 
-    File fileOut = new File(expectedFile);
+    File fileOut = new File(EXPECTED_FILE);
     if (fileOut.exists()) {
       fileOut.delete();
     }
   }
 
   @Test
+  void shouldCreateFileWhenInitializeIsInvoked() throws IOException {
+    //given
+    new File(INPUT_FILE).createNewFile();
+
+    //when
+    assertThrows(FileHelperException.class, () -> new FileHelperImpl(INPUT_FILE).initialize());
+  }
+
+  @Test
+  void shouldThrowExceptionWhenInitializeIsInvokedAndFileAlreadyExists() throws Exception {
+    //given
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+
+
+    //when
+    fileHelper.initialize();
+
+    //then
+    assertTrue(new File(INPUT_FILE).exists());
+  }
+
+  @Test
   void shouldRemoveSpecificLineFromFile() throws Exception {
     //given
-    createFile(inputFile, Arrays.asList("1", "2", "3", "4"));
-    createFile(expectedFile, Arrays.asList("1", "3", "4"));
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
-    File resultFile = new File(inputFile);
-    File expectedFile = new File(FileHelperImplTestIT.expectedFile);
+    createFile(INPUT_FILE, Arrays.asList("1", "2", "3", "4"));
+    createFile(EXPECTED_FILE, Arrays.asList("1", "3", "4"));
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    File resultFile = new File(INPUT_FILE);
+    File expectedFile = new File(FileHelperImplTestIT.EXPECTED_FILE);
 
     //when
     fileHelper.removeLine(2);
@@ -59,8 +81,8 @@ class FileHelperImplTestIT {
   @ParameterizedTest
   @MethodSource(value = "invalidArgumentsForRemovingSpecificLineFromFile")
   void shouldThrowExceptionWhenLineNumberIsInvalidDuringRemovingSpecificLine(List<String> lines, int lineNumber) throws IOException {
-    createFile(inputFile, lines);
-    assertThrows(IllegalArgumentException.class, () -> new FileHelperImpl(inputFile).removeLine(lineNumber));
+    createFile(INPUT_FILE, lines);
+    assertThrows(IllegalArgumentException.class, () -> new FileHelperImpl(INPUT_FILE).removeLine(lineNumber));
   }
 
   private static Stream<Arguments> invalidArgumentsForRemovingSpecificLineFromFile() {
@@ -71,22 +93,27 @@ class FileHelperImplTestIT {
 
   @Test
   void shouldThrowExceptionWhenTryingToRemoveLineFromNotExistingFile() {
-    assertThrows(FileNotFoundException.class, () -> new FileHelperImpl(inputFile).removeLine(5));
+    //given
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    new File(INPUT_FILE).delete();
+
+    //then
+    assertThrows(FileNotFoundException.class, () -> fileHelper.removeLine(5));
   }
 
   @Test
   void shouldThrowExceptionWhenTryingToRemoveLineFromEmptyFile() throws IOException {
-    new File(inputFile).createNewFile();
-    assertThrows(FileHelperException.class, () -> new FileHelperImpl(inputFile).removeLine(1));
+    new File(INPUT_FILE).createNewFile();
+    assertThrows(FileHelperException.class, () -> new FileHelperImpl(INPUT_FILE).removeLine(1));
   }
 
   @Test
   void shouldWriteLinesToFile() throws IOException {
     //given
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
-    createFile(expectedFile, Arrays.asList("1", "2", "3"));
-    File resultFile = new File(inputFile);
-    File expectedFile = new File(FileHelperImplTestIT.expectedFile);
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    createFile(EXPECTED_FILE, Arrays.asList("1", "2", "3"));
+    File resultFile = new File(INPUT_FILE);
+    File expectedFile = new File(FileHelperImplTestIT.EXPECTED_FILE);
 
     //when
     fileHelper.writeLines(Arrays.asList("1", "2", "3"));
@@ -97,16 +124,16 @@ class FileHelperImplTestIT {
 
   @Test
   void shouldThrowExceptionWhenLinesArgumentIsNullDuringWritingLinesToFile() {
-    assertThrows(IllegalArgumentException.class, () -> new FileHelperImpl(inputFile).writeLines(null));
+    assertThrows(IllegalArgumentException.class, () -> new FileHelperImpl(INPUT_FILE).writeLines(null));
   }
 
   @Test
   void shouldWriteLineToFile() throws IOException {
     //given
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
-    createFile(expectedFile, Arrays.asList("This", "is", "a", "test"));
-    final File resultFile = new File(inputFile);
-    final File expectedFile = new File(FileHelperImplTestIT.expectedFile);
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    createFile(EXPECTED_FILE, Arrays.asList("This", "is", "a", "test"));
+    final File resultFile = new File(INPUT_FILE);
+    final File expectedFile = new File(FileHelperImplTestIT.EXPECTED_FILE);
 
     //when
     fileHelper.writeLine("This");
@@ -120,15 +147,15 @@ class FileHelperImplTestIT {
 
   @Test
   void shouldThrowExceptionWhenLineArgumentIsNullDuringWritingLineToFile() {
-    assertThrows(IllegalArgumentException.class, () -> new FileHelperImpl(inputFile).writeLine(null));
+    assertThrows(IllegalArgumentException.class, () -> new FileHelperImpl(INPUT_FILE).writeLine(null));
   }
 
   @Test
   void shouldReadLinesFromExistingFile() throws IOException {
     //given
-    createFile(inputFile, Arrays.asList("1", "2", "3"));
+    createFile(INPUT_FILE, Arrays.asList("1", "2", "3"));
     List<String> expected = new ArrayList<>(Arrays.asList("1", "2", "3"));
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
 
     //when
     List<String> result = fileHelper.readLines();
@@ -139,16 +166,21 @@ class FileHelperImplTestIT {
 
   @Test
   void shouldThrowExceptionWhenTryingToReadFromNotExistingFile() {
-    assertThrows(FileNotFoundException.class, () -> new FileHelperImpl("notExistingFile").readLines());
+    //given
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    new File(INPUT_FILE).delete();
+
+    //then
+    assertThrows(FileNotFoundException.class, fileHelper::readLines);
   }
 
   @Test
   void shouldClearDataFromExistingFile() throws IOException {
     //given
-    createFile(inputFile, Arrays.asList("1", "2", "3"));
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
-    File resultFile = new File(inputFile);
-    File expectedFile = new File(FileHelperImplTestIT.expectedFile);
+    createFile(INPUT_FILE, Arrays.asList("1", "2", "3"));
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    File resultFile = new File(INPUT_FILE);
+    File expectedFile = new File(FileHelperImplTestIT.EXPECTED_FILE);
     expectedFile.createNewFile();
 
     //when
@@ -160,18 +192,23 @@ class FileHelperImplTestIT {
 
   @Test
   void shouldThrowExceptionWhenTryingToClearNotExistingFile() {
-    assertThrows(FileNotFoundException.class, () -> new FileHelperImpl("notExistingFile").clear());
+    //given
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    new File(INPUT_FILE).delete();
+
+    //then
+    assertThrows(FileNotFoundException.class, fileHelper::clear);
   }
 
   @Test
   void shouldDeleteExistingFile() throws IOException {
     //given
-    createFile(inputFile, Arrays.asList("1", "2", "3"));
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
+    createFile(INPUT_FILE, Arrays.asList("1", "2", "3"));
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
 
     //when
     fileHelper.delete();
-    boolean result = new File(inputFile).exists();
+    boolean result = new File(INPUT_FILE).exists();
 
     //
     assertFalse(result);
@@ -180,11 +217,11 @@ class FileHelperImplTestIT {
   @Test
   void shouldReturnCorrectResultWhenTryingToDeleteNotExistingFile() {
     //given
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
 
     //when
     fileHelper.delete();
-    boolean result = new File(inputFile).exists();
+    boolean result = new File(INPUT_FILE).exists();
 
     //
     assertFalse(result);
@@ -193,8 +230,8 @@ class FileHelperImplTestIT {
   @Test
   void shouldReturnTrueWhenFileExist() throws IOException {
     //given
-    createFile(inputFile, Arrays.asList("1", "2", "3"));
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
+    new File(INPUT_FILE).createNewFile();
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
 
     //when
     boolean result = fileHelper.exists();
@@ -206,7 +243,8 @@ class FileHelperImplTestIT {
   @Test
   void shouldReturnFalseWhenFileNotExist() {
     //given
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    new File(INPUT_FILE).delete();
 
     //when
     boolean result = fileHelper.exists();
@@ -218,8 +256,8 @@ class FileHelperImplTestIT {
   @Test
   void shouldReturnTrueWhenFileIsEmpty() throws IOException {
     //given
-    new File(inputFile).createNewFile();
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
+    new File(INPUT_FILE).createNewFile();
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
 
     //when
     boolean result = fileHelper.isEmpty();
@@ -231,8 +269,8 @@ class FileHelperImplTestIT {
   @Test
   void shouldReturnFalseWhenFileIsNotEmpty() throws IOException {
     //given
-    createFile(inputFile, Arrays.asList("1", "2", "3"));
-    FileHelper fileHelper = new FileHelperImpl(inputFile);
+    createFile(INPUT_FILE, Arrays.asList("1", "2", "3"));
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
 
     //when
     boolean result = fileHelper.isEmpty();
@@ -243,7 +281,12 @@ class FileHelperImplTestIT {
 
   @Test
   void shouldThrowExceptionWhenTryingToCheckIfFileIsEmptyOfNotExistingFile() {
-    assertThrows(FileNotFoundException.class, () -> new FileHelperImpl("notExistingFile").isEmpty());
+    //given
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    new File(INPUT_FILE).delete();
+
+    //then
+    assertThrows(FileNotFoundException.class, fileHelper::isEmpty);
   }
 
   private void createFile(String path, List<String> lines) throws IOException {

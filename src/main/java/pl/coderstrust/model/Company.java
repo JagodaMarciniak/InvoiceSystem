@@ -1,9 +1,9 @@
 package pl.coderstrust.model;
 
+import lombok.Data;
 import lombok.NonNull;
-import lombok.Value;
 
-@Value
+@Data
 public class Company {
   @NonNull
   String name;

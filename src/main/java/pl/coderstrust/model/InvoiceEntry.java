@@ -1,10 +1,10 @@
 package pl.coderstrust.model;
 
 import java.math.BigDecimal;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.Value;
 
-@Value
+@Data
 public class InvoiceEntry {
   @NonNull
   String item;
