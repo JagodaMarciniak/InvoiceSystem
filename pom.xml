@@ -21,7 +21,8 @@
         <linkXRef>false</linkXRef>
         <jacocoPlugin.version>0.8.2</jacocoPlugin.version>
         <checkstylePlugin.version>3.0.0</checkstylePlugin.version>
-        <checkstyle.config.location>checkstyle-config/google_style_settings.xml</checkstyle.config.location>
+        <checkstyle.config.location>checkstyle-config/google_style_settings.xml
+        </checkstyle.config.location>
     </properties>
 
     <dependencies>
@@ -55,6 +56,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <version>5.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
