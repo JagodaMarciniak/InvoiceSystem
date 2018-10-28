@@ -10,21 +10,19 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class InvoiceTest {
+  private final String id = "FV/2018/10/234";
+  private final InvoiceType invoiceType = STANDARD;
+  private final LocalDate issueDate = LocalDate.of(2018, 10, 24);
+  private final LocalDate dueDate = LocalDate.of(2018, 11, 23);
+  private final Company seller = CompanyGenerator.getSampleCompany();
+  private final Company buyer = CompanyGenerator.getSampleCompany();
+  private final List<InvoiceEntry> entries = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+  private final BigDecimal totalNetValue = new BigDecimal(400);
+  private final BigDecimal totalGrossValue = new BigDecimal(492);
+  private final String comments = "A few lines of comments";
 
   @Test
   void checkFullInitialization() {
-    //given
-    String id = "FV/2018/10/234";
-    InvoiceType invoiceType = STANDARD;
-    LocalDate issueDate = LocalDate.of(2018, 10, 24);
-    LocalDate dueDate = LocalDate.of(2018, 11, 23);
-    Company seller = CompanyGenerator.getSampleCompany();
-    Company buyer = CompanyGenerator.getSampleCompany();
-    List<InvoiceEntry> entries = InvoiceEntriesGenerator.getSampleInvoiceEntries();
-    BigDecimal totalNetValue = new BigDecimal(400);
-    BigDecimal totalGrossValue = new BigDecimal(492);
-    String comments = "A few lines of comments";
-
     //when
     Invoice invoice = new Invoice(id, invoiceType, issueDate, dueDate, seller, buyer, entries,
         totalNetValue, totalGrossValue, comments);
@@ -44,75 +42,55 @@ class InvoiceTest {
 
   @Test
   public void shouldThrowExceptionWhenIdIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(null, STANDARD,
-        LocalDate.of(2018, 10, 24), LocalDate.of(2018, 11, 23),
-        CompanyGenerator.getSampleCompany(), CompanyGenerator.getSampleCompany(),
-        InvoiceEntriesGenerator.getSampleInvoiceEntries(), new BigDecimal(400), new BigDecimal(492),
-        "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(null, invoiceType, issueDate,
+        dueDate, seller, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenInvoiceTypeIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice("FV/2018/10/234", null,
-        LocalDate.of(2018, 10, 24), LocalDate.of(2018, 11, 23),
-        CompanyGenerator.getSampleCompany(), CompanyGenerator.getSampleCompany(),
-        InvoiceEntriesGenerator.getSampleInvoiceEntries(), new BigDecimal(400), new BigDecimal(492),
-        "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, null, issueDate, dueDate,
+        seller, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenIssueDateIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice("FV/2018/10/234", STANDARD,
-        null, LocalDate.of(2018, 11, 23), CompanyGenerator.getSampleCompany(),
-        CompanyGenerator.getSampleCompany(), InvoiceEntriesGenerator.getSampleInvoiceEntries(),
-        new BigDecimal(400), new BigDecimal(492), "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, null, dueDate,
+        seller, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenDueDateIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice("FV/2018/10/234", STANDARD,
-        LocalDate.of(2018, 10, 24), null, CompanyGenerator.getSampleCompany(),
-        CompanyGenerator.getSampleCompany(), InvoiceEntriesGenerator.getSampleInvoiceEntries(),
-        new BigDecimal(400), new BigDecimal(492), "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate, null,
+        seller, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenSellerIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice("FV/2018/10/234", STANDARD,
-        LocalDate.of(2018, 10, 24), LocalDate.of(2018, 11, 23), null,
-        CompanyGenerator.getSampleCompany(), InvoiceEntriesGenerator.getSampleInvoiceEntries(),
-        new BigDecimal(400), new BigDecimal(492), "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+        dueDate, null, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenBuyerIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice("FV/2018/10/234", STANDARD,
-        LocalDate.of(2018, 10, 24), LocalDate.of(2018, 11, 23), CompanyGenerator.getSampleCompany(),
-        null, InvoiceEntriesGenerator.getSampleInvoiceEntries(), new BigDecimal(400),
-        new BigDecimal(492), "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+        dueDate, seller, null, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenEntriesIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice("FV/2018/10/234", STANDARD,
-        LocalDate.of(2018, 10, 24), LocalDate.of(2018, 11, 23), CompanyGenerator.getSampleCompany(),
-        CompanyGenerator.getSampleCompany(), null, new BigDecimal(400), new BigDecimal(492),
-        "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+        dueDate, seller, buyer, null, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenTotalNetValueIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice("FV/2018/10/234", STANDARD,
-        LocalDate.of(2018, 10, 24), LocalDate.of(2018, 11, 23), CompanyGenerator.getSampleCompany(),
-        CompanyGenerator.getSampleCompany(), InvoiceEntriesGenerator.getSampleInvoiceEntries(),
-        null, new BigDecimal(492), "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+        dueDate, seller, buyer, entries, null, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenTotalGrossValueIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice("FV/2018/10/234", STANDARD,
-        LocalDate.of(2018, 10, 24), LocalDate.of(2018, 11, 23), CompanyGenerator.getSampleCompany(),
-        CompanyGenerator.getSampleCompany(), InvoiceEntriesGenerator.getSampleInvoiceEntries(),
-        new BigDecimal(400), null, "A few lines of comments"));
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+        dueDate, seller, buyer, entries, totalNetValue, null, comments));
   }
 }
