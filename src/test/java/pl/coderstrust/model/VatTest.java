@@ -1,10 +1,10 @@
-package pl.coderstrust;
+package pl.coderstrust.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static pl.coderstrust.Vat.VAT_0;
-import static pl.coderstrust.Vat.VAT_23;
-import static pl.coderstrust.Vat.VAT_5;
-import static pl.coderstrust.Vat.VAT_8;
+import static pl.coderstrust.model.Vat.VAT_0;
+import static pl.coderstrust.model.Vat.VAT_23;
+import static pl.coderstrust.model.Vat.VAT_5;
+import static pl.coderstrust.model.Vat.VAT_8;
 
 import org.junit.jupiter.api.Test;
 

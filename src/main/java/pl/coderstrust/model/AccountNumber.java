@@ -1,4 +1,4 @@
-package pl.coderstrust;
+package pl.coderstrust.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package pl.coderstrust;
+package pl.coderstrust.model;
 
 public class AddressGenerator {
   public static Address getSampleAddress() {

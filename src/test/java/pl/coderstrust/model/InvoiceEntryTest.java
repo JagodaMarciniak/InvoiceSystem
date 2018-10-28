@@ -1,9 +1,9 @@
-package pl.coderstrust;
+package pl.coderstrust.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.coderstrust.UnitType.PIECE;
-import static pl.coderstrust.Vat.VAT_8;
+import static pl.coderstrust.model.UnitType.PIECE;
+import static pl.coderstrust.model.Vat.VAT_8;
 
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package pl.coderstrust;
+package pl.coderstrust.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

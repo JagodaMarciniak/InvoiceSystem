@@ -1,10 +1,10 @@
-package pl.coderstrust;
+package pl.coderstrust.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static pl.coderstrust.UnitType.DAY;
-import static pl.coderstrust.UnitType.FLAT_RATE;
-import static pl.coderstrust.UnitType.HOUR;
-import static pl.coderstrust.UnitType.PIECE;
+import static pl.coderstrust.model.UnitType.DAY;
+import static pl.coderstrust.model.UnitType.FLAT_RATE;
+import static pl.coderstrust.model.UnitType.HOUR;
+import static pl.coderstrust.model.UnitType.PIECE;
 
 import org.junit.jupiter.api.Test;
 
