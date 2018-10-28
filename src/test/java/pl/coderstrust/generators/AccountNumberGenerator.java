@@ -1,4 +1,6 @@
-package pl.coderstrust.model;
+package pl.coderstrust.generators;
+
+import pl.coderstrust.model.AccountNumber;
 
 public class AccountNumberGenerator {
   public static AccountNumber getSampleAccountNumber() {

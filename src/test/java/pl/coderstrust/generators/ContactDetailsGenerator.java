@@ -1,4 +1,6 @@
-package pl.coderstrust.model;
+package pl.coderstrust.generators;
+
+import pl.coderstrust.model.ContactDetails;
 
 public class ContactDetailsGenerator {
   public static ContactDetails getSampleContactDetails() {
