@@ -2,7 +2,6 @@ package pl.coderstrust;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 
 @AllArgsConstructor
 public enum Vat {
@@ -12,7 +11,6 @@ public enum Vat {
   VAT_5(0.05f),
   VAT_0(0.00f);
 
-  @NonNull
   @Getter
   private final float value;
 }
