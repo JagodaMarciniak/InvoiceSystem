@@ -1,12 +1,13 @@
-package pl.coderstrust;
+package pl.coderstrust.generators;
 
-import static pl.coderstrust.UnitType.HOUR;
-import static pl.coderstrust.UnitType.PIECE;
-import static pl.coderstrust.Vat.VAT_23;
+import static pl.coderstrust.model.UnitType.HOUR;
+import static pl.coderstrust.model.UnitType.PIECE;
+import static pl.coderstrust.model.Vat.VAT_23;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import pl.coderstrust.model.InvoiceEntry;
 
 public final class InvoiceEntriesGenerator {
   public static List<InvoiceEntry> getSampleInvoiceEntries() {

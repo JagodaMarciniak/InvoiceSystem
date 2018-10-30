@@ -1,13 +1,17 @@
-package pl.coderstrust;
+package pl.coderstrust.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.coderstrust.InvoiceType.STANDARD;
+import static pl.coderstrust.model.InvoiceType.STANDARD;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import pl.coderstrust.generators.CompanyGenerator;
+import pl.coderstrust.generators.InvoiceEntriesGenerator;
+import pl.coderstrust.model.Invoice;
+import pl.coderstrust.model.InvoiceType;
 
 class InvoiceTest {
   private final String id = "FV/2018/10/234";

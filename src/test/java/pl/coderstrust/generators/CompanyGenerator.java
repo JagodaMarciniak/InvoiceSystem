@@ -1,4 +1,4 @@
-package pl.coderstrust;
+package pl.coderstrust.generators;
 
 public final class CompanyGenerator {
 

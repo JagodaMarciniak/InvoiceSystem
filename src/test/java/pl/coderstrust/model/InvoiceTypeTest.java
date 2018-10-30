@@ -1,9 +1,9 @@
-package pl.coderstrust;
+package pl.coderstrust.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static pl.coderstrust.InvoiceType.DEBIT_MEMO;
-import static pl.coderstrust.InvoiceType.PRO_FORMA;
-import static pl.coderstrust.InvoiceType.STANDARD;
+import static pl.coderstrust.model.InvoiceType.DEBIT_MEMO;
+import static pl.coderstrust.model.InvoiceType.PRO_FORMA;
+import static pl.coderstrust.model.InvoiceType.STANDARD;
 
 import org.junit.jupiter.api.Test;
 
