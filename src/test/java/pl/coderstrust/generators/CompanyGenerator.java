@@ -1,5 +1,10 @@
 package pl.coderstrust.generators;
 
+import pl.coderstrust.model.AccountNumber;
+import pl.coderstrust.model.Address;
+import pl.coderstrust.model.Company;
+import pl.coderstrust.model.ContactDetails;
+
 public final class CompanyGenerator {
 
   public static Company getSampleCompany() {
