@@ -2,21 +2,22 @@ package pl.coderstrust.helpers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 public interface File {
 
-  void writeLines(String filePath, List<String> lines) throws IOException;
+  void writeLines(List<String> lines) throws IOException;
 
-  void writeLine(String filePath, String line) throws IOException;
+  void writeLine(String line) throws IOException;
 
-  List<String> readLines(String filePath) throws IOException;
+  Stream<String> readLines() throws IOException;
 
-  void clear(String filePath) throws IOException;
+  void clear() throws IOException;
 
-  void delete(String filePath) throws IOException;
+  void delete() throws IOException;
 
-  boolean exists(String filePath);
+  boolean exists();
 
-  boolean isEmpty(String filePath) throws IOException;
+  boolean isEmpty() throws IOException;
 
 }
