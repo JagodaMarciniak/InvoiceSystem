@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -116,7 +115,7 @@ class FileHelperTestIT {
     FileHelper fileHelper = new FileHelper(inputFilePath);
 
     //when
-    List<String> result = fileHelper.readLines().collect(Collectors.toList());
+    List<String> result = fileHelper.readLines();
     List<String> expected = new ArrayList<>(Arrays.asList("1", "2", "3"));
 
     //then

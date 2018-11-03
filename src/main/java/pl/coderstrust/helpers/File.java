@@ -2,7 +2,6 @@ package pl.coderstrust.helpers;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Stream;
 
 public interface File {
 
@@ -10,7 +9,7 @@ public interface File {
 
   void writeLine(String line) throws IOException;
 
-  Stream<String> readLines() throws IOException;
+  List<String> readLines() throws IOException;
 
   void clear() throws IOException;
 

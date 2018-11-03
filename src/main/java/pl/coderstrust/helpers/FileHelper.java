@@ -2,11 +2,8 @@ package pl.coderstrust.helpers;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Stream;
 import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
 
@@ -32,6 +29,7 @@ public class FileHelper implements File {
     }
 
     if (lineNumber > counter || lineNumber < 1) {
+      file.close();
       throw new IllegalArgumentException("Incorrect lineNumber");
     }
 
@@ -59,11 +57,11 @@ public class FileHelper implements File {
   }
 
   @Override
-  public Stream<String> readLines() throws IOException {
+  public List<String> readLines() throws IOException {
     if (!exists()) {
       throw new NoSuchFileException("File not exist");
     }
-    return Files.lines(Paths.get(filePath));
+    return FileUtils.readLines(new java.io.File(filePath));
   }
 
   @Override
