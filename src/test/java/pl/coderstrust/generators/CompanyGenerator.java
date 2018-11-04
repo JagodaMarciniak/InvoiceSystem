@@ -17,4 +17,15 @@ public final class CompanyGenerator {
     ));
     return new Company(name, taxId, accountNumber, contactDetails);
   }
+
+  public static Company getSampleCompany(String companyName) {
+    String name = companyName;
+    String taxId = "12345678990";
+    AccountNumber accountNumber = new AccountNumber(
+        "PL83620519463926400000847295");
+    ContactDetails contactDetails = new ContactDetails("contact@oracle.com",
+        "+1234567890", "www.oracle.com", new Address("Wyroczni", "13A", "34-760", "Gdynia", "Polska"
+    ));
+    return new Company(name, taxId, accountNumber, contactDetails);
+  }
 }
