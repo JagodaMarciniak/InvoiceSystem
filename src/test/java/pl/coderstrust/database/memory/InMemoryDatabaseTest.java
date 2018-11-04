@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -17,19 +18,17 @@ import pl.coderstrust.model.Invoice;
 
 
 class InMemoryDatabaseTest {
-  Database testDatabase;
-  InvoiceGenerator randomInvoiceGenerator;
+  private Database testDatabase;
 
   @BeforeEach
-  public void setup() {
+  private void setup() {
     testDatabase = new InMemoryDatabase();
-    randomInvoiceGenerator = new InvoiceGenerator();
   }
 
   @Test
   void shouldReturnTrueIfInvoiceExistsInDatabase() throws DatabaseOperationException {
     //given
-    Invoice invoice = randomInvoiceGenerator.getRandomInvoice();
+    Invoice invoice = InvoiceGenerator.getRandomInvoice();
 
     //when
     testDatabase.saveInvoice(invoice);
@@ -41,8 +40,8 @@ class InMemoryDatabaseTest {
   @Test
   void shouldReturnFalseIfInvoiceNotExistsInDatabase() throws DatabaseOperationException {
     //given
-    Invoice invoice1 = randomInvoiceGenerator.getRandomInvoice();
-    Invoice invoice2 = randomInvoiceGenerator.getRandomInvoice();
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
 
     //when
     testDatabase.saveInvoice(invoice1);
@@ -54,7 +53,7 @@ class InMemoryDatabaseTest {
   @Test
   void shouldSaveInvoiceIntoDatabase() throws DatabaseOperationException {
     //given
-    Invoice expectedInvoice1 = randomInvoiceGenerator.getRandomInvoice();
+    Invoice expectedInvoice1 = InvoiceGenerator.getRandomInvoice();
 
     //when
     testDatabase.saveInvoice(expectedInvoice1);
@@ -66,7 +65,7 @@ class InMemoryDatabaseTest {
   @Test
   void shouldDeleteInvoiceFromDatabaseIfPresent() throws DatabaseOperationException {
     //given
-    Invoice invoice = randomInvoiceGenerator.getRandomInvoice();
+    Invoice invoice = InvoiceGenerator.getRandomInvoice();
     testDatabase.saveInvoice(invoice);
 
     //when
@@ -91,11 +90,11 @@ class InMemoryDatabaseTest {
   @Test
   void shouldTestCountingInvoicesInDatabase() throws DatabaseOperationException {
     //given
-    Long expectedNumberOfInvoices = Long.valueOf(5);
+    Long expectedNumberOfInvoices = 5L;
 
     //when
     for (int i = 0; i < expectedNumberOfInvoices; i++) {
-      testDatabase.saveInvoice(randomInvoiceGenerator.getRandomInvoice());
+      testDatabase.saveInvoice(InvoiceGenerator.getRandomInvoice());
     }
     //then
     assertEquals(expectedNumberOfInvoices, testDatabase.countInvoices());
@@ -105,8 +104,8 @@ class InMemoryDatabaseTest {
   @Test
   void shouldFindOneInvoice() throws DatabaseOperationException {
     //given
-    Invoice invoice1 = randomInvoiceGenerator.getRandomInvoice();
-    Invoice invoice2 = randomInvoiceGenerator.getRandomInvoice();
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
 
     //when
     testDatabase.saveInvoice(invoice1);
@@ -122,11 +121,11 @@ class InMemoryDatabaseTest {
     //given
     List<Invoice> generatedInvoiceList = new ArrayList<>();
 
-    Invoice invoice1 = randomInvoiceGenerator.getRandomInvoice();
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     generatedInvoiceList.add(invoice1);
     testDatabase.saveInvoice(invoice1);
 
-    Invoice invoice2 = randomInvoiceGenerator.getRandomInvoice();
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
     generatedInvoiceList.add(invoice2);
     testDatabase.saveInvoice(invoice2);
 
@@ -200,7 +199,7 @@ class InMemoryDatabaseTest {
   }
 
   @Test
-  public void shouldVerifyUpdateOfInvoice() throws DatabaseOperationException {
+  void shouldVerifyUpdateOfInvoice() throws DatabaseOperationException {
     //given
     Invoice invoiceA = InvoiceGenerator.getRandomInvoice();
     Invoice invoiceAUpdate = InvoiceGenerator.getRandomInvoiceWithSpecificId(invoiceA.getId());
@@ -208,7 +207,7 @@ class InMemoryDatabaseTest {
     assertNotEquals(invoiceA, invoiceAUpdate);
 
     testDatabase.saveInvoice(invoiceA);
-    assertTrue(testDatabase.findOneInvoice(invoiceA.getId()) == invoiceA);
+    assertSame(testDatabase.findOneInvoice(invoiceA.getId()), invoiceA);
 
     //when
     testDatabase.saveInvoice(invoiceAUpdate);

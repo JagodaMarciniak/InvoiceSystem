@@ -3,7 +3,6 @@ package pl.coderstrust.database.memory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -19,7 +18,7 @@ public class InMemoryDatabase implements Database {
   public boolean invoiceExists(@NonNull String invoiceId) {
     return invoices
         .stream()
-        .anyMatch(i -> i.getId() == invoiceId);
+        .anyMatch(i -> i.getId().equals(invoiceId));
   }
 
   @Override
@@ -31,7 +30,7 @@ public class InMemoryDatabase implements Database {
 
   @Override
   public void deleteInvoice(@NonNull String invoiceId) {
-    invoices.removeIf(i -> i.getId() == invoiceId);
+    invoices.removeIf(i -> i.getId().equals(invoiceId));
   }
 
   @Override
@@ -41,15 +40,11 @@ public class InMemoryDatabase implements Database {
 
   @Override
   public Invoice findOneInvoice(@NonNull String id) {
-    Optional<Invoice> optionalInvoice = invoices
+    return invoices
         .stream()
-        .filter(invoice -> invoice.getId() == id)
-        .findFirst();
-
-    if (optionalInvoice.isPresent()) {
-      return optionalInvoice.get();
-    }
-    return null;
+        .filter(invoice -> invoice.getId().equals(id))
+        .findFirst()
+        .orElse(null);
   }
 
   @Override
@@ -61,7 +56,7 @@ public class InMemoryDatabase implements Database {
   public List<Invoice> findAllInvoicesBySellerName(@NonNull String sellerName) {
     return invoices
         .stream()
-        .filter(invoice -> invoice.getSeller().getName() == sellerName)
+        .filter(invoice -> invoice.getSeller().getName().equals(sellerName))
         .collect(Collectors.toList());
   }
 
@@ -69,7 +64,7 @@ public class InMemoryDatabase implements Database {
   public List<Invoice> findAllInvoicesByBuyerName(@NonNull String buyerName) {
     return invoices
         .stream()
-        .filter(invoice -> invoice.getBuyer().getName() == buyerName)
+        .filter(invoice -> invoice.getBuyer().getName().equals(buyerName))
         .collect(Collectors.toList());
   }
 }
