@@ -5,7 +5,13 @@ import pl.coderstrust.model.Invoice;
 
 public interface Database {
 
+  boolean invoiceExists(String invoiceId) throws DatabaseOperationException;
+
   Invoice saveInvoice(Invoice invoice) throws DatabaseOperationException;
+
+  void deleteInvoice(String invoiceId) throws DatabaseOperationException;
+
+  Long countInvoices() throws DatabaseOperationException;
 
   Invoice findOneInvoice(String invoiceId) throws DatabaseOperationException;
 
@@ -15,9 +21,4 @@ public interface Database {
 
   List<Invoice> findAllInvoicesByBuyerName(String buyerName) throws DatabaseOperationException;
 
-  Long countInvoices() throws DatabaseOperationException;
-
-  void deleteInvoice(Invoice invoice) throws DatabaseOperationException;
-
-  boolean invoiceExists(String invoiceId) throws DatabaseOperationException;
 }
