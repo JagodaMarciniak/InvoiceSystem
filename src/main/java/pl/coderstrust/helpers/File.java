@@ -13,7 +13,7 @@ public interface File {
 
   void clear() throws IOException;
 
-  void delete() throws IOException;
+  void delete();
 
   boolean exists();
 

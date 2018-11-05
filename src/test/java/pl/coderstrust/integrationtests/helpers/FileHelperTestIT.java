@@ -65,6 +65,21 @@ class FileHelperTestIT {
   }
 
   @Test
+  public void shouldThrowExceptionWhenTryingToRemoveLineFromNotExistingFile() {
+    assertThrows(NoSuchFileException.class, () -> {
+      new FileHelper(inputFilePath).removeLine(5);
+    });
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenTryingToRemoveLineFromEmptyFile() throws IOException {
+    createFile(Collections.singletonList(""), inputFilePath);
+    assertThrows(IllegalArgumentException.class, () -> {
+      new FileHelper(inputFilePath).removeLine(5);
+    });
+  }
+
+  @Test
   public void shouldWriteLinesToFile() throws IOException{
     //given
     FileHelper fileHelper = new FileHelper(inputFilePath);
