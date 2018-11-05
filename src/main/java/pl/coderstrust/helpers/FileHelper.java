@@ -15,7 +15,7 @@ public class FileHelper implements File {
   @NonNull
   private String filePath;
 
-  public void removeLine(int lineNumber) throws IOException {
+  public void removeLine(long lineNumber) throws IOException {
     if (lineNumber < 1) {
       throw new IllegalArgumentException("lineNumber cannot be lower than 1");
     }
@@ -27,7 +27,7 @@ public class FileHelper implements File {
     }
     RandomAccessFile file = new RandomAccessFile(filePath, "rw");
 
-    int numberOfLines = 0;
+    long numberOfLines = 0;
     long offset = 0;
 
     while (file.readLine() != null) {
