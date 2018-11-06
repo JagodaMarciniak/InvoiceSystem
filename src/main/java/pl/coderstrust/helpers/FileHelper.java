@@ -27,14 +27,11 @@ public class FileHelper implements File {
     }
     RandomAccessFile file = new RandomAccessFile(filePath, "rw");
 
-    long numberOfLines = 0;
+    long numberOfLines = 1;
     long offset = 0;
 
-    while (file.readLine() != null) {
+    while (file.readLine() != null && numberOfLines != lineNumber) {
       numberOfLines++;
-      if (numberOfLines == lineNumber) {
-        break;
-      }
       offset = file.getFilePointer();
     }
 
