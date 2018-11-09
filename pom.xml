@@ -151,7 +151,7 @@
                         <configuration>
                             <rules>
                                 <rule>
-                                    <element>BUNDLE</element>
+                                    <element>CLASS</element>
                                     <limits>
                                         <limit>
                                             <counter>LINE</counter>
@@ -166,6 +166,8 @@
                                     </limits>
                                     <excludes>
                                         <exclude>database.impl.ConfigurationProvider</exclude>
+                                        <exclude>pl.coderstrust.Application</exclude>
+                                        <exclude>pl.coderstrust.database.DatabaseOperationException</exclude>
                                     </excludes>
                                 </rule>
                             </rules>
