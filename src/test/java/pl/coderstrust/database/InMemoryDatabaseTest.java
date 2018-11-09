@@ -1,18 +1,14 @@
-package pl.coderstrust.database.memory;
+package pl.coderstrust.database;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.database.Database;
-import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
 
@@ -199,20 +195,18 @@ class InMemoryDatabaseTest {
   }
 
   @Test
-  void shouldVerifyUpdateOfInvoice() throws DatabaseOperationException {
+  void shouldUpdateExistingInvoice() throws DatabaseOperationException {
     //given
-    Invoice invoiceA = InvoiceGenerator.getRandomInvoice();
-    Invoice invoiceAUpdate = InvoiceGenerator.getRandomInvoiceWithSpecificId(invoiceA.getId());
-    assertEquals(invoiceA.getId(), invoiceAUpdate.getId());
-    assertNotEquals(invoiceA, invoiceAUpdate);
-
-    testDatabase.saveInvoice(invoiceA);
-    assertSame(testDatabase.findOneInvoice(invoiceA.getId()), invoiceA);
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice1Update = InvoiceGenerator.getRandomInvoiceWithSpecificId(invoice1.getId());
+    testDatabase.saveInvoice(invoice1);
 
     //when
-    testDatabase.saveInvoice(invoiceAUpdate);
+    testDatabase.saveInvoice(invoice1Update);
+    Invoice invoice = testDatabase.findOneInvoice(invoice1.getId());
 
     //then
-    assertEquals(invoiceA.getId(), invoiceAUpdate.getId());
+    assertEquals(invoice1.getId(), invoice.getId());
+    assertEquals(invoice1Update, invoice);
   }
 }

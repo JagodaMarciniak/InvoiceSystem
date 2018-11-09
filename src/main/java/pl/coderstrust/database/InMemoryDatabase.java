@@ -1,4 +1,4 @@
-package pl.coderstrust.database.memory;
+package pl.coderstrust.database;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import pl.coderstrust.database.Database;
 import pl.coderstrust.model.Invoice;
 
 @NoArgsConstructor
@@ -22,10 +21,10 @@ public class InMemoryDatabase implements Database {
   }
 
   @Override
-  public Invoice saveInvoice(@NonNull Invoice newInvoice) {
-    deleteInvoice(newInvoice.getId());
-    invoices.add(newInvoice);
-    return newInvoice;
+  public Invoice saveInvoice(@NonNull Invoice invoice) {
+    deleteInvoice(invoice.getId());
+    invoices.add(invoice);
+    return invoice;
   }
 
   @Override
