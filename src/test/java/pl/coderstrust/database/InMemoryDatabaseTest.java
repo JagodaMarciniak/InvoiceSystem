@@ -242,7 +242,6 @@ class InMemoryDatabaseTest {
   void shouldThrowExceptionIfMethodFindAllInvoicesBySellerNameInvokedWithNull() {
     assertThrows(IllegalArgumentException.class,
         () -> testDatabase.findAllInvoicesBySellerName(null));
-
   }
 
   @Test
