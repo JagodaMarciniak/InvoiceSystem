@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
+import pl.coderstrust.filehelper.EmptyFileException;
 import pl.coderstrust.filehelper.File;
 
 @AllArgsConstructor
@@ -16,7 +17,7 @@ public class FileHelper implements File {
   @NonNull
   private String filePath;
 
-  public void removeLine(long lineNumber) throws IOException {
+  public void removeLine(long lineNumber) throws Exception {
     if (lineNumber < 1) {
       throw new IllegalArgumentException("lineNumber cannot be lower than 1");
     }
@@ -24,7 +25,7 @@ public class FileHelper implements File {
       throw new FileNotFoundException("File does not exist");
     }
     if (isEmpty()) {
-      throw new IllegalArgumentException("File is empty");
+      throw new EmptyFileException("Can't delete a line in an empty file");
     }
     RandomAccessFile file = new RandomAccessFile(filePath, "rw");
 

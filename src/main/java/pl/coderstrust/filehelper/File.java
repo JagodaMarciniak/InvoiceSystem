@@ -19,5 +19,5 @@ public interface File {
 
   boolean isEmpty() throws IOException;
 
-  void removeLine(long lineNumber) throws IOException;
+  void removeLine(long lineNumber) throws Exception;
 }

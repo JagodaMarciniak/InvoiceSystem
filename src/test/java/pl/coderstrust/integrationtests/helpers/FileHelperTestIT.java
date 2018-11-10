@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
@@ -19,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import pl.coderstrust.filehelper.EmptyFileException;
 import pl.coderstrust.filehelperimpl.FileHelper;
 
 class FileHelperTestIT {
@@ -40,7 +40,7 @@ class FileHelperTestIT {
   }
 
   @Test
-  void shouldRemoveSpecificLineFromFile() throws IOException {
+  void shouldRemoveSpecificLineFromFile() throws Exception {
     //given
     createFile(inputFile, Arrays.asList("1", "2", "3", "4"));
     createFile(expectedFile, Arrays.asList("1", "3", "4"));
@@ -75,8 +75,8 @@ class FileHelperTestIT {
 
   @Test
   void shouldThrowExceptionWhenTryingToRemoveLineFromEmptyFile() throws IOException {
-    createFile(inputFile, Collections.singletonList(""));
-    assertThrows(IllegalArgumentException.class, () -> new FileHelper(inputFile).removeLine(5));
+    new File(inputFile).createNewFile();
+    assertThrows(EmptyFileException.class, () -> new FileHelper(inputFile).removeLine(1));
   }
 
   @Test
