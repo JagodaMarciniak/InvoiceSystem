@@ -1,4 +1,4 @@
-package pl.coderstrust.helpers;
+package pl.coderstrust.filehelper;
 
 import java.io.IOException;
 import java.util.List;
