@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
 
-
 class InMemoryDatabaseTest {
   private Database testDatabase;
 
@@ -25,12 +24,13 @@ class InMemoryDatabaseTest {
   void shouldReturnTrueIfInvoiceExistsInDatabase() throws DatabaseOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
-
-    //when
     testDatabase.saveInvoice(invoice);
 
+    //when
+    boolean invoiceExists = testDatabase.invoiceExists(invoice.getId());
+
     //then
-    assertTrue(testDatabase.invoiceExists(invoice.getId()));
+    assertTrue(invoiceExists);
   }
 
   @Test
@@ -38,24 +38,26 @@ class InMemoryDatabaseTest {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
-
-    //when
     testDatabase.saveInvoice(invoice1);
 
+    //when
+    boolean invoiceExist = testDatabase.invoiceExists(invoice2.getId());
+
     //then
-    assertFalse(testDatabase.invoiceExists(invoice2.getId()));
+    assertFalse(invoiceExist);
   }
 
   @Test
   void shouldSaveInvoiceIntoDatabase() throws DatabaseOperationException {
     //given
     Invoice expectedInvoice1 = InvoiceGenerator.getRandomInvoice();
-
-    //when
     testDatabase.saveInvoice(expectedInvoice1);
 
+    //when
+    boolean invoiceExists = testDatabase.invoiceExists(expectedInvoice1.getId());
+
     //then
-    assertTrue(testDatabase.invoiceExists(expectedInvoice1.getId()));
+    assertTrue(invoiceExists);
   }
 
   @Test
@@ -63,53 +65,58 @@ class InMemoryDatabaseTest {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
     testDatabase.saveInvoice(invoice);
-
-    //when
     testDatabase.deleteInvoice(invoice.getId());
 
+    //when
+    boolean invoiceExists = testDatabase.invoiceExists(invoice.getId());
+
     //then
-    assertFalse(testDatabase.invoiceExists(invoice.getId()));
+    assertFalse(invoiceExists);
   }
 
   @Test
   void shouldDeleteInvoiceFromDatabaseIfAbsent() throws DatabaseOperationException {
     //given
     String invoiceId = "1";
-
-    //when
     testDatabase.deleteInvoice(invoiceId);
 
+    //when
+    boolean invoiceExists = testDatabase.invoiceExists(invoiceId);
+
     //then
-    assertFalse(testDatabase.invoiceExists(invoiceId));
+    assertFalse(invoiceExists);
   }
 
   @Test
   void shouldTestCountingInvoicesInDatabase() throws DatabaseOperationException {
     //given
     Long expectedNumberOfInvoices = 5L;
-
-    //when
     for (int i = 0; i < expectedNumberOfInvoices; i++) {
       testDatabase.saveInvoice(InvoiceGenerator.getRandomInvoice());
     }
-    //then
-    assertEquals(expectedNumberOfInvoices, testDatabase.countInvoices());
-  }
 
+    //when
+    Long actualNumberOfInvoices = testDatabase.countInvoices();
+
+    //then
+    assertEquals(expectedNumberOfInvoices, actualNumberOfInvoices);
+  }
 
   @Test
   void shouldFindOneInvoice() throws DatabaseOperationException {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
-
-    //when
     testDatabase.saveInvoice(invoice1);
     testDatabase.saveInvoice(invoice2);
 
+    //when
+    Invoice invoiceFromDatabase1 = testDatabase.findOneInvoice(invoice1.getId());
+    Invoice invoiceFromDatabase2 = testDatabase.findOneInvoice(invoice2.getId());
+
     //then
-    assertEquals(invoice1, testDatabase.findOneInvoice(invoice1.getId()));
-    assertEquals(invoice2, testDatabase.findOneInvoice(invoice2.getId()));
+    assertEquals(invoice1, invoiceFromDatabase1);
+    assertEquals(invoice2, invoiceFromDatabase2);
   }
 
   @Test
@@ -136,62 +143,62 @@ class InMemoryDatabaseTest {
   void shouldFindAllInvoicesBySellerName() throws DatabaseOperationException {
     //given
     String sellerName = "sampleSellerABC";
-    Invoice invoiceA = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName(sellerName);
-    Invoice invoiceB = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName(sellerName);
-    Invoice invoiceC = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName(sellerName);
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName(sellerName);
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName(sellerName);
+    Invoice invoice3 = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName(sellerName);
 
-    Invoice invoiceD = InvoiceGenerator.getRandomInvoice();
-    Invoice invoiceE = InvoiceGenerator.getRandomInvoice();
-    Invoice invoiceF = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice4 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice5 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice6 = InvoiceGenerator.getRandomInvoice();
 
-    testDatabase.saveInvoice(invoiceA);
-    testDatabase.saveInvoice(invoiceB);
-    testDatabase.saveInvoice(invoiceC);
-    testDatabase.saveInvoice(invoiceD);
-    testDatabase.saveInvoice(invoiceE);
-    testDatabase.saveInvoice(invoiceF);
+    testDatabase.saveInvoice(invoice1);
+    testDatabase.saveInvoice(invoice2);
+    testDatabase.saveInvoice(invoice3);
+    testDatabase.saveInvoice(invoice4);
+    testDatabase.saveInvoice(invoice5);
+    testDatabase.saveInvoice(invoice6);
 
-    List<Invoice> expectedInvoiceListSameSeller = new ArrayList<>();
-    expectedInvoiceListSameSeller.add(invoiceA);
-    expectedInvoiceListSameSeller.add(invoiceB);
-    expectedInvoiceListSameSeller.add(invoiceC);
+    List<Invoice> expectedInvoices = new ArrayList<>();
+    expectedInvoices.add(invoice1);
+    expectedInvoices.add(invoice2);
+    expectedInvoices.add(invoice3);
 
     //when
-    List<Invoice> actualInvoiceList = testDatabase.findAllInvoicesBySellerName(sellerName);
+    List<Invoice> actualInvoices = testDatabase.findAllInvoicesBySellerName(sellerName);
 
     //then
-    assertArrayEquals(expectedInvoiceListSameSeller.toArray(), actualInvoiceList.toArray());
+    assertArrayEquals(expectedInvoices.toArray(), actualInvoices.toArray());
   }
 
   @Test
   void findAllInvoicesByBuyerName() throws DatabaseOperationException {
     //given
     String buyerName = "sampleBuyerABC";
-    Invoice invoiceA = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName(buyerName);
-    Invoice invoiceB = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName(buyerName);
-    Invoice invoiceC = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName(buyerName);
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName(buyerName);
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName(buyerName);
+    Invoice invoice3 = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName(buyerName);
 
-    Invoice invoiceD = InvoiceGenerator.getRandomInvoice();
-    Invoice invoiceE = InvoiceGenerator.getRandomInvoice();
-    Invoice invoiceF = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice4 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice5 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice6 = InvoiceGenerator.getRandomInvoice();
 
-    testDatabase.saveInvoice(invoiceA);
-    testDatabase.saveInvoice(invoiceB);
-    testDatabase.saveInvoice(invoiceC);
-    testDatabase.saveInvoice(invoiceD);
-    testDatabase.saveInvoice(invoiceE);
-    testDatabase.saveInvoice(invoiceF);
+    testDatabase.saveInvoice(invoice1);
+    testDatabase.saveInvoice(invoice2);
+    testDatabase.saveInvoice(invoice3);
+    testDatabase.saveInvoice(invoice4);
+    testDatabase.saveInvoice(invoice5);
+    testDatabase.saveInvoice(invoice6);
 
-    List<Invoice> expectedInvoiceListSameBuyer = new ArrayList<>();
-    expectedInvoiceListSameBuyer.add(invoiceA);
-    expectedInvoiceListSameBuyer.add(invoiceB);
-    expectedInvoiceListSameBuyer.add(invoiceC);
+    List<Invoice> expectedInvoices = new ArrayList<>();
+    expectedInvoices.add(invoice1);
+    expectedInvoices.add(invoice2);
+    expectedInvoices.add(invoice3);
 
     //when
-    List<Invoice> actualInvoiceList = testDatabase.findAllInvoicesByBuyerName(buyerName);
+    List<Invoice> actualInvoices = testDatabase.findAllInvoicesByBuyerName(buyerName);
 
     //then
-    assertArrayEquals(expectedInvoiceListSameBuyer.toArray(), actualInvoiceList.toArray());
+    assertArrayEquals(expectedInvoices.toArray(), actualInvoices.toArray());
   }
 
   @Test
@@ -200,13 +207,13 @@ class InMemoryDatabaseTest {
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice1Update = InvoiceGenerator.getRandomInvoiceWithSpecificId(invoice1.getId());
     testDatabase.saveInvoice(invoice1);
+    testDatabase.saveInvoice(invoice1Update);
 
     //when
-    testDatabase.saveInvoice(invoice1Update);
-    Invoice invoice = testDatabase.findOneInvoice(invoice1.getId());
+    Invoice updatedInvoiceFromDatabase = testDatabase.findOneInvoice(invoice1.getId());
 
     //then
-    assertEquals(invoice1.getId(), invoice.getId());
-    assertEquals(invoice1Update, invoice);
+    assertEquals(invoice1.getId(), updatedInvoiceFromDatabase.getId());
+    assertEquals(invoice1Update, updatedInvoiceFromDatabase);
   }
 }

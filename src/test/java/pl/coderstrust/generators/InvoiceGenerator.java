@@ -9,13 +9,12 @@ import java.util.Random;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.model.InvoiceEntry;
-import pl.coderstrust.model.InvoiceType;
 
 public class InvoiceGenerator {
+  private static Random random = new Random();
+  
   public static Invoice getRandomInvoice() {
-    Random random = new Random();
     Invoice sampleInvoice = getSampleInvoice();
-
     String sampleInvoiceId = sampleInvoice.getId() + String.valueOf(random.nextInt(50));
     String sampleSellerName = sampleInvoice.getSeller().getName()
         + String.valueOf(random.nextInt(50));
@@ -32,20 +31,17 @@ public class InvoiceGenerator {
         sampleInvoice.getBuyer().getAccountNumber(),
         sampleInvoice.getBuyer().getContactDetails());
 
-    Invoice randomInvoice = new Invoice(sampleInvoiceId, sampleInvoice.getType(),
+    return new Invoice(sampleInvoiceId, sampleInvoice.getType(),
         sampleInvoice.getIssueDate(), sampleInvoice.getDueDate(), sampleSeller,
         sampleBuyer, sampleInvoice.getEntries(), sampleInvoice.getTotalNetValue(),
         sampleInvoice.getTotalGrossValue(), sampleInvoice.getComments());
-
-    return randomInvoice;
   }
 
-  public static Invoice getSampleInvoice() {
+  private static Invoice getSampleInvoice() {
     String sampleInvoiceId = "sampleID:";
     String sampleSellerName = "sampleSeller";
     String sampleBuyerName = "sampleBuyer";
 
-    InvoiceType sampleInvoiceType = STANDARD;
     LocalDate sampleIssueDate = LocalDate.of(0001, 01, 01);
     LocalDate sampleDueDate = LocalDate.of(0001, 01, 01);
 
@@ -57,11 +53,10 @@ public class InvoiceGenerator {
     Company sampleBuyer = CompanyGenerator.getSampleCompany(sampleBuyerName);
     List<InvoiceEntry> sampleEntries = InvoiceEntriesGenerator.getSampleInvoiceEntries();
 
-    Invoice sampleInvoice = new Invoice(sampleInvoiceId, sampleInvoiceType, sampleIssueDate,
+    Invoice invoice = new Invoice(sampleInvoiceId, STANDARD, sampleIssueDate,
         sampleDueDate, sampleSeller, sampleBuyer, sampleEntries, sampleTotalNetValue,
         sampleTotalGrossValue, sampleComments);
-
-    return sampleInvoice;
+    return invoice;
   }
 
   public static Invoice getRandomInvoiceWithSpecificSellerName(String sellerName) {
