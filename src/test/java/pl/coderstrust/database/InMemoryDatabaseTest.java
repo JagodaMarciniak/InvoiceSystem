@@ -3,6 +3,7 @@ package pl.coderstrust.database;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -215,5 +216,38 @@ class InMemoryDatabaseTest {
     //then
     assertEquals(invoice1.getId(), updatedInvoiceFromDatabase.getId());
     assertEquals(invoice1Update, updatedInvoiceFromDatabase);
+  }
+
+  @Test
+  void shouldThrowExceptionIfMethodInvoiceExistInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class, () -> testDatabase.invoiceExists(null));
+  }
+
+  @Test
+  void shouldThrowExceptionIfMethodSaveInvoiceInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class, () -> testDatabase.saveInvoice(null));
+  }
+
+  @Test
+  void shouldThrowExceptionIfMethodDeleteInvoiceInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class, () -> testDatabase.deleteInvoice(null));
+  }
+
+  @Test
+  void shouldThrowExceptionIfMethodFindOneInvoiceInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class, () -> testDatabase.findOneInvoice(null));
+  }
+
+  @Test
+  void shouldThrowExceptionIfMethodFindAllInvoicesBySellerNameInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class,
+        () -> testDatabase.findAllInvoicesBySellerName(null));
+
+  }
+
+  @Test
+  void shouldThrowExceptionIfMethodFindAllInvoicesByBuyerNameInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class,
+        () -> testDatabase.findAllInvoicesByBuyerName(null));
   }
 }

@@ -56,7 +56,8 @@ public class InvoiceGenerator {
     Invoice invoice = new Invoice(sampleInvoiceId, STANDARD, sampleIssueDate,
         sampleDueDate, sampleSeller, sampleBuyer, sampleEntries, sampleTotalNetValue,
         sampleTotalGrossValue, sampleComments);
-    return invoice;
+    return
+        invoice;
   }
 
   public static Invoice getRandomInvoiceWithSpecificSellerName(String sellerName) {
