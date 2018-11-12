@@ -52,9 +52,9 @@ class InMemoryDatabaseTest {
   void shouldSaveInvoiceIntoDatabase() throws DatabaseOperationException {
     //given
     Invoice expectedInvoice1 = InvoiceGenerator.getRandomInvoice();
-    testDatabase.saveInvoice(expectedInvoice1);
 
     //when
+    testDatabase.saveInvoice(expectedInvoice1);
     boolean invoiceExists = testDatabase.invoiceExists(expectedInvoice1.getId());
 
     //then
@@ -66,9 +66,9 @@ class InMemoryDatabaseTest {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
     testDatabase.saveInvoice(invoice);
-    testDatabase.deleteInvoice(invoice.getId());
 
     //when
+    testDatabase.deleteInvoice(invoice.getId());
     boolean invoiceExists = testDatabase.invoiceExists(invoice.getId());
 
     //then
@@ -79,9 +79,9 @@ class InMemoryDatabaseTest {
   void shouldDeleteInvoiceFromDatabaseIfAbsent() throws DatabaseOperationException {
     //given
     String invoiceId = "1";
-    testDatabase.deleteInvoice(invoiceId);
 
     //when
+    testDatabase.deleteInvoice(invoiceId);
     boolean invoiceExists = testDatabase.invoiceExists(invoiceId);
 
     //then
@@ -123,22 +123,22 @@ class InMemoryDatabaseTest {
   @Test
   void shouldFindAllInvoices() throws DatabaseOperationException {
     //given
-    List<Invoice> generatedInvoiceList = new ArrayList<>();
+    List<Invoice> generatedInvoices = new ArrayList<>();
 
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
-    generatedInvoiceList.add(invoice1);
+    generatedInvoices.add(invoice1);
     testDatabase.saveInvoice(invoice1);
 
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
 
-    generatedInvoiceList.add(invoice2);
+    generatedInvoices.add(invoice2);
     testDatabase.saveInvoice(invoice2);
 
     //when
-    List<Invoice> actualInvoiceList = testDatabase.findAllInvoices();
+    List<Invoice> actualInvoices = testDatabase.findAllInvoices();
 
     //then
-    assertArrayEquals(generatedInvoiceList.toArray(), actualInvoiceList.toArray());
+    assertArrayEquals(generatedInvoices.toArray(), actualInvoices.toArray());
   }
 
   @Test
