@@ -5,21 +5,22 @@ import static pl.coderstrust.model.InvoiceType.STANDARD;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.model.InvoiceEntry;
 
 public class InvoiceGenerator {
-  private static Random random = new Random();
-  
+  private static AtomicInteger atomicInteger = new AtomicInteger();
+
   public static Invoice getRandomInvoice() {
     Invoice sampleInvoice = getSampleInvoice();
-    String sampleInvoiceId = sampleInvoice.getId() + String.valueOf(random.nextInt(50));
+    String sampleInvoiceId = sampleInvoice.getId()
+        + String.valueOf(atomicInteger.incrementAndGet());
     String sampleSellerName = sampleInvoice.getSeller().getName()
-        + String.valueOf(random.nextInt(50));
+        + String.valueOf(atomicInteger.incrementAndGet());
     String sampleBuyerName = sampleInvoice.getBuyer().getName()
-        + String.valueOf(random.nextInt(50));
+        + String.valueOf(atomicInteger.incrementAndGet());
 
     Company sampleSeller = new Company(sampleSellerName,
         sampleInvoice.getSeller().getTaxIdentificationNumber(),

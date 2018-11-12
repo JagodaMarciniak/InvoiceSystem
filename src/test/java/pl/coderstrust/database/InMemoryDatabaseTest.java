@@ -130,6 +130,7 @@ class InMemoryDatabaseTest {
     testDatabase.saveInvoice(invoice1);
 
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
+
     generatedInvoiceList.add(invoice2);
     testDatabase.saveInvoice(invoice2);
 
