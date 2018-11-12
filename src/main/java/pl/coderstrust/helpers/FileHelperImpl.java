@@ -20,7 +20,7 @@ public class FileHelperImpl implements FileHelper {
       throw new IllegalArgumentException("lineNumber cannot be lower than 1");
     }
     if (!exists()) {
-      throw new FileNotFoundException("FileHelper does not exist");
+      throw new FileNotFoundException("File does not exist");
     }
     if (isEmpty()) {
       throw new FileHelperException("Can't delete a line in an empty file");
@@ -71,7 +71,7 @@ public class FileHelperImpl implements FileHelper {
   @Override
   public void clear() throws IOException {
     if (!exists()) {
-      throw new FileNotFoundException("FileHelper does not exist");
+      throw new FileNotFoundException("File does not exist");
     }
     FileUtils.write(new java.io.File(filePath), "");
   }
@@ -91,7 +91,7 @@ public class FileHelperImpl implements FileHelper {
   @Override
   public boolean isEmpty() throws IOException {
     if (!exists()) {
-      throw new FileNotFoundException("FileHelper does not exist");
+      throw new FileNotFoundException("File does not exist");
     }
     return new java.io.File(filePath).length() == 0;
   }

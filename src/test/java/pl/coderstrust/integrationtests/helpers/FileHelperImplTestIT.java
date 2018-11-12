@@ -24,8 +24,8 @@ import pl.coderstrust.helpers.FileHelperImpl;
 
 class FileHelperImplTestIT {
 
-  private static final String inputFile = "src\\test\\resources\\helpers\\input_file";
-  private static final String expectedFile = "src\\test\\resources\\helpers\\expected_file";
+  private static final String inputFile = String.format("src%1$stest%1$sresources%1$shelpers%1$sinput_file", File.separator);
+  private static final String expectedFile = String.format("src%1$stest%1$sresources%1$shelpers%1$sexpected_file", File.separator);
 
   @BeforeEach
   private void removeTestFiles() {
@@ -45,12 +45,12 @@ class FileHelperImplTestIT {
     //given
     createFile(inputFile, Arrays.asList("1", "2", "3", "4"));
     createFile(expectedFile, Arrays.asList("1", "3", "4"));
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
     File resultFile = new File(inputFile);
     File expectedFile = new File(FileHelperImplTestIT.expectedFile);
 
     //when
-    fileHelperHelper.removeLine(2);
+    fileHelper.removeLine(2);
 
     //then
     assertTrue(FileUtils.contentEquals(expectedFile, resultFile));
@@ -83,13 +83,13 @@ class FileHelperImplTestIT {
   @Test
   void shouldWriteLinesToFile() throws IOException {
     //given
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
     createFile(expectedFile, Arrays.asList("1", "2", "3"));
     File resultFile = new File(inputFile);
     File expectedFile = new File(FileHelperImplTestIT.expectedFile);
 
     //when
-    fileHelperHelper.writeLines(Arrays.asList("1", "2", "3"));
+    fileHelper.writeLines(Arrays.asList("1", "2", "3"));
 
     //then
     assertTrue(FileUtils.contentEquals(expectedFile, resultFile));
@@ -103,16 +103,16 @@ class FileHelperImplTestIT {
   @Test
   void shouldWriteLineToFile() throws IOException {
     //given
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
     createFile(expectedFile, Arrays.asList("This", "is", "a", "test"));
     final File resultFile = new File(inputFile);
     final File expectedFile = new File(FileHelperImplTestIT.expectedFile);
 
     //when
-    fileHelperHelper.writeLine("This");
-    fileHelperHelper.writeLine("is");
-    fileHelperHelper.writeLine("a");
-    fileHelperHelper.writeLine("test");
+    fileHelper.writeLine("This");
+    fileHelper.writeLine("is");
+    fileHelper.writeLine("a");
+    fileHelper.writeLine("test");
 
     //then
     assertTrue(FileUtils.contentEquals(expectedFile, resultFile));
@@ -128,10 +128,10 @@ class FileHelperImplTestIT {
     //given
     createFile(inputFile, Arrays.asList("1", "2", "3"));
     List<String> expected = new ArrayList<>(Arrays.asList("1", "2", "3"));
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
 
     //when
-    List<String> result = fileHelperHelper.readLines();
+    List<String> result = fileHelper.readLines();
 
     //then
     assertEquals(expected, result);
@@ -146,13 +146,13 @@ class FileHelperImplTestIT {
   void shouldClearDataFromExistingFile() throws IOException {
     //given
     createFile(inputFile, Arrays.asList("1", "2", "3"));
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
     File resultFile = new File(inputFile);
     File expectedFile = new File(FileHelperImplTestIT.expectedFile);
     expectedFile.createNewFile();
 
     //when
-    fileHelperHelper.clear();
+    fileHelper.clear();
 
     //then
     assertTrue(FileUtils.contentEquals(expectedFile, resultFile));
@@ -167,10 +167,10 @@ class FileHelperImplTestIT {
   void shouldDeleteExistingFile() throws IOException {
     //given
     createFile(inputFile, Arrays.asList("1", "2", "3"));
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
 
     //when
-    fileHelperHelper.delete();
+    fileHelper.delete();
     boolean result = new File(inputFile).exists();
 
     //
@@ -180,10 +180,10 @@ class FileHelperImplTestIT {
   @Test
   void shouldReturnCorrectResultWhenTryingToDeleteNotExistingFile() {
     //given
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
 
     //when
-    fileHelperHelper.delete();
+    fileHelper.delete();
     boolean result = new File(inputFile).exists();
 
     //
@@ -194,10 +194,10 @@ class FileHelperImplTestIT {
   void shouldReturnTrueWhenFileExist() throws IOException {
     //given
     createFile(inputFile, Arrays.asList("1", "2", "3"));
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
 
     //when
-    boolean result = fileHelperHelper.exists();
+    boolean result = fileHelper.exists();
 
     //then
     assertTrue(result);
@@ -206,10 +206,10 @@ class FileHelperImplTestIT {
   @Test
   void shouldReturnFalseWhenFileNotExist() {
     //given
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
 
     //when
-    boolean result = fileHelperHelper.exists();
+    boolean result = fileHelper.exists();
 
     //then
     assertFalse(result);
@@ -219,10 +219,10 @@ class FileHelperImplTestIT {
   void shouldReturnTrueWhenFileIsEmpty() throws IOException {
     //given
     new File(inputFile).createNewFile();
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
 
     //when
-    boolean result = fileHelperHelper.isEmpty();
+    boolean result = fileHelper.isEmpty();
 
     //then
     assertTrue(result);
@@ -232,10 +232,10 @@ class FileHelperImplTestIT {
   void shouldReturnFalseWhenFileIsNotEmpty() throws IOException {
     //given
     createFile(inputFile, Arrays.asList("1", "2", "3"));
-    FileHelper fileHelperHelper = new FileHelperImpl(inputFile);
+    FileHelper fileHelper = new FileHelperImpl(inputFile);
 
     //when
-    boolean result = fileHelperHelper.isEmpty();
+    boolean result = fileHelper.isEmpty();
 
     //then
     assertFalse(result);
