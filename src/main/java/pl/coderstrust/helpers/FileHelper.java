@@ -1,9 +1,9 @@
-package pl.coderstrust.filehelper;
+package pl.coderstrust.helpers;
 
 import java.io.IOException;
 import java.util.List;
 
-public interface File {
+public interface FileHelper {
 
   void writeLines(List<String> lines) throws IOException;
 

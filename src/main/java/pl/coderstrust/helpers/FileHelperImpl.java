@@ -1,4 +1,4 @@
-package pl.coderstrust.filehelperimpl;
+package pl.coderstrust.helpers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,11 +8,9 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
-import pl.coderstrust.filehelper.EmptyFileException;
-import pl.coderstrust.filehelper.File;
 
 @AllArgsConstructor
-public class FileHelper implements File {
+public class FileHelperImpl implements FileHelper {
 
   @NonNull
   private String filePath;
@@ -22,10 +20,10 @@ public class FileHelper implements File {
       throw new IllegalArgumentException("lineNumber cannot be lower than 1");
     }
     if (!exists()) {
-      throw new FileNotFoundException("File does not exist");
+      throw new FileNotFoundException("FileHelper does not exist");
     }
     if (isEmpty()) {
-      throw new EmptyFileException("Can't delete a line in an empty file");
+      throw new FileHelperException("Can't delete a line in an empty file");
     }
     RandomAccessFile file = new RandomAccessFile(filePath, "rw");
 
@@ -73,7 +71,7 @@ public class FileHelper implements File {
   @Override
   public void clear() throws IOException {
     if (!exists()) {
-      throw new FileNotFoundException("File does not exist");
+      throw new FileNotFoundException("FileHelper does not exist");
     }
     FileUtils.write(new java.io.File(filePath), "");
   }
@@ -93,7 +91,7 @@ public class FileHelper implements File {
   @Override
   public boolean isEmpty() throws IOException {
     if (!exists()) {
-      throw new FileNotFoundException("File does not exist");
+      throw new FileNotFoundException("FileHelper does not exist");
     }
     return new java.io.File(filePath).length() == 0;
   }
