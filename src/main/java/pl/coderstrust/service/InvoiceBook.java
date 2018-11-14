@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @RequiredArgsConstructor
 public class InvoiceBook {
   @NonNull
@@ -50,7 +51,6 @@ public class InvoiceBook {
   public void deleteInvoice(@NonNull String invoiceId) throws InvoiceBookOperationException {
     try {
       if (database.invoiceExists(invoiceId)) {
-        Invoice invoice = database.findOneInvoice(invoiceId);
         database.deleteInvoice(invoiceId);
       } else {
         throw new InvoiceBookOperationException("Invoice with id " + invoiceId + " does not exist");

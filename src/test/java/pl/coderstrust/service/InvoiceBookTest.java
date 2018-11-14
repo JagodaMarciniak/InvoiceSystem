@@ -13,13 +13,15 @@ import pl.coderstrust.model.Invoice;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceBookTest {
   private Invoice testInvoice = InvoiceGenerator.getRandomInvoice();
+  private String invoiceId = testInvoice.getId();
 
   @Mock
   private Database testDatabase;
@@ -62,8 +64,8 @@ class InvoiceBookTest {
   @Test
   void shouldTestAddingNewInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
-    String id = testInvoice.getId();
-    Invoice expected = testDatabase.findOneInvoice(id);
+
+    Invoice expected = testDatabase.findOneInvoice(invoiceId);
     when(testDatabase.saveInvoice(testInvoice)).thenReturn(expected);
 
     //when
@@ -74,27 +76,27 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestInvoiceDeletion() throws DatabaseOperationException {
+  void shouldTestInvoiceDeletion() throws DatabaseOperationException,
+      InvoiceBookOperationException {
     //given
-    String id = testInvoice.getId();
-    doNothing().when(testDatabase).deleteInvoice(id);
-    when(testDatabase.invoiceExists(id)).thenReturn(false);
-    boolean isInvoiceExistAfterDeletion = testDatabase.invoiceExists(id);
+    when(testDatabase.invoiceExists(invoiceId)).thenReturn(true);
+    doNothing().when(testDatabase).deleteInvoice(invoiceId);
+
+    //when
+    invoiceBook.deleteInvoice(invoiceId);
 
     //then
-    assertFalse(isInvoiceExistAfterDeletion);
-    verify(testDatabase, times(1)).deleteInvoice(id);
+    verify(testDatabase, times(1)).deleteInvoice(invoiceId);
   }
 
   @Test
   void shouldTestGettingSingleInvoiceById() throws InvoiceBookOperationException,
       DatabaseOperationException {
     //given
-    String id = testInvoice.getId();
-    when(testDatabase.findOneInvoice(id)).thenReturn(testInvoice);
+    when(testDatabase.findOneInvoice(invoiceId)).thenReturn(testInvoice);
 
     //when
-    Invoice actual = invoiceBook.getSingleInvoiceById(id);
+    Invoice actual = invoiceBook.getSingleInvoiceById(invoiceId);
 
     //then
     assertEquals(testInvoice, actual);
@@ -103,17 +105,13 @@ class InvoiceBookTest {
   @Test
   void shouldTestInvoiceUpdating() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
-    String id = testInvoice.getId();
-    doNothing().when(testDatabase).deleteInvoice(id);
-    Invoice expected = testDatabase.findOneInvoice(testInvoice.getId());
-    when(testDatabase.saveInvoice(testInvoice)).thenReturn(expected);
+    when(testDatabase.saveInvoice(testInvoice)).thenReturn(testInvoice);
 
     //when
-    Invoice actual = invoiceBook.getSingleInvoiceById(id);
+    invoiceBook.updateInvoice(testInvoice);
 
     //then
-    verify(testDatabase, times(1)).deleteInvoice(id);
-    assertEquals(expected, actual);
+    verify(testDatabase, times(1)).saveInvoice(testInvoice);
   }
 
   @Test
@@ -136,7 +134,6 @@ class InvoiceBookTest {
   public void shouldThrowExceptionWhenGettingSingleInvoiceByIdWentWrong() throws
       DatabaseOperationException {
     //given
-    String invoiceId = "inv1";
     when(testDatabase.findOneInvoice(invoiceId)).thenThrow(new DatabaseOperationException("Exception while getting single invoice by id"));
 
     //then
@@ -190,7 +187,12 @@ class InvoiceBookTest {
 
     //then
     assertThrows(InvoiceBookOperationException.class, () ->
-        invoiceBook.deleteInvoice("123"));
+        invoiceBook.deleteInvoice(invoiceId));
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenInvoiceWithGivenIdDoesNotExist() {
+    String dupa = "DUPA";
   }
 
   @Test
