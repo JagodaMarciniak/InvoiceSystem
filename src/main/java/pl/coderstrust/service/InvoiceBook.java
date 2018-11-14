@@ -56,17 +56,18 @@ public class InvoiceBook {
         throw new InvoiceBookOperationException("Invoice with id " + invoiceId + " does not exist");
       }
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("ExceptionŁ while deleting invoice", e);
+      throw new InvoiceBookOperationException("Exception while deleting invoice", e);
     }
   }
 
-  public List<Invoice> getAllInvoicesInGivenDateRange(LocalDate startDate, LocalDate endDate) throws InvoiceBookOperationException {
+  public List<Invoice> getAllInvoicesInGivenDateRange(@NonNull LocalDate startDate, @NonNull
+      LocalDate endDate) throws InvoiceBookOperationException {
     try {
       return database.findAllInvoices().stream().filter(invoice -> invoice.getIssueDate()
           .compareTo(startDate) >= 0 && invoice.getIssueDate().compareTo(endDate) <= 0)
           .collect(Collectors.toList());
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Error while getting all invoices");
+      throw new InvoiceBookOperationException("Exception while getting all invoices");
     }
   }
 }
