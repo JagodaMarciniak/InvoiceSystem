@@ -1,14 +1,16 @@
 package pl.coderstrust.generators;
 
-import static pl.coderstrust.model.InvoiceType.STANDARD;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.model.InvoiceEntry;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static pl.coderstrust.model.InvoiceType.STANDARD;
 
 public class InvoiceGenerator {
   private static AtomicInteger atomicInteger = new AtomicInteger();
@@ -99,5 +101,33 @@ public class InvoiceGenerator {
         randomInvoice.getSeller(), randomInvoice.getBuyer(), randomInvoice.getEntries(),
         randomInvoice.getTotalNetValue(), randomInvoice.getTotalGrossValue(),
         randomInvoice.getComments());
+  }
+
+  public static Invoice getRandomInvoiceWithSpecificIssueDate(LocalDate issueDate) {
+    Invoice randomInvoice = getRandomInvoice();
+
+    return new Invoice(randomInvoice.getId(), randomInvoice.getType(),
+        issueDate, randomInvoice.getDueDate(),
+        randomInvoice.getSeller(), randomInvoice.getBuyer(), randomInvoice.getEntries(),
+        randomInvoice.getTotalNetValue(), randomInvoice.getTotalGrossValue(),
+        randomInvoice.getComments());
+  }
+
+  public static List<Invoice> getInvoiceListWithSpecificDateRange(LocalDate startDate, LocalDate
+      endDate) {
+    List<Invoice> invoiceList = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      invoiceList.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(startDate));
+      invoiceList.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(endDate));
+    }
+    return invoiceList;
+  }
+
+  public static List<Invoice> getRandomInvoiceList() {
+    List<Invoice> randomInvoiceList = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      randomInvoiceList.add(InvoiceGenerator.getRandomInvoice());
+    }
+    return randomInvoiceList;
   }
 }

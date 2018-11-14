@@ -35,20 +35,23 @@ public class InvoiceBook {
     try {
       return database.saveInvoice(invoice);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Database doesn't exist");
+      throw new InvoiceBookOperationException("Exception while adding new invoice");
     }
   }
 
-  public void updateInvoice(@NonNull Invoice invoice) throws
-      InvoiceBookOperationException, DatabaseOperationException {
-    database.saveInvoice(invoice);
+  public void updateInvoice(@NonNull Invoice invoice) throws InvoiceBookOperationException {
+    try {
+      database.saveInvoice(invoice);
+    } catch (DatabaseOperationException e) {
+      throw new InvoiceBookOperationException("Exception while updating invoice");
+    }
   }
 
   public void deleteInvoice(@NonNull String invoiceId) throws InvoiceBookOperationException {
     try {
       if (database.invoiceExists(invoiceId)) {
         Invoice invoice = database.findOneInvoice(invoiceId);
-        database.deleteInvoice(invoice);
+        database.deleteInvoice(invoiceId);
       } else {
         throw new InvoiceBookOperationException("Invoice with id " + invoiceId + " does not exist");
       }
@@ -63,7 +66,7 @@ public class InvoiceBook {
           .compareTo(startDate) >= 0 && invoice.getIssueDate().compareTo(endDate) <= 0)
           .collect(Collectors.toList());
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Database error");
+      throw new InvoiceBookOperationException("Error while getting all invoices");
     }
   }
 }

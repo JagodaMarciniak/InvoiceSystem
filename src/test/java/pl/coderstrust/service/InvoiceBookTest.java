@@ -7,13 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.coderstrust.database.Database;
 import pl.coderstrust.database.DatabaseOperationException;
-import pl.coderstrust.generators.CompanyGenerator;
-import pl.coderstrust.generators.InvoiceEntriesGenerator;
-import pl.coderstrust.generators.InvoiceListGenerator;
+import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
-import pl.coderstrust.model.InvoiceType;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,10 +19,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceBookTest {
-  private Invoice invoice = new Invoice("5678", InvoiceType.STANDARD, LocalDate.of(2018, 10, 24), LocalDate
-      .of(2019, 1, 1), CompanyGenerator.getSampleCompany(), CompanyGenerator.getSampleCompany(),
-      InvoiceEntriesGenerator.getSampleInvoiceEntries(), new BigDecimal(400), new BigDecimal
-      (492), "payment deadline: 12/12/2018");
+  private Invoice invoice = InvoiceGenerator.getRandomInvoice();
+
   @Mock
   private Database database;
 
@@ -36,8 +30,8 @@ class InvoiceBookTest {
   @Test
   void shouldTestGettingAllInvoices() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
-    List<Invoice> invoices = InvoiceListGenerator.getSampleInvoiceList();
-    when(database.findAllInvoices()).thenReturn(invoices);
+    List<Invoice> invoices = InvoiceGenerator.
+        when(database.findAllInvoices()).thenReturn(invoices);
 
     //when
     List<Invoice> actual = invoiceBook.getAllInvoices();
@@ -54,7 +48,8 @@ class InvoiceBookTest {
     //given
     LocalDate startDate = LocalDate.of(2018, 10, 24);
     LocalDate endDate = LocalDate.of(2019, 10, 24);
-    List<Invoice> invoices = InvoiceListGenerator.getSampleInvoiceList();
+    List<Invoice> invoices = InvoiceGenerator.getInvoiceListWithSpecificDateRange(startDate,
+        endDate);
     when(database.findAllInvoices()).thenReturn(invoices);
 
     //when
@@ -67,7 +62,8 @@ class InvoiceBookTest {
   @Test
   void shouldTestAddingNewInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
-    Invoice expected = database.findOneInvoice(invoice.getId());
+
+    Invoice expected = database.findOneInvoice();
     when(database.saveInvoice(invoice)).thenReturn(expected);
 
     //when
