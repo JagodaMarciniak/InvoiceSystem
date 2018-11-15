@@ -1,16 +1,15 @@
 package pl.coderstrust.generators;
 
-import pl.coderstrust.model.Company;
-import pl.coderstrust.model.Invoice;
-import pl.coderstrust.model.InvoiceEntry;
+import static pl.coderstrust.model.InvoiceType.STANDARD;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static pl.coderstrust.model.InvoiceType.STANDARD;
+import pl.coderstrust.model.Company;
+import pl.coderstrust.model.Invoice;
+import pl.coderstrust.model.InvoiceEntry;
 
 public class InvoiceGenerator {
   private static AtomicInteger atomicInteger = new AtomicInteger();

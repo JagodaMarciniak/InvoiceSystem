@@ -1,5 +1,14 @@
 package pl.coderstrust.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,14 +18,6 @@ import pl.coderstrust.database.Database;
 import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceBookTest {
@@ -44,7 +45,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void ShouldTestGettingAllInvoicesInGivenDateRange() throws
+  void shouldTestGettingAllInvoicesInGivenDateRange() throws
       DatabaseOperationException, InvoiceBookOperationException {
 
     //given
@@ -150,8 +151,7 @@ class InvoiceBookTest {
   public void shouldThrowExceptionWhenAddingNewInvoiceWentWrong() throws
       DatabaseOperationException {
     //given
-    when(testDatabase.saveInvoice(testInvoice)).thenThrow(new DatabaseOperationException
-        ("Exception while adding new invoice"));
+    when(testDatabase.saveInvoice(testInvoice)).thenThrow(new DatabaseOperationException("Exception while adding new invoice"));
 
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.addNewInvoice(testInvoice));
@@ -167,8 +167,7 @@ class InvoiceBookTest {
   public void shouldThrowExceptionWhenUpdatingInvoiceWentWrong() throws
       DatabaseOperationException {
     //given
-    when(testDatabase.saveInvoice(testInvoice)).thenThrow(new DatabaseOperationException
-        ("Exception while adding new invoice"));
+    when(testDatabase.saveInvoice(testInvoice)).thenThrow(new DatabaseOperationException("Exception while adding new invoice"));
 
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.updateInvoice(testInvoice));
@@ -195,10 +194,8 @@ class InvoiceBookTest {
     //given
     LocalDate startDate = testInvoice.getIssueDate();
     LocalDate endDate = testInvoice.getIssueDate();
-    assertThrows(IllegalArgumentException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange
-        (null, endDate));
-    assertThrows(IllegalArgumentException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange
-        (startDate, null));
+    assertThrows(IllegalArgumentException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(null, endDate));
+    assertThrows(IllegalArgumentException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, null));
   }
 
   @Test
@@ -207,12 +204,10 @@ class InvoiceBookTest {
     //given
     LocalDate startDate = testInvoice.getIssueDate();
     LocalDate endDate = testInvoice.getIssueDate();
-    when(testDatabase.findAllInvoices()).thenThrow(new DatabaseOperationException
-        ("Exception while getting all invoices"));
+    when(testDatabase.findAllInvoices()).thenThrow(new DatabaseOperationException("Exception while getting all invoices"));
 
     //then
-    assertThrows(InvoiceBookOperationException.class, () -> invoiceBook
-        .getAllInvoicesInGivenDateRange(startDate, endDate));
+    assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, endDate));
     verify(testDatabase, times(1)).findAllInvoices();
   }
 }

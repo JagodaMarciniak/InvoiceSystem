@@ -1,14 +1,13 @@
 package pl.coderstrust.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.coderstrust.database.Database;
 import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
