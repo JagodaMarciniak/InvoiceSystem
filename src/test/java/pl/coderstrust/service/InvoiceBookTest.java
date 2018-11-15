@@ -181,18 +181,13 @@ class InvoiceBookTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenDataBaseIsNull() {
+  public void shouldThrowExceptionWhenMethodDeleteInvoiceWentWrong() throws
+      DatabaseOperationException {
     //given
-    testDatabase = null;
+    when(testDatabase.invoiceExists(invoiceId)).thenThrow(new DatabaseOperationException("Exception while deleting invoice"));
 
     //then
-    assertThrows(InvoiceBookOperationException.class, () ->
-        invoiceBook.deleteInvoice(invoiceId));
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenInvoiceWithGivenIdDoesNotExist() {
-    String dupa = "DUPA";
+    assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.deleteInvoice(invoiceId));
   }
 
   @Test
