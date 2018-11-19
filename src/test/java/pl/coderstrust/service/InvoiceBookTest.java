@@ -1,8 +1,10 @@
 package pl.coderstrust.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -21,8 +23,8 @@ import pl.coderstrust.model.Invoice;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceBookTest {
-  private Invoice testInvoice = InvoiceGenerator.getRandomInvoice();
-  private String invoiceId = testInvoice.getId();
+  private final Invoice testInvoice = InvoiceGenerator.getRandomInvoice();
+  private final String invoiceId = testInvoice.getId();
 
   @Mock
   private Database testDatabase;
@@ -40,7 +42,7 @@ class InvoiceBookTest {
     List<Invoice> actual = invoiceBook.getAllInvoices();
 
     //then
-    assertEquals(invoices, actual);
+    assertSame(invoices, actual);
     verify(testDatabase, times(1)).findAllInvoices();
   }
 
@@ -62,25 +64,24 @@ class InvoiceBookTest {
     assertEquals(invoices, actual);
   }
 
+  //???
   @Test
-  void shouldTestAddingNewInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldTestAddingInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
-
     Invoice expected = testDatabase.findOneInvoice(invoiceId);
     when(testDatabase.saveInvoice(testInvoice)).thenReturn(expected);
 
     //when
-    Invoice actual = invoiceBook.addNewInvoice(testInvoice);
+    Invoice actual = invoiceBook.addInvoice(testInvoice);
 
     //then
-    assertEquals(expected, actual);
+    assertSame(expected, actual);
   }
 
   @Test
   void shouldTestInvoiceDeletion() throws DatabaseOperationException,
       InvoiceBookOperationException {
     //given
-    when(testDatabase.invoiceExists(invoiceId)).thenReturn(true);
     doNothing().when(testDatabase).deleteInvoice(invoiceId);
 
     //when
@@ -100,7 +101,7 @@ class InvoiceBookTest {
     Invoice actual = invoiceBook.getSingleInvoiceById(invoiceId);
 
     //then
-    assertEquals(testInvoice, actual);
+    assertSame(testInvoice, actual);
   }
 
   @Test
@@ -119,15 +120,14 @@ class InvoiceBookTest {
   public void shouldThrowExceptionWhenGettingAllInvoicesWentWrong() throws
       DatabaseOperationException {
     //given
-    when(testDatabase.findAllInvoices()).thenThrow(new DatabaseOperationException("Exception while getting all invoices"));
-
+    doThrow(DatabaseOperationException.class).when(testDatabase).findAllInvoices();
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoices());
     verify(testDatabase, times(1)).findAllInvoices();
   }
 
   @Test
-  public void shouldThrowExceptionWhenMethodFindAllInvoicesInvokedWithNull() {
+  public void shouldThrowExceptionWhenGetSingleInvoiceByIdInvokedWithNull() {
     assertThrows(IllegalArgumentException.class, () -> invoiceBook.getSingleInvoiceById(null));
   }
 
@@ -135,7 +135,7 @@ class InvoiceBookTest {
   public void shouldThrowExceptionWhenGettingSingleInvoiceByIdWentWrong() throws
       DatabaseOperationException {
     //given
-    when(testDatabase.findOneInvoice(invoiceId)).thenThrow(new DatabaseOperationException("Exception while getting single invoice by id"));
+    doThrow(DatabaseOperationException.class).when(testDatabase).findOneInvoice(invoiceId);
 
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getSingleInvoiceById(invoiceId));
@@ -143,23 +143,23 @@ class InvoiceBookTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenMethodAddNewInvoiceInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> invoiceBook.addNewInvoice(null));
+  public void shouldThrowExceptionWhenAddInvoiceInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class, () -> invoiceBook.addInvoice(null));
   }
 
   @Test
-  public void shouldThrowExceptionWhenAddingNewInvoiceWentWrong() throws
+  public void shouldThrowExceptionWhenAddingInvoiceWentWrong() throws
       DatabaseOperationException {
     //given
-    when(testDatabase.saveInvoice(testInvoice)).thenThrow(new DatabaseOperationException("Exception while adding new invoice"));
+    doThrow(DatabaseOperationException.class).when(testDatabase).saveInvoice(testInvoice);
 
     //then
-    assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.addNewInvoice(testInvoice));
+    assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.addInvoice(testInvoice));
     verify(testDatabase, times(1)).saveInvoice(testInvoice);
   }
 
   @Test
-  public void shouldThrowExceptionWhenMethodUpdateInvoiceInvokedWithNull() {
+  public void shouldThrowExceptionWhenUpdateInvoiceInvokedWithNull() {
     assertThrows(IllegalArgumentException.class, () -> invoiceBook.updateInvoice(null));
   }
 
@@ -167,47 +167,60 @@ class InvoiceBookTest {
   public void shouldThrowExceptionWhenUpdatingInvoiceWentWrong() throws
       DatabaseOperationException {
     //given
-    when(testDatabase.saveInvoice(testInvoice)).thenThrow(new DatabaseOperationException("Exception while adding new invoice"));
-
+    doThrow(DatabaseOperationException.class).when(testDatabase).saveInvoice(testInvoice);
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.updateInvoice(testInvoice));
     verify(testDatabase, times(1)).saveInvoice(testInvoice);
   }
 
   @Test
-  public void shouldThrowExceptionWhenMethodDeleteInvoiceInvokedWithNull() {
+  public void shouldThrowExceptionWhenDeleteInvoiceInvokedWithNull() {
     assertThrows(IllegalArgumentException.class, () -> invoiceBook.deleteInvoice(null));
   }
 
+  //??
   @Test
-  public void shouldThrowExceptionWhenMethodDeleteInvoiceWentWrong() throws
+  public void shouldThrowExceptionWhenDeleteInvoiceWentWrong() throws
       DatabaseOperationException {
     //given
-    when(testDatabase.invoiceExists(invoiceId)).thenThrow(new DatabaseOperationException("Exception while deleting invoice"));
-
+    doThrow(DatabaseOperationException.class).when(testDatabase).deleteInvoice(invoiceId);
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.deleteInvoice(invoiceId));
   }
 
   @Test
-  public void shouldThrowExceptionWhenMethodGetAllInvoicesInGivenDateRangeInvokedWithNull() {
+  public void shouldThrowExceptionWhenGetAllInvoicesInGivenDateRangeInvokedWithNull() {
     //given
     LocalDate startDate = testInvoice.getIssueDate();
     LocalDate endDate = testInvoice.getIssueDate();
+
+    //then
     assertThrows(IllegalArgumentException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(null, endDate));
     assertThrows(IllegalArgumentException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, null));
   }
 
+  //???
   @Test
   public void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWentWrong() throws
       DatabaseOperationException {
     //given
     LocalDate startDate = testInvoice.getIssueDate();
     LocalDate endDate = testInvoice.getIssueDate();
-    when(testDatabase.findAllInvoices()).thenThrow(new DatabaseOperationException("Exception while getting all invoices"));
-
+    doThrow(DatabaseOperationException.class).when(testDatabase).findAllInvoices();
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, endDate));
     verify(testDatabase, times(1)).findAllInvoices();
+  }
+
+  //??
+  @Test
+  public void shouldThrowExceptionWhenGivenDateRangeIsWrong() throws DatabaseOperationException {
+    //given
+    LocalDate startDate = LocalDate.of(2019, 12, 01);
+    LocalDate endDate = LocalDate.of(2019, 12, 03);
+    doThrow(InvoiceBookOperationException.class).when(testDatabase).findAllInvoices();
+    assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, endDate));
+
+
   }
 }
