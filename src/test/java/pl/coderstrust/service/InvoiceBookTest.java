@@ -11,9 +11,9 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.coderstrust.database.Database;
@@ -29,8 +29,12 @@ class InvoiceBookTest {
   @Mock
   private Database testDatabase;
 
-  @InjectMocks
   private InvoiceBook invoiceBook;
+
+  @BeforeEach
+  void setUp() {
+    invoiceBook = new InvoiceBook(testDatabase);
+  }
 
   @Test
   void shouldTestGettingAllInvoices() throws DatabaseOperationException, InvoiceBookOperationException {
@@ -47,14 +51,11 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestGettingAllInvoicesInGivenDateRange() throws
-      DatabaseOperationException, InvoiceBookOperationException {
-
+  void shouldTestGettingAllInvoicesInGivenDateRange() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
     LocalDate startDate = LocalDate.of(2018, 10, 24);
     LocalDate endDate = LocalDate.of(2019, 10, 24);
-    List<Invoice> invoices = InvoiceGenerator.getInvoiceListWithSpecificDateRange(startDate,
-        endDate);
+    List<Invoice> invoices = InvoiceGenerator.getInvoiceListWithSpecificDateRange(startDate, endDate);
     when(testDatabase.findAllInvoices()).thenReturn(invoices);
 
     //when
@@ -64,7 +65,6 @@ class InvoiceBookTest {
     assertEquals(invoices, actual);
   }
 
-  //???
   @Test
   void shouldTestAddingInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
@@ -79,8 +79,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestInvoiceDeletion() throws DatabaseOperationException,
-      InvoiceBookOperationException {
+  void shouldTestInvoiceDeletion() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
     doNothing().when(testDatabase).deleteInvoice(invoiceId);
 
@@ -92,8 +91,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestGettingSingleInvoiceById() throws InvoiceBookOperationException,
-      DatabaseOperationException {
+  void shouldTestGettingSingleInvoiceById() throws InvoiceBookOperationException, DatabaseOperationException {
     //given
     when(testDatabase.findOneInvoice(invoiceId)).thenReturn(testInvoice);
 
@@ -117,10 +115,10 @@ class InvoiceBookTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenGettingAllInvoicesWentWrong() throws
-      DatabaseOperationException {
+  public void shouldThrowExceptionWhenGettingAllInvoicesWentWrong() throws DatabaseOperationException {
     //given
     doThrow(DatabaseOperationException.class).when(testDatabase).findAllInvoices();
+
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoices());
     verify(testDatabase, times(1)).findAllInvoices();
@@ -132,8 +130,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenGettingSingleInvoiceByIdWentWrong() throws
-      DatabaseOperationException {
+  public void shouldThrowExceptionWhenGettingSingleInvoiceByIdWentWrong() throws DatabaseOperationException {
     //given
     doThrow(DatabaseOperationException.class).when(testDatabase).findOneInvoice(invoiceId);
 
@@ -148,8 +145,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenAddingInvoiceWentWrong() throws
-      DatabaseOperationException {
+  public void shouldThrowExceptionWhenAddingInvoiceWentWrong() throws DatabaseOperationException {
     //given
     doThrow(DatabaseOperationException.class).when(testDatabase).saveInvoice(testInvoice);
 
@@ -164,10 +160,10 @@ class InvoiceBookTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenUpdatingInvoiceWentWrong() throws
-      DatabaseOperationException {
+  public void shouldThrowExceptionWhenUpdatingInvoiceWentWrong() throws DatabaseOperationException {
     //given
     doThrow(DatabaseOperationException.class).when(testDatabase).saveInvoice(testInvoice);
+
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.updateInvoice(testInvoice));
     verify(testDatabase, times(1)).saveInvoice(testInvoice);
@@ -178,12 +174,11 @@ class InvoiceBookTest {
     assertThrows(IllegalArgumentException.class, () -> invoiceBook.deleteInvoice(null));
   }
 
-  //??
   @Test
-  public void shouldThrowExceptionWhenDeleteInvoiceWentWrong() throws
-      DatabaseOperationException {
+  public void shouldThrowExceptionWhenDeleteInvoiceWentWrong() throws DatabaseOperationException {
     //given
     doThrow(DatabaseOperationException.class).when(testDatabase).deleteInvoice(invoiceId);
+
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.deleteInvoice(invoiceId));
   }
@@ -199,28 +194,25 @@ class InvoiceBookTest {
     assertThrows(IllegalArgumentException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, null));
   }
 
-  //???
   @Test
-  public void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWentWrong() throws
-      DatabaseOperationException {
+  public void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWentWrong() throws DatabaseOperationException {
     //given
     LocalDate startDate = testInvoice.getIssueDate();
     LocalDate endDate = testInvoice.getIssueDate();
     doThrow(DatabaseOperationException.class).when(testDatabase).findAllInvoices();
+
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, endDate));
     verify(testDatabase, times(1)).findAllInvoices();
   }
 
-  //??
   @Test
-  public void shouldThrowExceptionWhenGivenDateRangeIsWrong() throws DatabaseOperationException {
+  public void shouldThrowExceptionWhenGivenDateRangeIsWrong() {
     //given
     LocalDate startDate = LocalDate.of(2019, 12, 01);
-    LocalDate endDate = LocalDate.of(2019, 12, 03);
-    doThrow(InvoiceBookOperationException.class).when(testDatabase).findAllInvoices();
-    assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, endDate));
+    LocalDate endDate = LocalDate.of(2019, 11, 01);
 
-
+    //then
+    assertThrows(IllegalArgumentException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, endDate));
   }
 }

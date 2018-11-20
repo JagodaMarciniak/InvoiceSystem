@@ -10,7 +10,6 @@ import pl.coderstrust.database.Database;
 import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
 
-
 @RequiredArgsConstructor
 public class InvoiceBook {
   @NonNull
@@ -57,8 +56,8 @@ public class InvoiceBook {
   }
 
   public List<Invoice> getAllInvoicesInGivenDateRange(@NonNull LocalDate startDate, @NonNull LocalDate endDate) throws InvoiceBookOperationException {
-    if (startDate.until(endDate, ChronoUnit.DAYS) < 1) {
-      throw new InvoiceBookOperationException("Wrong date range");
+    if (startDate.until(endDate, ChronoUnit.DAYS) < 0) {
+      throw new IllegalArgumentException("The End date must be older or equal to start date");
     }
     try {
       return database.findAllInvoices().stream()
