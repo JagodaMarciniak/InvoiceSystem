@@ -166,7 +166,7 @@ class InMemoryDatabaseTest {
     expectedInvoices.add(invoice3);
 
     //when
-    List<Invoice> actualInvoices = testDatabase.findAllInvoicesBySellerName(sellerName);
+    List<Invoice> actualInvoices = testDatabase.findAllBySellerName(sellerName);
 
     //then
     assertArrayEquals(expectedInvoices.toArray(), actualInvoices.toArray());
@@ -197,7 +197,7 @@ class InMemoryDatabaseTest {
     expectedInvoices.add(invoice3);
 
     //when
-    List<Invoice> actualInvoices = testDatabase.findAllInvoicesByBuyerName(buyerName);
+    List<Invoice> actualInvoices = testDatabase.findAllByBuyerName(buyerName);
 
     //then
     assertArrayEquals(expectedInvoices.toArray(), actualInvoices.toArray());
@@ -242,12 +242,12 @@ class InMemoryDatabaseTest {
   @Test
   void shouldThrowExceptionIfMethodFindAllInvoicesBySellerNameInvokedWithNull() {
     assertThrows(IllegalArgumentException.class,
-        () -> testDatabase.findAllInvoicesBySellerName(null));
+        () -> testDatabase.findAllBySellerName(null));
   }
 
   @Test
   void shouldThrowExceptionIfMethodFindAllInvoicesByBuyerNameInvokedWithNull() {
     assertThrows(IllegalArgumentException.class,
-        () -> testDatabase.findAllInvoicesByBuyerName(null));
+        () -> testDatabase.findAllByBuyerName(null));
   }
 }

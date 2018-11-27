@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <springframework.data.version>2.1.2.RELEASE</springframework.data.version>
         <linkXRef>false</linkXRef>
         <jacocoPlugin.version>0.8.2</jacocoPlugin.version>
         <checkstylePlugin.version>3.0.0</checkstylePlugin.version>
@@ -32,6 +33,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${springframework.data.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
