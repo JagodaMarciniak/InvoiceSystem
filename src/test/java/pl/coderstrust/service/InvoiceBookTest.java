@@ -27,9 +27,9 @@ class InvoiceBookTest {
   private final String invoiceId = testInvoice.getId();
 
   @Mock
-  private Database testDatabase;
+  private Database database;
 
-  private InvoiceBook invoiceBook;
+  private InvoiceService invoiceService;
 
   @BeforeEach
   void setUp() {
@@ -37,7 +37,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestGettingAllInvoices() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldReturnAllInvoices() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
     List<Invoice> invoices = InvoiceGenerator.getRandomInvoiceList();
     when(testDatabase.findAllInvoices()).thenReturn(invoices);
@@ -87,7 +87,7 @@ class InvoiceBookTest {
     invoiceBook.deleteInvoice(invoiceId);
 
     //then
-    verify(testDatabase, times(1)).deleteInvoice(invoiceId);
+    verify(testDatabase).deleteInvoice(invoiceId);
   }
 
   @Test
@@ -111,7 +111,7 @@ class InvoiceBookTest {
     invoiceBook.updateInvoice(testInvoice);
 
     //then
-    verify(testDatabase, times(1)).saveInvoice(testInvoice);
+    verify(testDatabase).saveInvoice(testInvoice);
   }
 
   @Test
@@ -121,7 +121,7 @@ class InvoiceBookTest {
 
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoices());
-    verify(testDatabase, times(1)).findAllInvoices();
+    verify(testDatabase).findAllInvoices();
   }
 
   @Test
@@ -136,7 +136,7 @@ class InvoiceBookTest {
 
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getSingleInvoiceById(invoiceId));
-    verify(testDatabase, times(1)).findOneInvoice(invoiceId);
+    verify(testDatabase).findOneInvoice(invoiceId);
   }
 
   @Test
@@ -151,7 +151,7 @@ class InvoiceBookTest {
 
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.addInvoice(testInvoice));
-    verify(testDatabase, times(1)).saveInvoice(testInvoice);
+    verify(testDatabase).saveInvoice(testInvoice);
   }
 
   @Test
@@ -166,7 +166,7 @@ class InvoiceBookTest {
 
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.updateInvoice(testInvoice));
-    verify(testDatabase, times(1)).saveInvoice(testInvoice);
+    verify(testDatabase).saveInvoice(testInvoice);
   }
 
   @Test
@@ -203,7 +203,7 @@ class InvoiceBookTest {
 
     //then
     assertThrows(InvoiceBookOperationException.class, () -> invoiceBook.getAllInvoicesInGivenDateRange(startDate, endDate));
-    verify(testDatabase, times(1)).findAllInvoices();
+    verify(testDatabase).findAllInvoices();
   }
 
   @Test

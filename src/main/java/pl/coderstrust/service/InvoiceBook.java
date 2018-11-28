@@ -11,7 +11,7 @@ import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
 
 @RequiredArgsConstructor
-public class InvoiceBook {
+public class InvoiceService {
   @NonNull
   private Database database;
 
@@ -19,7 +19,7 @@ public class InvoiceBook {
     try {
       return database.findAllInvoices();
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Exception while getting all invoices", e);
+      throw new InvoiceBookOperationException("An error occurred during getting all invoices", e);
     }
   }
 
@@ -27,7 +27,7 @@ public class InvoiceBook {
     try {
       return database.findOneInvoice(invoiceId);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Exception while getting single invoice by id", e);
+      throw new InvoiceBookOperationException(String.format("An error occurred during getting single invoice by id. Invoice id: %s", invoiceId), e);
     }
   }
 
@@ -35,7 +35,7 @@ public class InvoiceBook {
     try {
       return database.saveInvoice(invoice);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Exception while adding new invoice", e);
+      throw new InvoiceBookOperationException(String.format("An error occurred during adding new invoice. Invoice: %s", invoice), e);
     }
   }
 
@@ -43,7 +43,7 @@ public class InvoiceBook {
     try {
       database.saveInvoice(invoice);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Exception while updating invoice", e);
+      throw new InvoiceBookOperationException(String.format("An error occurred during updating invoice. Invoice: %s", invoice), e);
     }
   }
 
@@ -51,7 +51,7 @@ public class InvoiceBook {
     try {
       database.deleteInvoice(invoiceId);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Exception while deleting invoice", e);
+      throw new InvoiceBookOperationException(String.format("An error occurred during deleting invoice. Invoice: %s", invoice)", e);
     }
   }
 
