@@ -13,107 +13,107 @@ import org.junit.jupiter.api.Test;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
 
-class InMemoryDatabaseTest {
-  private Database testDatabase;
+class InMemoryInvoiceRepositoryTest {
+  private InvoiceRepository testInvoiceRepository;
 
   @BeforeEach
   private void setup() {
-    testDatabase = new InMemoryDatabase();
+    testInvoiceRepository = new InMemoryInvoiceRepository();
   }
 
   @Test
-  void shouldReturnTrueIfInvoiceExistsInDatabase() throws DatabaseOperationException {
+  void shouldReturnTrueIfInvoiceExistsInDatabase() throws RepositoryOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    testDatabase.saveInvoice(invoice);
+    testInvoiceRepository.saveInvoice(invoice);
 
     //when
-    boolean invoiceExists = testDatabase.invoiceExists(invoice.getId());
+    boolean invoiceExists = testInvoiceRepository.invoiceExists(invoice.getId());
 
     //then
     assertTrue(invoiceExists);
   }
 
   @Test
-  void shouldReturnFalseIfInvoiceNotExistsInDatabase() throws DatabaseOperationException {
+  void shouldReturnFalseIfInvoiceNotExistsInDatabase() throws RepositoryOperationException {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
-    testDatabase.saveInvoice(invoice1);
+    testInvoiceRepository.saveInvoice(invoice1);
 
     //when
-    boolean invoiceExist = testDatabase.invoiceExists(invoice2.getId());
+    boolean invoiceExist = testInvoiceRepository.invoiceExists(invoice2.getId());
 
     //then
     assertFalse(invoiceExist);
   }
 
   @Test
-  void shouldSaveInvoiceIntoDatabase() throws DatabaseOperationException {
+  void shouldSaveInvoiceIntoDatabase() throws RepositoryOperationException {
     //given
     Invoice expectedInvoice1 = InvoiceGenerator.getRandomInvoice();
 
     //when
-    testDatabase.saveInvoice(expectedInvoice1);
-    boolean invoiceExists = testDatabase.invoiceExists(expectedInvoice1.getId());
+    testInvoiceRepository.saveInvoice(expectedInvoice1);
+    boolean invoiceExists = testInvoiceRepository.invoiceExists(expectedInvoice1.getId());
 
     //then
     assertTrue(invoiceExists);
   }
 
   @Test
-  void shouldDeleteInvoiceFromDatabaseIfPresent() throws DatabaseOperationException {
+  void shouldDeleteInvoiceFromDatabaseIfPresent() throws RepositoryOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    testDatabase.saveInvoice(invoice);
+    testInvoiceRepository.saveInvoice(invoice);
 
     //when
-    testDatabase.deleteInvoice(invoice.getId());
-    boolean invoiceExists = testDatabase.invoiceExists(invoice.getId());
+    testInvoiceRepository.deleteInvoice(invoice.getId());
+    boolean invoiceExists = testInvoiceRepository.invoiceExists(invoice.getId());
 
     //then
     assertFalse(invoiceExists);
   }
 
   @Test
-  void shouldDeleteInvoiceFromDatabaseIfAbsent() throws DatabaseOperationException {
+  void shouldDeleteInvoiceFromDatabaseIfAbsent() throws RepositoryOperationException {
     //given
     String invoiceId = "1";
 
     //when
-    testDatabase.deleteInvoice(invoiceId);
-    boolean invoiceExists = testDatabase.invoiceExists(invoiceId);
+    testInvoiceRepository.deleteInvoice(invoiceId);
+    boolean invoiceExists = testInvoiceRepository.invoiceExists(invoiceId);
 
     //then
     assertFalse(invoiceExists);
   }
 
   @Test
-  void shouldTestCountingInvoicesInDatabase() throws DatabaseOperationException {
+  void shouldTestCountingInvoicesInDatabase() throws RepositoryOperationException {
     //given
     Long expectedNumberOfInvoices = 5L;
     for (int i = 0; i < expectedNumberOfInvoices; i++) {
-      testDatabase.saveInvoice(InvoiceGenerator.getRandomInvoice());
+      testInvoiceRepository.saveInvoice(InvoiceGenerator.getRandomInvoice());
     }
 
     //when
-    Long actualNumberOfInvoices = testDatabase.countInvoices();
+    Long actualNumberOfInvoices = testInvoiceRepository.countInvoices();
 
     //then
     assertEquals(expectedNumberOfInvoices, actualNumberOfInvoices);
   }
 
   @Test
-  void shouldFindOneInvoice() throws DatabaseOperationException {
+  void shouldFindOneInvoice() throws RepositoryOperationException {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
-    testDatabase.saveInvoice(invoice1);
-    testDatabase.saveInvoice(invoice2);
+    testInvoiceRepository.saveInvoice(invoice1);
+    testInvoiceRepository.saveInvoice(invoice2);
 
     //when
-    Invoice invoiceFromDatabase1 = testDatabase.findOneInvoice(invoice1.getId());
-    Invoice invoiceFromDatabase2 = testDatabase.findOneInvoice(invoice2.getId());
+    Invoice invoiceFromDatabase1 = testInvoiceRepository.findOneInvoice(invoice1.getId());
+    Invoice invoiceFromDatabase2 = testInvoiceRepository.findOneInvoice(invoice2.getId());
 
     //then
     assertEquals(invoice1, invoiceFromDatabase1);
@@ -121,28 +121,28 @@ class InMemoryDatabaseTest {
   }
 
   @Test
-  void shouldFindAllInvoices() throws DatabaseOperationException {
+  void shouldFindAllInvoices() throws RepositoryOperationException {
     //given
     List<Invoice> generatedInvoices = new ArrayList<>();
 
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     generatedInvoices.add(invoice1);
-    testDatabase.saveInvoice(invoice1);
+    testInvoiceRepository.saveInvoice(invoice1);
 
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
 
     generatedInvoices.add(invoice2);
-    testDatabase.saveInvoice(invoice2);
+    testInvoiceRepository.saveInvoice(invoice2);
 
     //when
-    List<Invoice> actualInvoices = testDatabase.findAllInvoices();
+    List<Invoice> actualInvoices = testInvoiceRepository.findAllInvoices();
 
     //then
     assertArrayEquals(generatedInvoices.toArray(), actualInvoices.toArray());
   }
 
   @Test
-  void shouldFindAllInvoicesBySellerName() throws DatabaseOperationException {
+  void shouldFindAllInvoicesBySellerName() throws RepositoryOperationException {
     //given
     String sellerName = "sampleSellerABC";
     Invoice invoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName(sellerName);
@@ -153,12 +153,12 @@ class InMemoryDatabaseTest {
     Invoice invoice5 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice6 = InvoiceGenerator.getRandomInvoice();
 
-    testDatabase.saveInvoice(invoice1);
-    testDatabase.saveInvoice(invoice2);
-    testDatabase.saveInvoice(invoice3);
-    testDatabase.saveInvoice(invoice4);
-    testDatabase.saveInvoice(invoice5);
-    testDatabase.saveInvoice(invoice6);
+    testInvoiceRepository.saveInvoice(invoice1);
+    testInvoiceRepository.saveInvoice(invoice2);
+    testInvoiceRepository.saveInvoice(invoice3);
+    testInvoiceRepository.saveInvoice(invoice4);
+    testInvoiceRepository.saveInvoice(invoice5);
+    testInvoiceRepository.saveInvoice(invoice6);
 
     List<Invoice> expectedInvoices = new ArrayList<>();
     expectedInvoices.add(invoice1);
@@ -166,14 +166,14 @@ class InMemoryDatabaseTest {
     expectedInvoices.add(invoice3);
 
     //when
-    List<Invoice> actualInvoices = testDatabase.findAllBySellerName(sellerName);
+    List<Invoice> actualInvoices = testInvoiceRepository.findAllBySellerName(sellerName);
 
     //then
     assertArrayEquals(expectedInvoices.toArray(), actualInvoices.toArray());
   }
 
   @Test
-  void findAllInvoicesByBuyerName() throws DatabaseOperationException {
+  void findAllInvoicesByBuyerName() throws RepositoryOperationException {
     //given
     String buyerName = "sampleBuyerABC";
     Invoice invoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName(buyerName);
@@ -184,12 +184,12 @@ class InMemoryDatabaseTest {
     Invoice invoice5 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice6 = InvoiceGenerator.getRandomInvoice();
 
-    testDatabase.saveInvoice(invoice1);
-    testDatabase.saveInvoice(invoice2);
-    testDatabase.saveInvoice(invoice3);
-    testDatabase.saveInvoice(invoice4);
-    testDatabase.saveInvoice(invoice5);
-    testDatabase.saveInvoice(invoice6);
+    testInvoiceRepository.saveInvoice(invoice1);
+    testInvoiceRepository.saveInvoice(invoice2);
+    testInvoiceRepository.saveInvoice(invoice3);
+    testInvoiceRepository.saveInvoice(invoice4);
+    testInvoiceRepository.saveInvoice(invoice5);
+    testInvoiceRepository.saveInvoice(invoice6);
 
     List<Invoice> expectedInvoices = new ArrayList<>();
     expectedInvoices.add(invoice1);
@@ -197,22 +197,22 @@ class InMemoryDatabaseTest {
     expectedInvoices.add(invoice3);
 
     //when
-    List<Invoice> actualInvoices = testDatabase.findAllByBuyerName(buyerName);
+    List<Invoice> actualInvoices = testInvoiceRepository.findAllByBuyerName(buyerName);
 
     //then
     assertArrayEquals(expectedInvoices.toArray(), actualInvoices.toArray());
   }
 
   @Test
-  void shouldUpdateExistingInvoice() throws DatabaseOperationException {
+  void shouldUpdateExistingInvoice() throws RepositoryOperationException {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice1Update = InvoiceGenerator.getRandomInvoiceWithSpecificId(invoice1.getId());
-    testDatabase.saveInvoice(invoice1);
-    testDatabase.saveInvoice(invoice1Update);
+    testInvoiceRepository.saveInvoice(invoice1);
+    testInvoiceRepository.saveInvoice(invoice1Update);
 
     //when
-    Invoice updatedInvoiceFromDatabase = testDatabase.findOneInvoice(invoice1.getId());
+    Invoice updatedInvoiceFromDatabase = testInvoiceRepository.findOneInvoice(invoice1.getId());
 
     //then
     assertEquals(invoice1.getId(), updatedInvoiceFromDatabase.getId());
@@ -221,33 +221,33 @@ class InMemoryDatabaseTest {
 
   @Test
   void shouldThrowExceptionIfMethodInvoiceExistInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testDatabase.invoiceExists(null));
+    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.invoiceExists(null));
   }
 
   @Test
   void shouldThrowExceptionIfMethodSaveInvoiceInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testDatabase.saveInvoice(null));
+    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.saveInvoice(null));
   }
 
   @Test
   void shouldThrowExceptionIfMethodDeleteInvoiceInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testDatabase.deleteInvoice(null));
+    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.deleteInvoice(null));
   }
 
   @Test
   void shouldThrowExceptionIfMethodFindOneInvoiceInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testDatabase.findOneInvoice(null));
+    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.findOneInvoice(null));
   }
 
   @Test
   void shouldThrowExceptionIfMethodFindAllInvoicesBySellerNameInvokedWithNull() {
     assertThrows(IllegalArgumentException.class,
-        () -> testDatabase.findAllBySellerName(null));
+        () -> testInvoiceRepository.findAllBySellerName(null));
   }
 
   @Test
   void shouldThrowExceptionIfMethodFindAllInvoicesByBuyerNameInvokedWithNull() {
     assertThrows(IllegalArgumentException.class,
-        () -> testDatabase.findAllByBuyerName(null));
+        () -> testInvoiceRepository.findAllByBuyerName(null));
   }
 }

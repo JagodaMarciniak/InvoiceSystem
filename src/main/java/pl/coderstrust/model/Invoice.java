@@ -9,7 +9,7 @@ import lombok.Value;
 @Value
 public class Invoice {
   @NonNull
-  Integer id;
+  int id;
 
   @NonNull
   InvoiceType type;

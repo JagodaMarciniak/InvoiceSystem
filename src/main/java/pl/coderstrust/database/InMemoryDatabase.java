@@ -10,7 +10,7 @@ import lombok.NonNull;
 import pl.coderstrust.model.Invoice;
 
 @NoArgsConstructor
-public class InMemoryDatabase implements Database {
+public class InMemoryDatabase implements InvoiceRepository {
 
   private List<Invoice> invoices = Collections.synchronizedList(new ArrayList<>());
 
@@ -18,19 +18,19 @@ public class InMemoryDatabase implements Database {
   public boolean existsById(@NonNull Integer id) {
     return invoices
         .stream()
-        .anyMatch(i -> i.getId().equals(id));
+        .anyMatch(i -> i.getId() == id);
   }
 
   @Override
   public Invoice save(@NonNull Invoice invoice) {
-    delete(invoice);
+    deleteById(invoice.getId());
     invoices.add(invoice);
     return invoice;
   }
 
   @Override
-  public void delete(@NonNull Invoice invoice) {
-    invoices.removeIf(i -> i.getId().equals(invoice.getId()));
+  public void deleteById(Integer id) {
+    invoices.removeIf(i -> i.getId() == id);
   }
 
   @Override
@@ -45,20 +45,19 @@ public class InMemoryDatabase implements Database {
 
   @Override
   public Optional<Invoice> findById(@NonNull Integer id) {
-    return Optional.of(invoices
+    return invoices
         .stream()
-        .filter(invoice -> invoice.getId().equals(id))
-        .findFirst())
-        .orElse(null);
+        .filter(invoice -> invoice.getId() == id)
+        .findFirst();
   }
 
   @Override
-  public List<Invoice> findAll() {
+  public Iterable<Invoice> findAll() {
     return invoices;
   }
 
   @Override
-  public List<Invoice> findAllBySellerName(@NonNull String sellerName) {
+  public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) {
     return invoices
         .stream()
         .filter(invoice -> invoice.getSeller().getName().equals(sellerName))
@@ -66,32 +65,10 @@ public class InMemoryDatabase implements Database {
   }
 
   @Override
-  public List<Invoice> findAllByBuyerName(@NonNull String buyerName) {
+  public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) {
     return invoices
         .stream()
         .filter(invoice -> invoice.getBuyer().getName().equals(buyerName))
         .collect(Collectors.toList());
-  }
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-
-  @Override
-  public <S extends Invoice> Iterable<S> saveAll(Iterable<S> iterable) {
-    throw new UnsupportedOperationException("Not supported");
-  }
-
-  @Override
-  public Iterable<Invoice> findAllById(Iterable<Integer> iterable) {
-    throw new UnsupportedOperationException("Not supported");
-  }
-
-  @Override
-  public void deleteAll(Iterable<? extends Invoice> iterable) {
-    throw new UnsupportedOperationException("Not supported");
-  }
-
-  @Override
-  public void deleteById(Integer integer) {
-    throw new UnsupportedOperationException("Not supported");
   }
 }
