@@ -51,7 +51,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestGettingAllInvoicesInGivenDateRange() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldReturnAllInvoicesInGivenDateRange() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
     LocalDate startDate = LocalDate.of(2018, 10, 24);
     LocalDate endDate = LocalDate.of(2019, 10, 24);
@@ -66,7 +66,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestAddingInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldAddingInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
     Invoice expected = testDatabase.findOneInvoice(invoiceId);
     when(testDatabase.saveInvoice(testInvoice)).thenReturn(expected);
@@ -79,7 +79,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestInvoiceDeletion() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldDeleteInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
     doNothing().when(testDatabase).deleteInvoice(invoiceId);
 
@@ -91,7 +91,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestGettingSingleInvoiceById() throws InvoiceBookOperationException, DatabaseOperationException {
+  void shouldReturnSingleInvoiceById() throws InvoiceBookOperationException, DatabaseOperationException {
     //given
     when(testDatabase.findOneInvoice(invoiceId)).thenReturn(testInvoice);
 
@@ -103,7 +103,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  void shouldTestInvoiceUpdating() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldUpdateInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
     //given
     when(testDatabase.saveInvoice(testInvoice)).thenReturn(testInvoice);
 
@@ -207,7 +207,7 @@ class InvoiceBookTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenGivenDateRangeIsWrong() {
+  public void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWithWrongDates() {
     //given
     LocalDate startDate = LocalDate.of(2019, 12, 01);
     LocalDate endDate = LocalDate.of(2019, 11, 01);
