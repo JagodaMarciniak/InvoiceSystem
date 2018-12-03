@@ -1,6 +1,10 @@
 package pl.coderstrust.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,8 +119,8 @@ class InMemoryInvoiceRepositoryTest {
     Optional invoiceFromDatabase2 = testInvoiceRepository.findById(invoice2.getId());
 
     //then
-    assertEquals(invoice1, invoiceFromDatabase1);
-    assertEquals(invoice2, invoiceFromDatabase2);
+    assertEquals(invoice1, invoiceFromDatabase1.get());
+    assertEquals(invoice2, invoiceFromDatabase2.get());
   }
 
   @Test
@@ -218,10 +222,11 @@ class InMemoryInvoiceRepositoryTest {
 
     //when
     Optional updatedInvoiceFromDatabase = testInvoiceRepository.findById(invoice1.getId());
+    Invoice resultAfterUpdate = (Invoice) updatedInvoiceFromDatabase.get();
 
     //then
-    assertEquals(invoice1.getId(), updatedInvoiceFromDatabase);
-    assertEquals(invoice1Update, updatedInvoiceFromDatabase);
+    assertEquals(invoice1.getId(), resultAfterUpdate.getId());
+    assertEquals(invoice1Update, updatedInvoiceFromDatabase.get());
   }
 
   @Test
@@ -232,11 +237,6 @@ class InMemoryInvoiceRepositoryTest {
   @Test
   void shouldThrowExceptionIfMethodSaveInvokedWithNull() {
     assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.save(null));
-  }
-
-  @Test
-  void shouldThrowExceptionIfMethodDeleteByIdInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.deleteById(null));
   }
 
   @Test
