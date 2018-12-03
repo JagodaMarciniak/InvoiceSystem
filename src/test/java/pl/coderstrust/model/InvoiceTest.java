@@ -10,11 +10,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import pl.coderstrust.generators.CompanyGenerator;
 import pl.coderstrust.generators.InvoiceEntriesGenerator;
-import pl.coderstrust.model.Invoice;
-import pl.coderstrust.model.InvoiceType;
 
 class InvoiceTest {
-  private final String id = "FV/2018/10/234";
+  private final int id = 1;
   private final InvoiceType invoiceType = STANDARD;
   private final LocalDate issueDate = LocalDate.of(2018, 10, 24);
   private final LocalDate dueDate = LocalDate.of(2018, 11, 23);
@@ -42,12 +40,6 @@ class InvoiceTest {
     assertEquals(totalNetValue, invoice.getTotalNetValue());
     assertEquals(totalGrossValue, invoice.getTotalGrossValue());
     assertEquals(comments, invoice.getComments());
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenIdIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(null, invoiceType, issueDate,
-        dueDate, seller, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test

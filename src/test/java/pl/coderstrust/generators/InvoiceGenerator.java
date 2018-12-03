@@ -15,8 +15,8 @@ public class InvoiceGenerator {
 
   public static Invoice getRandomInvoice() {
     Invoice sampleInvoice = getSampleInvoice();
-    String sampleInvoiceId = sampleInvoice.getId()
-        + String.valueOf(atomicInteger.incrementAndGet());
+    int sampleInvoiceId = sampleInvoice.getId()
+        + atomicInteger.incrementAndGet();
     String sampleSellerName = sampleInvoice.getSeller().getName()
         + String.valueOf(atomicInteger.incrementAndGet());
     String sampleBuyerName = sampleInvoice.getBuyer().getName()
@@ -39,7 +39,7 @@ public class InvoiceGenerator {
   }
 
   private static Invoice getSampleInvoice() {
-    String sampleInvoiceId = "sampleID:";
+    int sampleInvoiceId = 4;
     String sampleSellerName = "sampleSeller";
     String sampleBuyerName = "sampleBuyer";
 
@@ -91,7 +91,7 @@ public class InvoiceGenerator {
         randomInvoice.getComments());
   }
 
-  public static Invoice getRandomInvoiceWithSpecificId(String invoiceId) {
+  public static Invoice getRandomInvoiceWithSpecificId(int invoiceId) {
     Invoice randomInvoice = getRandomInvoice();
 
     return new Invoice(invoiceId, randomInvoice.getType(),
