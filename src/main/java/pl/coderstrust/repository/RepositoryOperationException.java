@@ -1,4 +1,4 @@
-package pl.coderstrust.database;
+package pl.coderstrust.repository;
 
 public class RepositoryOperationException extends Exception {
   public RepositoryOperationException(String message) {

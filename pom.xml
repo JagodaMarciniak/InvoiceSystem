@@ -176,7 +176,7 @@
                                     <excludes>
                                         <exclude>database.impl.ConfigurationProvider</exclude>
                                         <exclude>pl.coderstrust.Application</exclude>
-                                        <exclude>pl.coderstrust.database.RepositoryOperationException</exclude>
+                                        <exclude>pl.coderstrust.repository.RepositoryOperationException</exclude>
                                     </excludes>
                                 </rule>
                             </rules>

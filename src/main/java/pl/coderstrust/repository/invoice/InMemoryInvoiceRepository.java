@@ -1,4 +1,4 @@
-package pl.coderstrust.database;
+package pl.coderstrust.repository.invoice;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import lombok.NonNull;
 import pl.coderstrust.model.Invoice;
 
 @NoArgsConstructor
-public class InMemoryDatabase implements InvoiceRepository {
+public class InMemoryInvoiceRepository implements InvoiceRepository {
 
   private List<Invoice> invoices = Collections.synchronizedList(new ArrayList<>());
 

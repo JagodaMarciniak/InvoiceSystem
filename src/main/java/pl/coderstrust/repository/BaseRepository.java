@@ -1,4 +1,4 @@
-package pl.coderstrust.database;
+package pl.coderstrust.repository;
 
 import java.io.Serializable;
 import java.util.Optional;
