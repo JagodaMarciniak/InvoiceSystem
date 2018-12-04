@@ -65,6 +65,30 @@ class InMemoryInvoiceRepositoryTest {
   }
 
   @Test
+  void shouldDeleteAllInvoicesInDatabase() throws RepositoryOperationException {
+    //given
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
+    testInvoiceRepository.save(invoice1);
+    testInvoiceRepository.save(invoice2);
+
+    //when
+    testInvoiceRepository.deleteAll();
+
+    //then
+    assertEquals(0, testInvoiceRepository.count());
+  }
+
+  @Test
+  void shouldPerformDeleteAllMethodEvenIfDatabaseIsEmpty() throws RepositoryOperationException {
+    //when
+    testInvoiceRepository.deleteAll();
+
+    //then
+    assertEquals(0, testInvoiceRepository.count());
+  }
+
+  @Test
   void shouldDeleteByIdFromDatabaseIfPresent() throws RepositoryOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
@@ -127,13 +151,10 @@ class InMemoryInvoiceRepositoryTest {
   void shouldFindAllInvoices() throws RepositoryOperationException {
     //given
     List<Invoice> generatedInvoices = new ArrayList<>();
-
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     generatedInvoices.add(invoice1);
     testInvoiceRepository.save(invoice1);
-
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
-
     generatedInvoices.add(invoice2);
     testInvoiceRepository.save(invoice2);
 
@@ -218,9 +239,9 @@ class InMemoryInvoiceRepositoryTest {
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice1Update = InvoiceGenerator.getRandomInvoiceWithSpecificId(invoice1.getId());
     testInvoiceRepository.save(invoice1);
-    testInvoiceRepository.save(invoice1Update);
 
     //when
+    testInvoiceRepository.save(invoice1Update);
     Optional updatedInvoiceFromDatabase = testInvoiceRepository.findById(invoice1.getId());
     Invoice resultAfterUpdate = (Invoice) updatedInvoiceFromDatabase.get();
 

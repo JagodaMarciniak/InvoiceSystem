@@ -29,7 +29,7 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   @Override
-  public void deleteById(Integer id) {
+  public void deleteById(@NonNull Integer id) {
     invoices.removeIf(i -> i.getId() == id);
   }
 
