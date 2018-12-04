@@ -21,8 +21,8 @@
         <linkXRef>false</linkXRef>
         <jacocoPlugin.version>0.8.2</jacocoPlugin.version>
         <checkstylePlugin.version>3.0.0</checkstylePlugin.version>
-        <checkstyle.config.location>checkstyle-config/google_style_settings.xml
-        </checkstyle.config.location>
+        <projectInfoReportsPlugin.version>3.0.0</projectInfoReportsPlugin.version>
+        <checkstyle.config.location>checkstyle-config/google_style_settings.xml</checkstyle.config.location>
     </properties>
 
     <dependencies>
@@ -97,6 +97,25 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${projectInfoReportsPlugin.version}</version>
+                <configuration>
+                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                            <report>summary</report>
+                            <report>dependencies</report>
+                            <report>modules</report>
+                            <report>plugins</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${checkstylePlugin.version}</version>
                 <configuration>
@@ -141,7 +160,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${projectInfoReportsPlugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
