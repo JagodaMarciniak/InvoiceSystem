@@ -51,21 +51,22 @@ public class InvoiceService {
     try {
       database.deleteInvoice(invoiceId);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException(String.format("An error occurred during deleting " +
-          "invoice. Invoice: %s", invoiceId), e);
+      throw new InvoiceBookOperationException(String.format("An error occurred during deleting " + "invoice. Invoice: %s", invoiceId), e);
     }
   }
 
   public List<Invoice> getAllInvoicesInGivenDateRange(@NonNull LocalDate startDate, @NonNull LocalDate endDate) throws InvoiceBookOperationException {
     if (startDate.until(endDate, ChronoUnit.DAYS) < 0) {
-      throw new IllegalArgumentException("The End date must be older or equal to start date");
+      throw new IllegalArgumentException("The end date must be older or equal to start date");
     }
     try {
       return database.findAllInvoices().stream()
           .filter(invoice -> invoice.getIssueDate().compareTo(startDate) >= 0 && invoice.getIssueDate().compareTo(endDate) <= 0)
           .collect(Collectors.toList());
     } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException("Exception while getting all invoices in given date range", e);
+      throw new InvoiceBookOperationException(
+          String.format("An error occurred during getting all invoices in given date range. "
+              + "Start date: %s, end date: %s", startDate, endDate), e);
     }
   }
 }
