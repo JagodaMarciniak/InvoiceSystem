@@ -116,7 +116,7 @@ class InMemoryInvoiceRepositoryTest {
   }
 
   @Test
-  void shouldTestCountingInvoicesInDatabase() throws RepositoryOperationException {
+  void shouldCountingInvoicesInDatabase() throws RepositoryOperationException {
     //given
     Long expectedNumberOfInvoices = 5L;
     for (int i = 0; i < expectedNumberOfInvoices; i++) {
@@ -251,7 +251,7 @@ class InMemoryInvoiceRepositoryTest {
   }
 
   @Test
-  void shouldThrowExceptionIfMethodInvoiceExistInvokedWithNull() {
+  void shouldThrowExceptionIfMethodExistByIdInvokedWithNull() {
     assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.existsById(null));
   }
 
@@ -261,8 +261,13 @@ class InMemoryInvoiceRepositoryTest {
   }
 
   @Test
-  void shouldThrowExceptionIfMethodFindOneInvoiceInvokedWithNull() {
+  void shouldThrowExceptionIfMethodFindByIdIsInvokedWithNull() {
     assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.findById(null));
+  }
+
+  @Test
+  void shouldThrowExceptionIfMethodDeleteByIdIsInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.deleteById(null));
   }
 
   @Test
