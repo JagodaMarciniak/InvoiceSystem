@@ -17,59 +17,70 @@ public class InvoiceService {
   @NonNull
   private InvoiceRepository invoiceRepository;
 
-  public List<Invoice> getAllInvoices() throws InvoiceBookOperationException {
+  public List<Invoice> getAllInvoices() throws InvoiceServiceOperationException {
     try {
       List<Invoice> result = new ArrayList<>();
       invoiceRepository.findAll().forEach(result::add);
       return result;
     } catch (RepositoryOperationException e) {
-      throw new InvoiceBookOperationException("An error occurred during getting all invoices", e);
+      throw new InvoiceServiceOperationException("An error occurred during getting all invoices", e);
     }
   }
 
-  public Optional<Invoice> getSingleInvoiceById(@NonNull invoiceId) throws
-      InvoiceBookOperationException {
+  public Optional<Invoice> getSingleInvoiceById(@NonNull int invoiceId) throws
+      InvoiceServiceOperationException {
     try {
-      return invoiceRepository.findById();
+      return invoiceRepository.findById(invoiceId);
     } catch (RepositoryOperationException e) {
-      throw new InvoiceBookOperationException(String.format("An error occurred during getting single invoice by id. Invoice id: %s", invoiceId), e);
+      throw new InvoiceServiceOperationException(String.format("An error occurred during getting single invoice by id. Invoice id: %s", invoiceId), e);
     }
   }
 
-  public Invoice addInvoice(@NonNull Invoice invoice) throws InvoiceBookOperationException {
+  public Invoice addInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
     try {
-      return invoiceRepository.saveInvoice(invoice);
-    } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException(String.format("An error occurred during adding new invoice. Invoice: %s", invoice), e);
+      return invoiceRepository.save(invoice);
+    } catch (RepositoryOperationException e) {
+      throw new InvoiceServiceOperationException(String.format("An error occurred during adding new invoice. Invoice: %s", invoice), e);
     }
   }
 
-  public void updateInvoice(@NonNull Invoice invoice) throws InvoiceBookOperationException {
+  public void updateInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
     try {
-      invoiceRepository.saveInvoice(invoice);
-    } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException(String.format("An error occurred during updating invoice. Invoice: %s", invoice), e);
+      invoiceRepository.save(invoice);
+    } catch (RepositoryOperationException e) {
+      throw new InvoiceServiceOperationException(String.format("An error occurred during updating invoice. Invoice: %s", invoice), e);
     }
   }
 
-  public void deleteInvoice(@NonNull String invoiceId) throws InvoiceBookOperationException {
+  public void deleteInvoice(@NonNull int invoiceId) throws InvoiceServiceOperationException {
     try {
-      invoiceRepository.deleteInvoice(invoiceId);
-    } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException(String.format("An error occurred during deleting " + "invoice. Invoice: %s", invoiceId), e);
+      invoiceRepository.deleteById(invoiceId);
+    } catch (RepositoryOperationException e) {
+      throw new InvoiceServiceOperationException(String.format("An error occurred during deleting " + "invoice. Invoice: %s", invoiceId), e);
     }
   }
 
-  public List<Invoice> getAllInvoicesInGivenDateRange(@NonNull LocalDate startDate, @NonNull LocalDate endDate) throws InvoiceBookOperationException {
+  public void deleteAllInvoices() throws InvoiceServiceOperationException {
+    try {
+      invoiceRepository.deleteAll();
+    } catch (RepositoryOperationException e) {
+      throw new InvoiceServiceOperationException(("An error occurred during deleting all invoices"), e);
+    }
+  }
+
+  public List<Invoice> getAllInvoicesInGivenDateRange(@NonNull LocalDate startDate, @NonNull LocalDate endDate) throws
+      InvoiceServiceOperationException {
     if (startDate.until(endDate, ChronoUnit.DAYS) < 0) {
       throw new IllegalArgumentException("The end date must be older or equal to start date");
     }
     try {
-      return invoiceRepository.findAllInvoices().stream()
+      List<Invoice> result = new ArrayList<>();
+      invoiceRepository.findAll().forEach(result::add);
+      return result.stream()
           .filter(invoice -> invoice.getIssueDate().compareTo(startDate) >= 0 && invoice.getIssueDate().compareTo(endDate) <= 0)
           .collect(Collectors.toList());
-    } catch (DatabaseOperationException e) {
-      throw new InvoiceBookOperationException(
+    } catch (RepositoryOperationException e) {
+      throw new InvoiceServiceOperationException(
           String.format("An error occurred during getting all invoices in given date range. "
               + "Start date: %s, end date: %s", startDate, endDate), e);
     }

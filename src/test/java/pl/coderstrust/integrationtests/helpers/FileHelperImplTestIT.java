@@ -27,12 +27,6 @@ class FileHelperImplTestIT {
   private static final String INPUT_FILE = String.format("src%1$stest%1$sresources%1$shelpers%1$sinput_file", File.separator);
   private static final String EXPECTED_FILE = String.format("src%1$stest%1$sresources%1$shelpers%1$sexpected_file", File.separator);
 
-  private static Stream<Arguments> invalidArgumentsForRemovingSpecificLineFromFile() {
-    return Stream.of(
-        Arguments.of(Arrays.asList("1", "2", "3"), 5),
-        Arguments.of(Arrays.asList("1", "2", "3"), -5));
-  }
-
   @BeforeEach
   private void removeTestFiles() {
     File fileIn = new File(INPUT_FILE);
@@ -88,6 +82,12 @@ class FileHelperImplTestIT {
   void shouldThrowExceptionWhenLineNumberIsInvalidDuringRemovingSpecificLine(List<String> lines, int lineNumber) throws IOException {
     createFile(INPUT_FILE, lines);
     assertThrows(IllegalArgumentException.class, () -> new FileHelperImpl(INPUT_FILE).removeLine(lineNumber));
+  }
+
+  private static Stream<Arguments> invalidArgumentsForRemovingSpecificLineFromFile() {
+    return Stream.of(
+        Arguments.of(Arrays.asList("1", "2", "3"), 5),
+        Arguments.of(Arrays.asList("1", "2", "3"), -5));
   }
 
   @Test

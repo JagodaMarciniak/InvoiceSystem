@@ -7,173 +7,197 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.coderstrust.database.Database;
-import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
+import pl.coderstrust.repository.RepositoryOperationException;
+import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
   @Mock
-  private Database database;
+  private InvoiceRepository repository;
 
   private InvoiceService invoiceService;
 
   @BeforeEach
   void setUp() {
-    invoiceService = new InvoiceService(database);
+    invoiceService = new InvoiceService(repository);
   }
 
   @Test
-  void shouldReturnAllInvoices() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldReturnAllInvoices() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
-    List<Invoice> invoices = InvoiceGenerator.getRandomInvoiceList();
-    when(database.findAllInvoices()).thenReturn(invoices);
+    List<Invoice> invoices = InvoiceGenerator.getRandomInvoices();
+    when(repository.findAll()).thenReturn(invoices);
 
     //when
     List<Invoice> actual = invoiceService.getAllInvoices();
 
     //then
-    assertSame(invoices, actual);
-    verify(database, times(1)).findAllInvoices();
+    assertEquals(invoices, actual);
+    verify(repository).findAll();
   }
 
   @Test
-  void shouldReturnAllInvoicesInGivenDateRange() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldReturnEmptyListWhenDatabaseIsEmpty() throws RepositoryOperationException, InvoiceServiceOperationException {
+    //given
+    when(repository.findAll()).thenReturn(new ArrayList<>());
+
+    //when
+    List<Invoice> actual = invoiceService.getAllInvoices();
+
+    //then
+    assertEquals(new ArrayList<>(), actual);
+    verify(repository).findAll();
+  }
+
+  @Test
+  void shouldReturnAllInvoicesInGivenDateRange() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
     LocalDate startDate = LocalDate.of(2018, 12, 3);
     LocalDate endDate = LocalDate.of(2018, 12, 5);
 
-    List<Invoice> invoices = InvoiceGenerator.getRandomInvoiceIssuedInSpecificDateRange(startDate, endDate);
-    when(database.findAllInvoices()).thenReturn(invoices);
+    List<Invoice> invoices = InvoiceGenerator.getRandomInvoicesIssuedInSpecificDateRange(startDate, endDate);
+    invoices.add(10, InvoiceGenerator.getRandomInvoice());
+    when(repository.findAll()).thenReturn(invoices);
 
     //when
-    List<Invoice> actual = invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate);
+    Iterable<Invoice> actual = invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate);
 
     //then
     assertEquals(invoices, actual);
+    verify(repository).findAll();
   }
 
   @Test
-  void shouldReturnEmptyListOfInvoicesWhenDatabaseIsEmpty() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldReturnEmptyListOfInvoicesInGivenDataRangeWhenDatabaseIsEmpty() throws RepositoryOperationException,
+      InvoiceServiceOperationException {
     //given
     LocalDate startDate = LocalDate.of(2018, 12, 3);
     LocalDate endDate = LocalDate.of(2018, 12, 5);
 
-    List<Invoice> emptyList = new ArrayList<>();
-    when(database.findAllInvoices()).thenReturn(emptyList);
+    when(repository.findAll()).thenReturn(new ArrayList<>());
 
     //when
     List<Invoice> actual = invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate);
 
     //then
-    assertEquals(emptyList, actual);
+    assertEquals(new ArrayList<>(), actual);
+    verify(repository).findAll();
   }
 
   @Test
-  void shouldReturnEmptyListOfInvoicesWhenThereAreNoInvoicesInGivenDateRange() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldAddInvoice() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
-    LocalDate startDate = LocalDate.of(2018, 12, 3);
-    LocalDate endDate = LocalDate.of(2018, 12, 5);
-    List<Invoice> emptyList = new ArrayList<>();
-    when(database.findAllInvoices()).thenReturn(emptyList);
+    Invoice invoice = InvoiceGenerator.getRandomInvoice();
+    when(repository.save(invoice)).thenReturn(invoice);
 
     //when
-    List<Invoice> actual = invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate);
+    Invoice actual = invoiceService.addInvoice(invoice);
 
     //then
-    assertEquals(emptyList, actual);
+    assertEquals(invoice, actual);
+    verify(repository).save(invoice);
   }
 
   @Test
-  void shouldAddingInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldDeleteInvoice() throws RepositoryOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    when(database.saveInvoice(randomInvoice)).thenReturn(randomInvoice);
+    int id = Integer.parseInt("XX/2018/11/454");
+    doNothing().when(repository).deleteById(id);
 
     //when
-    Invoice actual = invoiceService.addInvoice(randomInvoice);
+    repository.deleteById(id);
 
     //then
-    assertSame(randomInvoice, actual);
+    verify(repository).deleteById(id);
   }
 
   @Test
-  void shouldDeleteInvoice() throws DatabaseOperationException {
+  void shouldDeleteAllInvoices() throws RepositoryOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    String id = randomInvoice.getId();
-    doNothing().when(database).deleteInvoice(id);
+    doNothing().when(repository).deleteAll();
 
     //when
-    database.deleteInvoice(id);
+    repository.deleteAll();
 
     //then
-    verify(database).deleteInvoice(id);
+    verify(repository).deleteAll();
   }
 
   @Test
-  void shouldReturnSingleInvoiceById() throws InvoiceBookOperationException, DatabaseOperationException {
+  void shouldReturnSingleInvoiceById() throws InvoiceServiceOperationException, RepositoryOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    String id = randomInvoice.getId();
-    when(database.findOneInvoice(id)).thenReturn(randomInvoice);
+    Optional<Invoice> invoice = Optional.of(InvoiceGenerator.getRandomInvoice());
+    int id = invoice.get().getId();
+    when(repository.findById(id)).thenReturn(invoice);
 
     //when
-    Invoice actual = invoiceService.getSingleInvoiceById(id);
+    Optional<Invoice> actual = invoiceService.getSingleInvoiceById(id);
 
     //then
-    assertSame(randomInvoice, actual);
+    assertSame(invoice, actual);
+    verify(repository).findById(id);
   }
 
   @Test
-  void shouldUpdateInvoice() throws DatabaseOperationException, InvoiceBookOperationException {
+  void shouldUpdateInvoice() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    when(database.saveInvoice(randomInvoice)).thenReturn(randomInvoice);
+    Invoice invoice = InvoiceGenerator.getRandomInvoice();
+    when(repository.save(invoice)).thenReturn(invoice);
 
     //when
-    invoiceService.updateInvoice(randomInvoice);
+    invoiceService.updateInvoice(invoice);
 
     //then
-    verify(database).saveInvoice(randomInvoice);
+    verify(repository).save(invoice);
   }
 
   @Test
-  public void shouldThrowExceptionWhenGettingAllInvoicesWentWrong() throws DatabaseOperationException {
+  public void shouldThrowExceptionWhenGettingAllInvoicesWentWrong() throws RepositoryOperationException {
     //given
-    doThrow(DatabaseOperationException.class).when(database).findAllInvoices();
+    doThrow(InvoiceServiceOperationException.class).when(repository).findAll();
 
     //then
-    assertThrows(InvoiceBookOperationException.class, () -> invoiceService.getAllInvoices());
-    verify(database).findAllInvoices();
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getAllInvoices());
+    verify(repository).findAll();
   }
 
   @Test
   public void shouldThrowExceptionWhenGetSingleInvoiceByIdInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.getSingleInvoiceById(null));
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.getSingleInvoiceById(Integer.parseInt(null)));
   }
 
   @Test
-  public void shouldThrowExceptionWhenGettingSingleInvoiceByIdWentWrong() throws DatabaseOperationException {
+  public void shouldReturnNullIfInvoiceDoesNotExistInDatabase() throws RepositoryOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    String id = randomInvoice.getId();
-    doThrow(DatabaseOperationException.class).when(database).findOneInvoice(id);
+    int id = Integer.parseInt("XX/2018/11/454");
+    doThrow(NullPointerException.class).when(repository).findById(id);
 
     //then
-    assertThrows(InvoiceBookOperationException.class, () -> invoiceService.getSingleInvoiceById(id));
-    verify(database).findOneInvoice(id);
+    assertThrows(NullPointerException.class, () -> invoiceService.getSingleInvoiceById(id));
+    verify(repository).findById(id);
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenGettingSingleInvoiceByIdWentWrong() throws RepositoryOperationException {
+    //given
+    int id = Integer.parseInt("XX/2018/11/454");
+    doThrow(RepositoryOperationException.class).when(repository).findById(id);
+
+    //then
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getSingleInvoiceById(id));
+    verify(repository).findById(id);
   }
 
   @Test
@@ -182,14 +206,14 @@ class InvoiceServiceTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenAddingInvoiceWentWrong() throws DatabaseOperationException {
+  public void shouldThrowExceptionWhenAddingInvoiceWentWrong() throws RepositoryOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    doThrow(DatabaseOperationException.class).when(database).saveInvoice(randomInvoice);
+    Invoice invoice = InvoiceGenerator.getRandomInvoice();
+    doThrow(RepositoryOperationException.class).when(repository).save(invoice);
 
     //then
-    assertThrows(InvoiceBookOperationException.class, () -> invoiceService.addInvoice(randomInvoice));
-    verify(database).saveInvoice(randomInvoice);
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.addInvoice(invoice));
+    verify(repository).save(invoice);
   }
 
   @Test
@@ -198,38 +222,37 @@ class InvoiceServiceTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenUpdatingInvoiceWentWrong() throws DatabaseOperationException {
+  public void shouldThrowExceptionWhenUpdatingInvoiceWentWrong() throws RepositoryOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    doThrow(DatabaseOperationException.class).when(database).saveInvoice(randomInvoice);
+    Invoice invoice = InvoiceGenerator.getRandomInvoice();
+    doThrow(RepositoryOperationException.class).when(repository).save(invoice);
 
     //then
-    assertThrows(InvoiceBookOperationException.class, () -> invoiceService.updateInvoice(randomInvoice));
-    verify(database).saveInvoice(randomInvoice);
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.updateInvoice(invoice));
+    verify(repository).save(invoice);
   }
 
   @Test
   public void shouldThrowExceptionWhenDeleteInvoiceInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.deleteInvoice(null));
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.deleteInvoice(Integer.parseInt(null)));
   }
 
   @Test
-  public void shouldThrowExceptionWhenDeleteInvoiceWentWrong() throws DatabaseOperationException {
+  public void shouldThrowExceptionWhenDeleteInvoiceWentWrong() throws RepositoryOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    String id = randomInvoice.getId();
-    doThrow(DatabaseOperationException.class).when(database).deleteInvoice(id);
+    int id = Integer.parseInt("XX/2018/11/454");
+    doThrow(RepositoryOperationException.class).when(repository).deleteById(id);
 
     //then
-    assertThrows(DatabaseOperationException.class, () -> database.deleteInvoice(id));
+    assertThrows(RepositoryOperationException.class, () -> repository.deleteById(id));
+    verify(repository).deleteById(id);
   }
 
   @Test
   public void shouldThrowExceptionWhenGetAllInvoicesInGivenDateRangeInvokedWithNull() {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    LocalDate startDate = randomInvoice.getIssueDate();
-    LocalDate endDate = randomInvoice.getIssueDate();
+    LocalDate startDate = LocalDate.of(2019, 12, 1);
+    LocalDate endDate = LocalDate.of(2019, 11, 1);
 
     //then
     assertThrows(IllegalArgumentException.class, () -> invoiceService.getAllInvoicesInGivenDateRange(null, endDate));
@@ -237,23 +260,22 @@ class InvoiceServiceTest {
   }
 
   @Test
-  public void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWentWrong() throws DatabaseOperationException {
+  public void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWentWrong() throws RepositoryOperationException {
     //given
-    Invoice randomInvoice = InvoiceGenerator.getRandomInvoice();
-    LocalDate startDate = randomInvoice.getIssueDate();
-    LocalDate endDate = randomInvoice.getIssueDate();
-    doThrow(DatabaseOperationException.class).when(database).findAllInvoices();
+    LocalDate startDate = LocalDate.of(2019, 12, 1);
+    LocalDate endDate = LocalDate.of(2019, 12, 5);
+    doThrow(RepositoryOperationException.class).when(repository).findAll();
 
     //then
-    assertThrows(InvoiceBookOperationException.class, () -> invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate));
-    verify(database).findAllInvoices();
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate));
+    verify(repository).findAll();
   }
 
   @Test
   public void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWithWrongDates() {
     //given
-    LocalDate startDate = LocalDate.of(2019, 12, 01);
-    LocalDate endDate = LocalDate.of(2019, 11, 01);
+    LocalDate startDate = LocalDate.of(2019, 12, 1);
+    LocalDate endDate = LocalDate.of(2019, 11, 1);
 
     //then
     assertThrows(IllegalArgumentException.class, () -> invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate));
