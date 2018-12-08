@@ -21,5 +21,5 @@ public interface FileHelper {
 
   boolean isEmpty() throws IOException;
 
-  void removeLine(long lineNumber) throws IOException, FileHelperException;
+  void removeLine(int lineNumber) throws IOException, FileHelperException;
 }

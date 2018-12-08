@@ -9,7 +9,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
-import pl.coderstrust.configuration.Configuration;
 
 @AllArgsConstructor
 public class FileHelperImpl implements FileHelper {
@@ -22,10 +21,10 @@ public class FileHelperImpl implements FileHelper {
     if (file.exists()) {
       throw new FileHelperException("File already exists.");
     }
-      file.createNewFile();
-    }
+    file.createNewFile();
+  }
 
-  public void removeLine(long lineNumber) throws IOException, FileHelperException {
+  public void removeLine(int lineNumber) throws IOException, FileHelperException {
     if (lineNumber < 1) {
       throw new IllegalArgumentException("lineNumber cannot be lower than 1");
     }
