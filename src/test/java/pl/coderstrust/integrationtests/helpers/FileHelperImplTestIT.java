@@ -54,7 +54,6 @@ class FileHelperImplTestIT {
     //given
     FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
 
-
     //when
     fileHelper.initialize();
 
@@ -210,7 +209,7 @@ class FileHelperImplTestIT {
     fileHelper.delete();
     boolean result = new File(INPUT_FILE).exists();
 
-    //
+    //then
     assertFalse(result);
   }
 
@@ -223,7 +222,7 @@ class FileHelperImplTestIT {
     fileHelper.delete();
     boolean result = new File(INPUT_FILE).exists();
 
-    //
+    //then
     assertFalse(result);
   }
 
