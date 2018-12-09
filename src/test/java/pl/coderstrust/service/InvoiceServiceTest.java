@@ -112,25 +112,25 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldDeleteInvoice() throws RepositoryOperationException {
+  void shouldDeleteInvoice() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
     int id = 3448;
     doNothing().when(repository).deleteById(id);
 
     //when
-    repository.deleteById(id);
+    invoiceService.deleteInvoice(id);
 
     //then
     verify(repository).deleteById(id);
   }
 
   @Test
-  void shouldDeleteAllInvoices() throws RepositoryOperationException {
+  void shouldDeleteAllInvoices() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
     doNothing().when(repository).deleteAll();
 
     //when
-    repository.deleteAll();
+    invoiceService.deleteAllInvoices();
 
     //then
     verify(repository).deleteAll();
@@ -176,7 +176,7 @@ class InvoiceServiceTest {
 
   @Test
   void shouldThrowExceptionWhenGetSingleInvoiceByIdInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.getSingleInvoiceById(Integer.parseInt(null)));
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.getSingleInvoiceById(Integer.parseInt((null))));
   }
 
   @Test
@@ -244,12 +244,22 @@ class InvoiceServiceTest {
   @Test
   void shouldThrowExceptionWhenDeleteInvoiceWentWrong() throws RepositoryOperationException {
     //given
-    int id = 234;
+    int id = -234;
     doThrow(RepositoryOperationException.class).when(repository).deleteById(id);
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> repository.deleteById(id));
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.deleteInvoice(id));
     verify(repository).deleteById(id);
+  }
+
+  @Test
+  void shouldThrowExceptionWhenDeleteAllInvoicesWentWrong() throws RepositoryOperationException {
+    //given
+    doThrow(RepositoryOperationException.class).when(repository).deleteAll();
+
+    //then
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.deleteAllInvoices());
+    verify(repository).deleteAll();
   }
 
   @Test

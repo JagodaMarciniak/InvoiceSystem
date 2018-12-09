@@ -32,7 +32,8 @@ public class InvoiceService {
     try {
       return invoiceRepository.findById(invoiceId);
     } catch (RepositoryOperationException e) {
-      throw new InvoiceServiceOperationException(String.format("An error occurred during getting single invoice by id. Invoice id: %s", invoiceId), e);
+      throw new InvoiceServiceOperationException(String.format("An error occurred during getting single invoice by id. Invoice id: %s",
+          invoiceId), e);
     }
   }
 
