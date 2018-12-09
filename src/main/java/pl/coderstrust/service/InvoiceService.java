@@ -27,7 +27,7 @@ public class InvoiceService {
     }
   }
 
-  public Optional<Invoice> getSingleInvoiceById(@NonNull int invoiceId) throws
+  public Optional<Invoice> getSingleInvoiceById(int invoiceId) throws
       InvoiceServiceOperationException {
     try {
       return invoiceRepository.findById(invoiceId);
@@ -52,7 +52,7 @@ public class InvoiceService {
     }
   }
 
-  public void deleteInvoice(@NonNull int invoiceId) throws InvoiceServiceOperationException {
+  public void deleteInvoice(int invoiceId) throws InvoiceServiceOperationException {
     try {
       invoiceRepository.deleteById(invoiceId);
     } catch (RepositoryOperationException e) {
