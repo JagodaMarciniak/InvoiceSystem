@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.Synchronized;
 import pl.coderstrust.helpers.FileHelper;
+import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
 
@@ -33,30 +34,26 @@ public class InFileInvoiceRepository implements InvoiceRepository {
       fileHelper.writeLine(mapper.writeValueAsString(invoice));
       return invoice;
     } catch (IOException e) {
-      throw new RepositoryOperationException(String.format("Encountered problems searching for invoice: %s", invoice), e);
+      throw new RepositoryOperationException(String.format("Encountered problems saving invoice: %s", invoice), e);
     }
   }
 
   @Synchronized
   public Optional<Invoice> findById(@NonNull Integer id) throws RepositoryOperationException {
     try {
-      return fileHelper.readLines().stream()
-          .map(this::deserializeJsonToInvoice)
+      return getAllInvoices().stream()
           .filter(invoice -> invoice != null && invoice.getId() == id)
           .findFirst();
     } catch (IOException e) {
-      throw new RepositoryOperationException("Encountered problems while searching for invoice.", e);
+      throw new RepositoryOperationException(String.format("Encountered problems while searching for invoice:, %d", id), e);
     }
   }
 
   @Override
   @Synchronized
-  public List<Invoice> findAll() throws RepositoryOperationException {
+  public Iterable<Invoice> findAll() throws RepositoryOperationException {
     try {
-      return fileHelper.readLines().stream()
-          .map(this::deserializeJsonToInvoice)
-          .filter(Objects::nonNull)
-          .collect(Collectors.toList());
+      return getAllInvoices();
     } catch (IOException e) {
       throw new RepositoryOperationException("Encountered problems while searching for invoices.", e);
     }
@@ -64,27 +61,25 @@ public class InFileInvoiceRepository implements InvoiceRepository {
 
   @Override
   @Synchronized
-  public List<Invoice> findAllBySellerName(@NonNull String sellerName) throws RepositoryOperationException {
+  public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) throws RepositoryOperationException {
     try {
-      return fileHelper.readLines().stream()
-          .map(this::deserializeJsonToInvoice)
+      return getAllInvoices().stream()
           .filter(invoice -> invoice != null && invoice.getSeller().getName().equals(sellerName))
           .collect(Collectors.toList());
     } catch (IOException e) {
-      throw new RepositoryOperationException("Encountered problems while searching for invoices.", e);
+      throw new RepositoryOperationException(String.format("Encountered problems while searching for invoices with seller name: %s", sellerName), e);
     }
   }
 
   @Override
   @Synchronized
-  public List<Invoice> findAllByBuyerName(@NonNull String buyerName) throws RepositoryOperationException {
+  public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) throws RepositoryOperationException {
     try {
-      return fileHelper.readLines().stream()
-          .map(this::deserializeJsonToInvoice)
+      return getAllInvoices().stream()
           .filter(invoice -> invoice != null && invoice.getBuyer().getName().equals(buyerName))
           .collect(Collectors.toList());
     } catch (IOException e) {
-      throw new RepositoryOperationException("Encountered problems while searching for invoices.", e);
+      throw new RepositoryOperationException(String.format("Encountered problems while searching for invoices with buyer name: %s", buyerName), e);
     }
   }
 
@@ -95,7 +90,7 @@ public class InFileInvoiceRepository implements InvoiceRepository {
       if (fileHelper.isEmpty()) {
         return 0L;
       }
-      return (long) findAll().size();
+      return (long) getAllInvoices().size();
     } catch (IOException e) {
       throw new RepositoryOperationException("Encountered problems while counting invoices.", e);
     }
@@ -104,23 +99,22 @@ public class InFileInvoiceRepository implements InvoiceRepository {
   @Synchronized
   public void deleteById(@NonNull Integer id) throws RepositoryOperationException {
     try {
-      List<Invoice> invoices = findAll();
+      List<Invoice> invoices = getAllInvoices();
       Optional<Invoice> invoice = invoices.stream()
           .filter(i -> i.getId() == id)
           .findFirst();
       if (invoice.isPresent()) {
         fileHelper.removeLine(invoices.indexOf(invoice.get()) + 1);
       }
-    } catch (Exception e) {
-      throw new RepositoryOperationException("Encountered problem while deleting invoice.", e);
+    } catch (IOException | FileHelperException e) {
+      throw new RepositoryOperationException(String.format("Encountered problem while deleting invoice: %d", id), e);
     }
   }
 
   @Synchronized
   public boolean existsById(@NonNull Integer id) throws RepositoryOperationException {
     try {
-      return fileHelper.readLines().stream()
-          .map(this::deserializeJsonToInvoice)
+      return getAllInvoices().stream()
           .filter(Objects::nonNull)
           .anyMatch(invoice -> invoice.getId() == id);
     } catch (IOException e) {
@@ -144,5 +138,12 @@ public class InFileInvoiceRepository implements InvoiceRepository {
       System.err.println("Unsuccessful JSON deserialization.");
       return null;
     }
+  }
+
+  private List<Invoice> getAllInvoices() throws IOException {
+    return fileHelper.readLines().stream()
+        .map(this::deserializeJsonToInvoice)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
   }
 }

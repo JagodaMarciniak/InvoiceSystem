@@ -79,6 +79,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertThrows(RepositoryOperationException.class, () -> inFileRepository.save(invoice));
+    verify(fileHelperMock).writeLine(invoiceAsJson);
   }
 
   @Test
@@ -98,6 +99,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Optional.of(invoice2), actualInvoice);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -112,6 +114,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -125,6 +128,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -138,6 +142,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -148,6 +153,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertThrows(RepositoryOperationException.class, () -> inFileRepository.findById(getRandomInvoice().getId()));
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -167,6 +173,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Arrays.asList(invoice1, invoice2, invoice3), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -180,6 +187,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(new ArrayList<>(), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -193,6 +201,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(new ArrayList<>(), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -203,6 +212,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertThrows(RepositoryOperationException.class, () -> inFileRepository.findAll());
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -222,6 +232,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Arrays.asList(invoice1, invoice2), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -235,6 +246,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Collections.emptyList(), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -248,6 +260,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(new ArrayList<>(), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -267,6 +280,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Collections.emptyList(), actualInvoicesBySellerName);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -278,6 +292,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertThrows(RepositoryOperationException.class, () -> inFileRepository.findAllBySellerName(invoice.getSeller().getName()));
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -297,6 +312,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Arrays.asList(invoice1, invoice3), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -310,6 +326,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Collections.emptyList(), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -323,6 +340,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Collections.emptyList(), actualInvoices);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -342,6 +360,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Collections.emptyList(), actualInvoicesByBuyerName);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -352,6 +371,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertThrows(RepositoryOperationException.class, () -> inFileRepository.findAllByBuyerName(getRandomInvoice().getBuyer().getName()));
+    verify(fileHelperMock).readLines();
   }
 
   @ParameterizedTest
@@ -367,6 +387,8 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(expectedInvoiceCount, actualInvoiceCount);
+    verify(fileHelperMock).isEmpty();
+    verify(fileHelperMock).readLines();
   }
 
   private static Stream<Arguments> countInvoicesTestParameters() throws IOException {
@@ -391,6 +413,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Long.valueOf(0), actualInvoiceCount);
+    verify(fileHelperMock).isEmpty();
   }
 
   @Test
@@ -404,6 +427,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertEquals(Long.valueOf(0), actualInvoiceCount);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -417,6 +441,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertFalse(result);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -436,6 +461,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertTrue(result);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -455,16 +481,18 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertFalse(result);
+    verify(fileHelperMock).readLines();
   }
 
   @Test
   @DisplayName("Should throw RepositoryOperationException when existsById invoked and fileHelper throws exception.")
-  void shouldThrowExceptionWhenInvoiceExistsAndFileHelperThrowsException() throws IOException {
+  void existsByIdShouldThrowExceptionWhenFileHelperReadLinesThrowsException() throws IOException {
     //given
     doThrow(IOException.class).when(fileHelperMock).readLines();
 
     //then
     assertThrows(RepositoryOperationException.class, () -> inFileRepository.existsById(getRandomInvoice().getId()));
+    verify(fileHelperMock).readLines();
   }
 
   @Test
@@ -517,6 +545,8 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertThrows(RepositoryOperationException.class, () -> inFileRepository.deleteById(invoice.getId()));
+    verify(fileHelperMock).readLines();
+    verify(fileHelperMock).removeLine(anyInt());
   }
 
   @Test
@@ -527,6 +557,7 @@ class InFileInvoiceRepositoryTest {
 
     //then
     assertThrows(RepositoryOperationException.class, () -> inFileRepository.deleteAll());
+    verify(fileHelperMock).clear();
   }
 
   @Test
