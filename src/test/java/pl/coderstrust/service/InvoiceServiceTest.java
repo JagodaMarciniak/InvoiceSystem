@@ -144,7 +144,7 @@ class InvoiceServiceTest {
     when(repository.findById(id)).thenReturn(invoice);
 
     //when
-    Optional<Invoice> actual = invoiceService.getSingleInvoiceById(id);
+    Optional<Invoice> actual = invoiceService.getInvoice(id);
 
     //then
     assertSame(invoice, actual);
@@ -175,8 +175,8 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenGetSingleInvoiceByIdInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.getSingleInvoiceById(Integer.parseInt((null))));
+  void shouldThrowExceptionWhenGetInvoiceInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.getInvoice(Integer.parseInt((null))));
   }
 
   @Test
@@ -186,7 +186,7 @@ class InvoiceServiceTest {
     when(repository.findById(id)).thenReturn(Optional.empty());
 
     //then
-    Optional<Invoice> actual = invoiceService.getSingleInvoiceById(id);
+    Optional<Invoice> actual = invoiceService.getInvoice(id);
 
     //then
     assertEquals(Optional.empty(), actual);
@@ -194,13 +194,13 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenGettingSingleInvoiceByIdWentWrong() throws RepositoryOperationException {
+  void shouldThrowExceptionWhenGettingInvoiceWentWrong() throws RepositoryOperationException {
     //given
     int id = 234;
     doThrow(RepositoryOperationException.class).when(repository).findById(id);
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getSingleInvoiceById(id));
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getInvoice(id));
     verify(repository).findById(id);
   }
 
@@ -263,7 +263,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenGetAllInvoicesInGivenDateRangeInvokedWithNull() {
+  void shouldThrowExceptionWhenGetAllInvoicesIssuedInGivenDateRangeInvokedWithNull() {
     //given
     LocalDate startDate = LocalDate.of(2019, 12, 1);
     LocalDate endDate = LocalDate.of(2019, 11, 1);
@@ -274,7 +274,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWentWrong() throws RepositoryOperationException {
+  void shouldThrowExceptionWhenGettingAllInvoicesIssuedInGivenDateRangeWentWrong() throws RepositoryOperationException {
     //given
     LocalDate startDate = LocalDate.of(2019, 12, 1);
     LocalDate endDate = LocalDate.of(2019, 12, 5);
@@ -286,7 +286,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenGettingAllInvoicesInGivenDateRangeWithWrongDates() {
+  void shouldThrowExceptionWhenGettingAllInvoicesIssuedInGivenDateRangeWithWrongDates() {
     //given
     LocalDate startDate = LocalDate.of(2019, 12, 1);
     LocalDate endDate = LocalDate.of(2019, 11, 1);

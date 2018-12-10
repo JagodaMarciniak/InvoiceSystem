@@ -114,12 +114,12 @@ public class InvoiceGenerator {
 
   public static List<Invoice> getRandomInvoicesIssuedInSpecificDateRange(LocalDate startDate, LocalDate
       endDate) {
-    List<Invoice> invoiceList = new ArrayList<>();
+    List<Invoice> invoices = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      invoiceList.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(startDate));
-      invoiceList.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(endDate));
+      invoices.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(startDate));
+      invoices.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(endDate));
     }
-    return invoiceList;
+    return invoices;
   }
 
   public static List<Invoice> getRandomInvoices() {
