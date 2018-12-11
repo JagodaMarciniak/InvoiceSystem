@@ -112,8 +112,7 @@ public class InvoiceGenerator {
         randomInvoice.getComments());
   }
 
-  public static List<Invoice> getRandomInvoicesIssuedInSpecificDateRange(LocalDate startDate, LocalDate
-      endDate) {
+  public static List<Invoice> getRandomInvoicesIssuedInSpecificDateRange(LocalDate startDate, LocalDate endDate) {
     List<Invoice> invoices = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
       invoices.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(startDate));
@@ -123,10 +122,10 @@ public class InvoiceGenerator {
   }
 
   public static List<Invoice> getRandomInvoices() {
-    List<Invoice> randomInvoiceList = new ArrayList<>();
+    List<Invoice> invoices = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      randomInvoiceList.add(InvoiceGenerator.getRandomInvoice());
+      invoices.add(InvoiceGenerator.getRandomInvoice());
     }
-    return randomInvoiceList;
+    return invoices;
   }
 }

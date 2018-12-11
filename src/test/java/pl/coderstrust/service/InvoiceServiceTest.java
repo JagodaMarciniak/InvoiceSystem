@@ -1,8 +1,6 @@
 package pl.coderstrust.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -68,15 +66,18 @@ class InvoiceServiceTest {
     LocalDate startDate = LocalDate.of(2018, 12, 3);
     LocalDate endDate = LocalDate.of(2018, 12, 5);
 
-    List<Invoice> invoices = InvoiceGenerator.getRandomInvoicesIssuedInSpecificDateRange(startDate, endDate);
-    invoices.add(20, InvoiceGenerator.getRandomInvoice());
+    List<Invoice> expected = InvoiceGenerator.getRandomInvoicesIssuedInSpecificDateRange(startDate, endDate);
+    List<Invoice> invoices = new ArrayList<>();
+    invoices.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(LocalDate.of(2016, 11, 3)));
+    invoices.addAll(expected);
+    invoices.add(InvoiceGenerator.getRandomInvoiceWithSpecificIssueDate(LocalDate.of(2017, 12, 3)));
     when(repository.findAll()).thenReturn(invoices);
 
     //when
-    Iterable<Invoice> actual = invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate);
+    Iterable<Invoice> actual = invoiceService.getAllInvoicesIssuedInGivenDateRange(startDate, endDate);
 
     //then
-    assertNotSame(invoices, actual);
+    assertEquals(expected, actual);
     verify(repository).findAll();
   }
 
@@ -90,7 +91,7 @@ class InvoiceServiceTest {
     when(repository.findAll()).thenReturn(new ArrayList<>());
 
     //when
-    List<Invoice> actual = invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate);
+    List<Invoice> actual = invoiceService.getAllInvoicesIssuedInGivenDateRange(startDate, endDate);
 
     //then
     assertEquals(new ArrayList<>(), actual);
@@ -137,7 +138,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldReturnSingleInvoiceById() throws InvoiceServiceOperationException, RepositoryOperationException {
+  void shouldReturnInvoice() throws InvoiceServiceOperationException, RepositoryOperationException {
     //given
     Optional<Invoice> invoice = Optional.of(InvoiceGenerator.getRandomInvoice());
     int id = invoice.get().getId();
@@ -147,7 +148,7 @@ class InvoiceServiceTest {
     Optional<Invoice> actual = invoiceService.getInvoice(id);
 
     //then
-    assertSame(invoice, actual);
+    assertEquals(invoice, actual);
     verify(repository).findById(id);
   }
 
@@ -269,8 +270,8 @@ class InvoiceServiceTest {
     LocalDate endDate = LocalDate.of(2019, 11, 1);
 
     //then
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.getAllInvoicesInGivenDateRange(null, endDate));
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.getAllInvoicesInGivenDateRange(startDate, null));
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.getAllInvoicesIssuedInGivenDateRange(null, endDate));
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.getAllInvoicesIssuedInGivenDateRange(startDate, null));
   }
 
   @Test
@@ -281,7 +282,7 @@ class InvoiceServiceTest {
     doThrow(RepositoryOperationException.class).when(repository).findAll();
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate));
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getAllInvoicesIssuedInGivenDateRange(startDate, endDate));
     verify(repository).findAll();
   }
 
@@ -292,6 +293,6 @@ class InvoiceServiceTest {
     LocalDate endDate = LocalDate.of(2019, 11, 1);
 
     //then
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.getAllInvoicesInGivenDateRange(startDate, endDate));
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.getAllInvoicesIssuedInGivenDateRange(startDate, endDate));
   }
 }

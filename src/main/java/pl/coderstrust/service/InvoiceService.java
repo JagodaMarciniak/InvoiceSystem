@@ -68,7 +68,7 @@ public class InvoiceService {
     }
   }
 
-  public List<Invoice> getAllInvoicesInGivenDateRange(@NonNull LocalDate startDate, @NonNull LocalDate endDate) throws
+  public List<Invoice> getAllInvoicesIssuedInGivenDateRange(@NonNull LocalDate startDate, @NonNull LocalDate endDate) throws
       InvoiceServiceOperationException {
     if (startDate.until(endDate, ChronoUnit.DAYS) < 0) {
       throw new IllegalArgumentException("The end date must be newer or equal to start date");
