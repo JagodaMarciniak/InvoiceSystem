@@ -82,7 +82,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldReturnEmptyListOfInvoicesInGivenDataRangeWhenDatabaseIsEmpty() throws RepositoryOperationException,
+  void shouldReturnEmptyListWhenGetAllInvoicesInGivenDateRangeIsInvokedAndDatabaseIsEmpty() throws RepositoryOperationException,
       InvoiceServiceOperationException {
     //given
     LocalDate startDate = LocalDate.of(2018, 12, 3);
@@ -156,6 +156,9 @@ class InvoiceServiceTest {
   void shouldUpdateInvoice() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
+    int id = invoice.getId();
+    when(repository.existsById(id)).thenReturn(true);
+    doNothing().when(repository).deleteById(id);
     when(repository.save(invoice)).thenReturn(invoice);
 
     //when
@@ -163,6 +166,8 @@ class InvoiceServiceTest {
 
     //then
     verify(repository).save(invoice);
+    verify(repository).existsById(id);
+    verify(repository).deleteById(id);
   }
 
   @Test
