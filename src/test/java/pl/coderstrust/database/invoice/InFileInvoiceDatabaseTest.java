@@ -50,6 +50,17 @@ class InFileInvoiceDatabaseTest {
 
   private InvoiceDatabase database;
 
+  private static Stream<Arguments> countInvoicesTestParameters() throws IOException {
+    String invoice1AsJson = mapper.writeValueAsString(getRandomInvoice());
+    String invoice2AsJson = mapper.writeValueAsString(getRandomInvoice());
+    String invoice3AsJson = mapper.writeValueAsString(getRandomInvoice());
+    return Stream.of(
+        Arguments.of(Collections.singletonList(invoice1AsJson), 1L),
+        Arguments.of(Arrays.asList(invoice1AsJson, invoice2AsJson), 2L),
+        Arguments.of(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), 3L)
+    );
+  }
+
   @BeforeEach
   void setUp() throws DatabaseOperationException {
     database = new InFileInvoiceDatabase(fileHelperMock, mapper);
@@ -448,17 +459,6 @@ class InFileInvoiceDatabaseTest {
     assertEquals(expectedInvoiceCount, actualInvoiceCount);
     verify(fileHelperMock).isEmpty();
     verify(fileHelperMock).readLines();
-  }
-
-  private static Stream<Arguments> countInvoicesTestParameters() throws IOException {
-    String invoice1AsJson = mapper.writeValueAsString(getRandomInvoice());
-    String invoice2AsJson = mapper.writeValueAsString(getRandomInvoice());
-    String invoice3AsJson = mapper.writeValueAsString(getRandomInvoice());
-    return Stream.of(
-        Arguments.of(Collections.singletonList(invoice1AsJson), 1L),
-        Arguments.of(Arrays.asList(invoice1AsJson, invoice2AsJson), 2L),
-        Arguments.of(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), 3L)
-    );
   }
 
   @Test

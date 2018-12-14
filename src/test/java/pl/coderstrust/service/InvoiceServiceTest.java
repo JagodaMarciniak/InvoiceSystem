@@ -21,6 +21,7 @@ import pl.coderstrust.database.invoice.InvoiceDatabase;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
 
+
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
   @Mock

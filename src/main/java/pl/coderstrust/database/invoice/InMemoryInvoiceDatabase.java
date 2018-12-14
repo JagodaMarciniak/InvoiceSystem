@@ -17,6 +17,7 @@ import pl.coderstrust.model.Invoice;
 @Repository
 public class InMemoryInvoiceDatabase implements InvoiceDatabase {
 
+  private static int lastInvoiceId = 1;
   private List<Invoice> invoices = Collections.synchronizedList(new ArrayList<>());
 
   @Override
@@ -27,9 +28,12 @@ public class InMemoryInvoiceDatabase implements InvoiceDatabase {
   }
 
   @Override
-  public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
-    deleteById(invoice.getId());
-    invoices.add(invoice);
+  public Invoice save(@NonNull Invoice invoice) {
+    if (existsById(invoice.getId())) {
+      updateInvoice(invoice);
+    } else {
+      addInvoice(invoice);
+    }
     return invoice;
   }
 
@@ -79,5 +83,17 @@ public class InMemoryInvoiceDatabase implements InvoiceDatabase {
         .stream()
         .filter(invoice -> invoice.getBuyer().getName().equals(buyerName))
         .collect(Collectors.toList());
+  }
+
+  private Invoice updateInvoice(Invoice invoice) {
+    deleteById(String.valueOf(invoice.getId()));
+    invoices.add(invoice);
+    return invoice;
+  }
+
+  private Invoice addInvoice(Invoice invoice) {
+    invoice.setId(String.valueOf(lastInvoiceId++));
+    invoices.add(invoice);
+    return invoice;
   }
 }

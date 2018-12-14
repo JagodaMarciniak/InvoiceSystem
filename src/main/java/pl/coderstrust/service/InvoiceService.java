@@ -42,6 +42,10 @@ public class InvoiceService {
     }
   }
 
+  public boolean invoiceExists(int invoiceId) throws InvoiceServiceOperationException, RepositoryOperationException {
+    return invoiceDatabase.existsById(invoiceId);
+  }
+
   public Invoice addInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
     try {
       return invoiceDatabase.save(invoice);

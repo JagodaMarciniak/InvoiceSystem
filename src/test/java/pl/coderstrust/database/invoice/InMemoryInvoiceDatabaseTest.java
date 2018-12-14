@@ -1,6 +1,11 @@
 package pl.coderstrust.database.invoice;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -232,8 +237,8 @@ class InMemoryInvoiceDatabaseTest {
   void shouldUpdateExistingInvoice() throws DatabaseOperationException {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
-    Invoice invoice1Update = InvoiceGenerator.getRandomInvoiceWithSpecificId(invoice1.getId());
     database.save(invoice1);
+    Invoice invoice1Update = InvoiceGenerator.getRandomInvoiceWithSpecificId(invoice1.getId());
 
     //when
     database.save(invoice1Update);
@@ -242,7 +247,8 @@ class InMemoryInvoiceDatabaseTest {
 
     //then
     assertEquals(invoice1.getId(), resultAfterUpdate.getId());
-    assertEquals(invoice1Update, updatedInvoiceFromDatabase.get());
+    assertNotEquals(invoice1, invoice1Update);
+    assertEquals(invoice1Update, resultAfterUpdate);
   }
 
   @Test

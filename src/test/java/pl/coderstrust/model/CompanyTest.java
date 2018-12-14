@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import pl.coderstrust.generators.AccountNumberGenerator;
 import pl.coderstrust.generators.ContactDetailsGenerator;
 
+
 class CompanyTest {
 
   @Test

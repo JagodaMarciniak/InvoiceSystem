@@ -7,6 +7,7 @@ import static pl.coderstrust.model.Vat.VAT_8;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
+
 class InvoiceEntryTest {
 
   @Test
