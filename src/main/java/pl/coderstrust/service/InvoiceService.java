@@ -78,8 +78,7 @@ public class InvoiceService {
     if (startDate.until(endDate, ChronoUnit.DAYS) < 0) {
       throw new IllegalArgumentException("The end date must be newer or equal to start date");
     }
-    List<Invoice> result = getAllInvoices();
-    return result.stream()
+    return getAllInvoices().stream()
         .filter(invoice -> invoice.getIssueDate().compareTo(startDate) >= 0 && invoice.getIssueDate().compareTo(endDate) <= 0)
         .collect(Collectors.toList());
   }

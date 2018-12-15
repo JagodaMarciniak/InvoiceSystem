@@ -8,7 +8,7 @@ import lombok.NonNull;
 
 @Data
 public class Invoice {
-
+  @NonNull
   int id;
 
   @NonNull

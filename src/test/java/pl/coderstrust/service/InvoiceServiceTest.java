@@ -233,11 +233,26 @@ class InvoiceServiceTest {
   void shouldThrowExceptionWhenUpdatingInvoiceWentWrong() throws RepositoryOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
+    int id = invoice.getId();
+    when(repository.existsById(id)).thenReturn(true);
     doThrow(RepositoryOperationException.class).when(repository).save(invoice);
 
     //then
     assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.updateInvoice(invoice));
+    verify(repository).existsById(id);
     verify(repository).save(invoice);
+  }
+
+  @Test
+  void shouldThrowExceptionIfInvoiceWithGivenIdDoesNotExist() throws RepositoryOperationException {
+    //given
+    Invoice invoice = InvoiceGenerator.getRandomInvoice();
+    int id = invoice.getId();
+    doThrow(RepositoryOperationException.class).when(repository).existsById(id);
+
+    //then
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.updateInvoice(invoice));
+    verify(repository).existsById(id);
   }
 
   @Test
