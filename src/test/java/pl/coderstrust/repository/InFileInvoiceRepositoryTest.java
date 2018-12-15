@@ -31,7 +31,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.coderstrust.configuration.Configuration;
+import pl.coderstrust.configuration.AppConfiguration;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.model.Invoice;
@@ -41,7 +41,7 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 @ExtendWith(MockitoExtension.class)
 class InFileInvoiceRepositoryTest {
 
-  private static ObjectMapper mapper = Configuration.getObjectMapper();
+  private static ObjectMapper mapper = AppConfiguration.getObjectMapper();
 
   @Mock
   private FileHelper fileHelperMock;

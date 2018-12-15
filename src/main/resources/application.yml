@@ -1,0 +1,11 @@
+# InFileDatabase configuration
+spring:
+  profile: in-file-database
+database:
+  database-file-path: src/main/resources/invoice_database.txt
+
+---
+
+# InMemoryDatabase configuration
+spring:
+  profile: in-memory-database

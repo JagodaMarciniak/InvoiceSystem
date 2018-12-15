@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.configuration.Configuration;
+import pl.coderstrust.configuration.AppConfiguration;
 import pl.coderstrust.helpers.FileHelperImpl;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
@@ -27,10 +27,12 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 public class InFileInvoiceRepositoryIT {
 
-  private final ObjectMapper mapper = Configuration.getObjectMapper();
+  private final ObjectMapper mapper = AppConfiguration.getObjectMapper();
   private final String expectedDatabaseFilePath = String.format("%1$s%2$ssrc%2$stest%2$sresources%2$sdatabase%2$s%3$s",
       System.getProperty("user.dir"), File.separator, "expected_invoice_database.txt");
-  private final File databaseFile = new File(Configuration.DATABASE_FILE_PATH);
+  private final String databaseFilePath = String.format("%1$s%2$ssrc%2$smain%2$sresources%2$s%3$s",
+      System.getProperty("user.dir"), File.separator, "invoice_database.txt");
+  private final File databaseFile = new File(databaseFilePath);
   private final File expectedDatabaseFile = new File(expectedDatabaseFilePath);
   private InvoiceRepository inFileRepository;
 
@@ -39,7 +41,7 @@ public class InFileInvoiceRepositoryIT {
     if (databaseFile.exists()) {
       databaseFile.delete();
     }
-    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
+    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(databaseFilePath), mapper);
     if (expectedDatabaseFile.exists()) {
       expectedDatabaseFile.delete();
       expectedDatabaseFile.createNewFile();

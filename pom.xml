@@ -220,6 +220,8 @@
                                         <exclude>pl.coderstrust.Application</exclude>
                                         <exclude>pl.coderstrust.service.InvoiceServiceOperationException</exclude>
                                         <exclude>pl.coderstrust.repository.RepositoryOperationException</exclude>
+                                        <exclude>pl.coderstrust.configuration.AppConfiguration</exclude>
+                                        <exclude>pl.coderstrust.configuration.InFileDatabaseProperties</exclude>
                                     </excludes>
                                 </rule>
                             </rules>
