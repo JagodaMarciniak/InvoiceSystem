@@ -44,14 +44,13 @@ public class InvoiceService {
     }
   }
 
-  public void updateInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException, RepositoryOperationException {
+  public void updateInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
     try {
       int id = invoice.getId();
       if (invoiceRepository.existsById(id)) {
-        invoiceRepository.deleteById(id);
-        invoiceRepository.save(invoice);
+        addInvoice(invoice);
       } else {
-        invoiceRepository.save(invoice);
+        throw new InvoiceServiceOperationException("Invoice with id " + id + " does not exist");
       }
     } catch (RepositoryOperationException e) {
       throw new InvoiceServiceOperationException(String.format("An error occurred during updating invoice. Invoice: %s", invoice), e);

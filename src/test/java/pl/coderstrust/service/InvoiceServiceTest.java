@@ -158,7 +158,6 @@ class InvoiceServiceTest {
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
     int id = invoice.getId();
     when(repository.existsById(id)).thenReturn(true);
-    doNothing().when(repository).deleteById(id);
     when(repository.save(invoice)).thenReturn(invoice);
 
     //when
@@ -167,7 +166,6 @@ class InvoiceServiceTest {
     //then
     verify(repository).save(invoice);
     verify(repository).existsById(id);
-    verify(repository).deleteById(id);
   }
 
   @Test
