@@ -44,9 +44,15 @@ public class InvoiceService {
     }
   }
 
-  public void updateInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
+  public void updateInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException, RepositoryOperationException {
     try {
-      invoiceRepository.save(invoice);
+      int id = invoice.getId();
+      if (invoiceRepository.existsById(id)) {
+        invoiceRepository.deleteById(id);
+        invoiceRepository.save(invoice);
+      } else {
+        invoiceRepository.save(invoice);
+      }
     } catch (RepositoryOperationException e) {
       throw new InvoiceServiceOperationException(String.format("An error occurred during updating invoice. Invoice: %s", invoice), e);
     }
@@ -73,15 +79,9 @@ public class InvoiceService {
     if (startDate.until(endDate, ChronoUnit.DAYS) < 0) {
       throw new IllegalArgumentException("The end date must be newer or equal to start date");
     }
-    try {
-      List<Invoice> result = new ArrayList<>();
-      invoiceRepository.findAll().forEach(result::add);
-      return result.stream()
-          .filter(invoice -> invoice.getIssueDate().compareTo(startDate) >= 0 && invoice.getIssueDate().compareTo(endDate) <= 0)
-          .collect(Collectors.toList());
-    } catch (RepositoryOperationException e) {
-      throw new InvoiceServiceOperationException(String.format("An error occurred during getting all invoices in given date range. "
-          + "Start date: %s, end date: %s", startDate, endDate), e);
-    }
+    List<Invoice> result = getAllInvoices();
+    return result.stream()
+        .filter(invoice -> invoice.getIssueDate().compareTo(startDate) >= 0 && invoice.getIssueDate().compareTo(endDate) <= 0)
+        .collect(Collectors.toList());
   }
 }
