@@ -248,7 +248,7 @@ class InvoiceServiceTest {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
     int id = invoice.getId();
-    doThrow(RepositoryOperationException.class).when(repository).existsById(id);
+    when(repository.existsById(id)).thenReturn(false);
 
     //then
     assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.updateInvoice(invoice));

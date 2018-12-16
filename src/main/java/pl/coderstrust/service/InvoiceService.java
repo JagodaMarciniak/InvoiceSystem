@@ -48,7 +48,7 @@ public class InvoiceService {
     try {
       int id = invoice.getId();
       if (invoiceRepository.existsById(id)) {
-        addInvoice(invoice);
+        invoiceRepository.save(invoice);
       } else {
         throw new InvoiceServiceOperationException("Invoice with id " + id + " does not exist");
       }
@@ -61,7 +61,7 @@ public class InvoiceService {
     try {
       invoiceRepository.deleteById(invoiceId);
     } catch (RepositoryOperationException e) {
-      throw new InvoiceServiceOperationException(String.format("An error occurred during deleting " + "invoice. Invoice: %s", invoiceId), e);
+      throw new InvoiceServiceOperationException(String.format("An error occurred during deleting invoice. Invoice: %s", invoiceId), e);
     }
   }
 
