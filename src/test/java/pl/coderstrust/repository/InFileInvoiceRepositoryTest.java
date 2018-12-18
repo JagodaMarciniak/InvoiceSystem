@@ -41,7 +41,7 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 @ExtendWith(MockitoExtension.class)
 class InFileInvoiceRepositoryTest {
 
-  private static ObjectMapper mapper = AppConfiguration.getObjectMapper();
+  private static ObjectMapper mapper = new AppConfiguration().getObjectMapper();
 
   @Mock
   private FileHelper fileHelperMock;

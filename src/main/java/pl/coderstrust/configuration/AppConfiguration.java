@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperImpl;
 import pl.coderstrust.repository.invoice.InFileInvoiceRepository;
@@ -15,13 +15,15 @@ import pl.coderstrust.repository.invoice.InMemoryInvoiceRepository;
 import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @Configuration
-@EnableConfigurationProperties(InFileDatabaseProperties.class)
+@EnableConfigurationProperties(InFileRepositoryProperties.class)
 public class AppConfiguration {
 
   @Autowired
-  private InFileDatabaseProperties inFileDatabaseProperties;
+  private InFileRepositoryProperties inFileRepositoryProperties;
 
-  public static ObjectMapper getObjectMapper() {
+  @Bean
+  @ConditionalOnProperty(name = "database", havingValue = "in-file-database")
+  public ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JavaTimeModule());
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -29,19 +31,20 @@ public class AppConfiguration {
   }
 
   @Bean
-  public FileHelper fileHelper() {
-    return new FileHelperImpl(inFileDatabaseProperties.getDatabaseFilePath());
+  @ConditionalOnProperty(name = "database", havingValue = "in-file-database")
+  public FileHelper getFileHelper() {
+    return new FileHelperImpl(inFileRepositoryProperties.getDatabaseFilePath());
   }
 
   @Bean
-  @Profile("in-memory-database")
-  public InvoiceRepository inMemoryInvoiceRepository() {
+  @ConditionalOnProperty(name = "database", havingValue = "in-memory-database")
+  public InvoiceRepository getInMemoryInvoiceRepository() {
     return new InMemoryInvoiceRepository();
   }
 
   @Bean
-  @Profile("in-file-database")
-  public InvoiceRepository inFileInvoiceRepository(FileHelper fileHelper) throws Exception {
+  @ConditionalOnProperty(name = "database", havingValue = "in-file-database")
+  public InvoiceRepository getInFileInvoiceRepository(FileHelper fileHelper) throws Exception {
     return new InFileInvoiceRepository(fileHelper, getObjectMapper());
   }
 }
