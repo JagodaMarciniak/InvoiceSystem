@@ -17,6 +17,7 @@ public class InFileInvoiceRepository implements InvoiceRepository {
 
   private FileHelper fileHelper;
   private ObjectMapper mapper;
+  private int lastInvoiceId;
 
   public InFileInvoiceRepository(@NonNull FileHelper fileHelper, @NonNull ObjectMapper mapper) throws Exception {
     this.fileHelper = fileHelper;
@@ -24,13 +25,26 @@ public class InFileInvoiceRepository implements InvoiceRepository {
     if (!fileHelper.exists()) {
       fileHelper.initialize();
     }
+    lastInvoiceId = getLastInvoiceId();
+  }
+
+  //TODO - revise exception handling
+
+  private int getLastInvoiceId() throws IOException {
+    String lastInvoiceAsJson = fileHelper.readLastLine();
+    if (lastInvoiceAsJson == null) {
+      return 0;
+    }
+    Invoice lastInvoice = mapper.readValue(lastInvoiceAsJson, Invoice.class);
+    return lastInvoice.getId();
   }
 
   @Override
   @Synchronized
   public Invoice save(@NonNull Invoice invoice) throws RepositoryOperationException {
     try {
-      this.deleteById(invoice.getId());
+      deleteById(invoice.getId());
+      invoice.setId(incrementAndGetId());
       fileHelper.writeLine(mapper.writeValueAsString(invoice));
       return invoice;
     } catch (IOException e) {
@@ -145,5 +159,9 @@ public class InFileInvoiceRepository implements InvoiceRepository {
         .map(this::deserializeJsonToInvoice)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
+  }
+
+  private int incrementAndGetId() {
+    return lastInvoiceId++;
   }
 }

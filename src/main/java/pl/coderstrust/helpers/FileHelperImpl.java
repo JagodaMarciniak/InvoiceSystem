@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.input.ReversedLinesFileReader;
 
 @AllArgsConstructor
 public class FileHelperImpl implements FileHelper {
@@ -60,6 +61,14 @@ public class FileHelperImpl implements FileHelper {
     }
     file.setLength(file.length() - length);
     file.close();
+  }
+
+  @Override
+  public String readLastLine() throws IOException {
+    ReversedLinesFileReader reversedLinesReader = new ReversedLinesFileReader(new File(filePath));
+    String lastLine = reversedLinesReader.readLine();
+    reversedLinesReader.close();
+    return lastLine;
   }
 
   @Override

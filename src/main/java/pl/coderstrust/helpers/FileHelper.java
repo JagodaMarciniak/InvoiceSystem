@@ -22,4 +22,6 @@ public interface FileHelper {
   boolean isEmpty() throws IOException;
 
   void removeLine(int lineNumber) throws IOException, FileHelperException;
+
+  String readLastLine() throws IOException;
 }
