@@ -22,7 +22,7 @@ public class AppConfiguration {
   private InFileRepositoryProperties inFileRepositoryProperties;
 
   @Bean
-  @ConditionalOnProperty(name = "database", havingValue = "in-file-database")
+  @ConditionalOnProperty(name = "repository", havingValue = "in-file")
   public ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JavaTimeModule());
@@ -31,19 +31,19 @@ public class AppConfiguration {
   }
 
   @Bean
-  @ConditionalOnProperty(name = "database", havingValue = "in-file-database")
+  @ConditionalOnProperty(name = "repository", havingValue = "in-file")
   public FileHelper getFileHelper() {
     return new FileHelperImpl(inFileRepositoryProperties.getDatabaseFilePath());
   }
 
   @Bean
-  @ConditionalOnProperty(name = "database", havingValue = "in-memory-database")
+  @ConditionalOnProperty(name = "repository", havingValue = "in-memory")
   public InvoiceRepository getInMemoryInvoiceRepository() {
     return new InMemoryInvoiceRepository();
   }
 
   @Bean
-  @ConditionalOnProperty(name = "database", havingValue = "in-file-database")
+  @ConditionalOnProperty(name = "repository", havingValue = "in-file")
   public InvoiceRepository getInFileInvoiceRepository(FileHelper fileHelper) throws Exception {
     return new InFileInvoiceRepository(fileHelper, getObjectMapper());
   }
