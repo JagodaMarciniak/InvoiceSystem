@@ -1,7 +1,6 @@
 package pl.coderstrust.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,40 +24,5 @@ class AddressTest {
     assertEquals(postalCode, address.getPostalCode());
     assertEquals(city, address.getCity());
     assertEquals(country, address.getCountry());
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenStreetNameIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Address(null, "4/6", "66-951", "Gdynia", "Poland");
-    });
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenNumberIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Address("Wojska Polskiego", null, "66-951", "Gdynia", "Poland");
-    });
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenPostalCodeIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Address("Wojska Polskiego", "4/6", null, "Gdynia", "Poland");
-    });
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenCityNameIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Address("Wojska Polskiego", "4/6", "66-951", null, "Poland");
-    });
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenCountryNameIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new Address("Wojska Polskiego", "4/6", "66-951", "Gdynia", null);
-    });
   }
 }

@@ -1,10 +1,6 @@
 package pl.coderstrust.repository;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -248,37 +244,5 @@ class InMemoryInvoiceRepositoryTest {
     //then
     assertEquals(invoice1.getId(), resultAfterUpdate.getId());
     assertEquals(invoice1Update, updatedInvoiceFromDatabase.get());
-  }
-
-  @Test
-  void shouldThrowExceptionIfMethodExistByIdInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.existsById(null));
-  }
-
-  @Test
-  void shouldThrowExceptionIfMethodSaveInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.save(null));
-  }
-
-  @Test
-  void shouldThrowExceptionIfMethodFindByIdIsInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.findById(null));
-  }
-
-  @Test
-  void shouldThrowExceptionIfMethodDeleteByIdIsInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> testInvoiceRepository.deleteById(null));
-  }
-
-  @Test
-  void shouldThrowExceptionIfMethodFindAllInvoicesBySellerNameInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class,
-        () -> testInvoiceRepository.findAllBySellerName(null));
-  }
-
-  @Test
-  void shouldThrowExceptionIfMethodFindAllInvoicesByBuyerNameInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class,
-        () -> testInvoiceRepository.findAllByBuyerName(null));
   }
 }

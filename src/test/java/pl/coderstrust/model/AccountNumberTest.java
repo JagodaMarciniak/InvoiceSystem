@@ -23,13 +23,6 @@ class AccountNumberTest {
     assertEquals(expectedLocalNumber, accountNumber.getLocalNumber());
   }
 
-  @Test
-  public void shouldThrowExceptionWhenIbanNumberIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new AccountNumber(null);
-    });
-  }
-
   @ParameterizedTest
   @ValueSource(strings = {
       "",

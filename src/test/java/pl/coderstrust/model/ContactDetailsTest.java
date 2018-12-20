@@ -24,36 +24,4 @@ class ContactDetailsTest {
     assertEquals(phoneNumber, contactDetails.getPhoneNumber());
     assertEquals(website, contactDetails.getWebsite());
   }
-
-  @Test
-  public void shouldThrowExceptionWhenEmailAddressIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new ContactDetails(null, "5239766", "www.maria-nawik.org.pl",
-          AddressGenerator.getSampleAddress());
-    });
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenPhoneNumberIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new ContactDetails("maria-nawik@gmail.com", null, "www.maria-nawik.org.pl",
-          AddressGenerator.getSampleAddress());
-    });
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenWebsiteIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new ContactDetails("maria-nawik@gmail.com", "5239766", null,
-          AddressGenerator.getSampleAddress());
-    });
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenAddressIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      new ContactDetails("maria-nawik@gmail.com", "5239766", "www.maria-nawik.org.pl",
-          null);
-    });
-  }
 }

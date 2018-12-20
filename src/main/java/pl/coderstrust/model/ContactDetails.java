@@ -1,19 +1,16 @@
 package pl.coderstrust.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
+@AllArgsConstructor
 public class ContactDetails {
-  @NonNull
   String email;
 
-  @NonNull
   String phoneNumber;
 
-  @NonNull
   String website;
 
-  @NonNull
   Address address;
 }

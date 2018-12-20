@@ -1,7 +1,6 @@
 package pl.coderstrust.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.coderstrust.model.InvoiceType.STANDARD;
 
 import java.math.BigDecimal;
@@ -40,53 +39,5 @@ class InvoiceTest {
     assertEquals(totalNetValue, invoice.getTotalNetValue());
     assertEquals(totalGrossValue, invoice.getTotalGrossValue());
     assertEquals(comments, invoice.getComments());
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenInvoiceTypeIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, null, issueDate, dueDate,
-        seller, buyer, entries, totalNetValue, totalGrossValue, comments));
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenIssueDateIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, null, dueDate,
-        seller, buyer, entries, totalNetValue, totalGrossValue, comments));
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenDueDateIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate, null,
-        seller, buyer, entries, totalNetValue, totalGrossValue, comments));
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenSellerIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
-        dueDate, null, buyer, entries, totalNetValue, totalGrossValue, comments));
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenBuyerIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
-        dueDate, seller, null, entries, totalNetValue, totalGrossValue, comments));
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenEntriesIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
-        dueDate, seller, buyer, null, totalNetValue, totalGrossValue, comments));
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenTotalNetValueIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
-        dueDate, seller, buyer, entries, null, totalGrossValue, comments));
-  }
-
-  @Test
-  public void shouldThrowExceptionWhenTotalGrossValueIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
-        dueDate, seller, buyer, entries, totalNetValue, null, comments));
   }
 }

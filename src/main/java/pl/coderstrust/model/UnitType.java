@@ -2,7 +2,6 @@ package pl.coderstrust.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 
 @AllArgsConstructor
 public enum UnitType {
@@ -12,7 +11,6 @@ public enum UnitType {
   DAY("day"),
   FLAT_RATE("flat rate");
 
-  @NonNull
   @Getter
   private final String value;
 }

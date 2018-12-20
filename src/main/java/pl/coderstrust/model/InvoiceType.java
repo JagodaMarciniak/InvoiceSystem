@@ -2,7 +2,6 @@ package pl.coderstrust.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 
 @AllArgsConstructor
 public enum InvoiceType {
@@ -11,7 +10,6 @@ public enum InvoiceType {
   PRO_FORMA("Pro-forma"),
   DEBIT_MEMO("Debit memo");
 
-  @NonNull
   @Getter
   private final String value;
 }
