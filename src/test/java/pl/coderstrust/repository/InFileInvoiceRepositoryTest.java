@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoice;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName;
+import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificId;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificSellerName;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +58,7 @@ class InFileInvoiceRepositoryTest {
   @DisplayName("Should return saved invoice when save invoked.")
   void shouldReturnSavedInvoice() throws RepositoryOperationException, IOException {
     //given
-    final Invoice expectedInvoice = getRandomInvoice();
+    final Invoice expectedInvoice = getRandomInvoiceWithSpecificId(0);
     final String invoiceAsJson = mapper.writeValueAsString(expectedInvoice);
     doNothing().when(fileHelperMock).writeLine(invoiceAsJson);
 
@@ -73,7 +74,7 @@ class InFileInvoiceRepositoryTest {
   @DisplayName("Should throw DatabaseOperationException when save is invoked and fileHelper throws exception.")
   void saveShouldThrowExceptionWhenFileHelperThrowsException() throws IOException {
     //given
-    final Invoice invoice = getRandomInvoice();
+    final Invoice invoice = getRandomInvoiceWithSpecificId(0);
     final String invoiceAsJson = mapper.writeValueAsString(invoice);
     doThrow(IOException.class).when(fileHelperMock).writeLine(invoiceAsJson);
 

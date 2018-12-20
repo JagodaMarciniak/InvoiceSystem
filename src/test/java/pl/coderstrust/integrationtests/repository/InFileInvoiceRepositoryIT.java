@@ -52,7 +52,7 @@ public class InFileInvoiceRepositoryIT {
   @DisplayName("Should save new invoice to database when save is invoked.")
   void saveShouldSaveNewInvoiceToDatabase() throws IOException, RepositoryOperationException {
     //given
-    Invoice invoice = getRandomInvoice();
+    Invoice invoice = getRandomInvoiceWithSpecificId(0);
     String invoiceAsJson = mapper.writeValueAsString(invoice);
     FileUtils.writeLines(expectedDatabaseFile, Collections.singleton(invoiceAsJson), null);
 
@@ -67,8 +67,8 @@ public class InFileInvoiceRepositoryIT {
   @DisplayName("Should replace invoice in database file when save is called and invoiceId is already present in database.")
   void saveShouldReplaceInvoiceInDatabase() throws IOException, RepositoryOperationException {
     //given
-    Invoice invoice = getRandomInvoiceWithSpecificId(12);
-    Invoice alteredInvoice = getRandomInvoiceWithSpecificId(12);
+    Invoice invoice = getRandomInvoiceWithSpecificId(0);
+    Invoice alteredInvoice = getRandomInvoiceWithSpecificId(0);
     String invoiceAsJson = mapper.writeValueAsString(invoice);
     String alteredInvoiceAsJson = mapper.writeValueAsString(alteredInvoice);
     FileUtils.writeLines(expectedDatabaseFile, Collections.singleton(alteredInvoiceAsJson), null);
