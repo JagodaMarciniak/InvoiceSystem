@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperImpl;
 import pl.coderstrust.repository.invoice.InFileInvoiceRepository;
@@ -16,6 +17,7 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @Configuration
 @EnableConfigurationProperties(InFileRepositoryProperties.class)
+@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:in-file.yml")
 public class AppConfiguration {
 
   @Autowired
