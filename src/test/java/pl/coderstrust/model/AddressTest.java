@@ -9,6 +9,7 @@ class AddressTest {
   @Test
   public void checkFullyInitialization() {
     //given
+    int id = 1;
     String street = "Szarych Szeregów";
     String number = "8b";
     String postalCode = "66-843";
@@ -16,7 +17,7 @@ class AddressTest {
     String country = "Poland";
 
     //when
-    Address address = new Address(street, number, postalCode, city, country);
+    Address address = new Address(id, street, number, postalCode, city, country);
 
     //then
     assertEquals(street, address.getStreet());

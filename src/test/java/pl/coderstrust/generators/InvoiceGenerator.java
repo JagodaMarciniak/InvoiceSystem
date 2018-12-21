@@ -23,12 +23,12 @@ public class InvoiceGenerator {
     String sampleBuyerName = sampleInvoice.getBuyer().getName()
         + atomicInteger.incrementAndGet();
 
-    Company sampleSeller = new Company(sampleSellerName,
+    Company sampleSeller = new Company(0, sampleSellerName,
         sampleInvoice.getSeller().getTaxIdentificationNumber(),
         sampleInvoice.getSeller().getAccountNumber(),
         sampleInvoice.getSeller().getContactDetails());
 
-    Company sampleBuyer = new Company(sampleBuyerName,
+    Company sampleBuyer = new Company(0, sampleBuyerName,
         sampleInvoice.getBuyer().getTaxIdentificationNumber(),
         sampleInvoice.getBuyer().getAccountNumber(),
         sampleInvoice.getBuyer().getContactDetails());
@@ -65,7 +65,7 @@ public class InvoiceGenerator {
   public static Invoice getRandomInvoiceWithSpecificSellerName(String sellerName) {
     Invoice randomInvoice = getRandomInvoice();
 
-    Company sampleSeller = new Company(sellerName,
+    Company sampleSeller = new Company(0, sellerName,
         randomInvoice.getSeller().getTaxIdentificationNumber(),
         randomInvoice.getSeller().getAccountNumber(),
         randomInvoice.getSeller().getContactDetails());
@@ -80,7 +80,7 @@ public class InvoiceGenerator {
   public static Invoice getRandomInvoiceWithSpecificBuyerName(String buyerName) {
     Invoice randomInvoice = getRandomInvoice();
 
-    Company sampleBuyer = new Company(buyerName,
+    Company sampleBuyer = new Company(0, buyerName,
         randomInvoice.getSeller().getTaxIdentificationNumber(),
         randomInvoice.getSeller().getAccountNumber(),
         randomInvoice.getSeller().getContactDetails());
