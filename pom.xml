@@ -222,6 +222,7 @@
                                         <exclude>pl.coderstrust.repository.RepositoryOperationException</exclude>
                                         <exclude>pl.coderstrust.configuration.AppConfiguration</exclude>
                                         <exclude>pl.coderstrust.configuration.InFileRepositoryProperties</exclude>
+                                        <exclude>pl.coderstrust.configuration.YamlPropertySourceFactory</exclude>
                                     </excludes>
                                 </rule>
                             </rules>
