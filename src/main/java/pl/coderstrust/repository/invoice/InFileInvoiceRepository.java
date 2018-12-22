@@ -19,16 +19,22 @@ public class InFileInvoiceRepository implements InvoiceRepository {
   private ObjectMapper mapper;
   private int lastInvoiceId;
 
-  public InFileInvoiceRepository(@NonNull FileHelper fileHelper, @NonNull ObjectMapper mapper) throws Exception {
+  public InFileInvoiceRepository(@NonNull FileHelper fileHelper, @NonNull ObjectMapper mapper) throws RepositoryOperationException {
     this.fileHelper = fileHelper;
     this.mapper = mapper;
     if (!fileHelper.exists()) {
-      fileHelper.initialize();
+      try {
+        fileHelper.initialize();
+      } catch (IOException | FileHelperException e) {
+        throw new RepositoryOperationException("Could not create In-file Invoice Repository", e);
+      }
     }
-    lastInvoiceId = getLastInvoiceId();
+    try {
+      lastInvoiceId = getLastInvoiceId();
+    } catch (IOException e) {
+      throw new RepositoryOperationException("Could not create In-file Invoice Repository", e);
+    }
   }
-
-  //TODO - revise exception handling
 
   private int getLastInvoiceId() throws IOException {
     String lastInvoiceAsJson = fileHelper.readLastLine();
@@ -42,14 +48,17 @@ public class InFileInvoiceRepository implements InvoiceRepository {
   @Override
   @Synchronized
   public Invoice save(@NonNull Invoice invoice) throws RepositoryOperationException {
-    try {
+    if (existsById(invoice.getId())) {
       deleteById(invoice.getId());
+    } else {
       invoice.setId(incrementAndGetId());
+    }
+    try {
       fileHelper.writeLine(mapper.writeValueAsString(invoice));
-      return invoice;
     } catch (IOException e) {
       throw new RepositoryOperationException(String.format("Encountered problems saving invoice: %s", invoice), e);
     }
+    return invoice;
   }
 
   @Synchronized
