@@ -65,10 +65,9 @@ public class FileHelperImpl implements FileHelper {
 
   @Override
   public String readLastLine() throws IOException {
-    ReversedLinesFileReader reversedLinesReader = new ReversedLinesFileReader(new File(filePath));
-    String lastLine = reversedLinesReader.readLine();
-    reversedLinesReader.close();
-    return lastLine;
+    try (ReversedLinesFileReader reversedLinesReader = new ReversedLinesFileReader(new File(filePath))) {
+      return reversedLinesReader.readLine();
+    }
   }
 
   @Override
