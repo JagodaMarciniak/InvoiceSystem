@@ -17,8 +17,8 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @Configuration
 @EnableConfigurationProperties(InFileRepositoryProperties.class)
-@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:in-file.yml")
-public class AppConfiguration {
+@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:in-file-repository.yml")
+public class ApplicationConfiguration {
 
   @Autowired
   private InFileRepositoryProperties inFileRepositoryProperties;

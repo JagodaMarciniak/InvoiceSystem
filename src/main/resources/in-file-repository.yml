@@ -1,2 +1,2 @@
-in-file-invoice-repository:
+in-file-repository:
   database-file-path: src/main/resources/invoice_database.txt

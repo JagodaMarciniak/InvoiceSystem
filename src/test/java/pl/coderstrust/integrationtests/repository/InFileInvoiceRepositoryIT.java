@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.configuration.AppConfiguration;
+import pl.coderstrust.configuration.ApplicationConfiguration;
 import pl.coderstrust.helpers.FileHelperImpl;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
@@ -27,7 +27,7 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 public class InFileInvoiceRepositoryIT {
 
-  private final ObjectMapper mapper = new AppConfiguration().getObjectMapper();
+  private final ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String expectedDatabaseFilePath = String.format("%1$s%2$ssrc%2$stest%2$sresources%2$sdatabase%2$s%3$s",
       System.getProperty("user.dir"), File.separator, "expected_invoice_database.txt");
   private final String databaseFilePath = String.format("%1$s%2$ssrc%2$smain%2$sresources%2$s%3$s",
