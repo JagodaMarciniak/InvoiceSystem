@@ -21,7 +21,7 @@ class InvoiceEntryTest {
     BigDecimal grossValue = new BigDecimal(108);
 
     //when
-    InvoiceEntry invoiceEntry = new InvoiceEntry(item, quantity, unit, price, vatRate,
+    InvoiceEntry invoiceEntry = new InvoiceEntry(0, item, quantity, unit, price, vatRate,
         netValue, grossValue);
 
     //then

@@ -19,7 +19,7 @@ public class ContactDetails {
 
   String website;
 
-  @Transient
+  @OneToOne(cascade = CascadeType.ALL)
   Address address;
 
   public ContactDetails() {

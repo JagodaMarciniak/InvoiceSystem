@@ -28,7 +28,8 @@ public class Invoice {
   @ManyToOne(cascade = CascadeType.ALL)
   Company buyer;
 
-  @Transient
+  @ElementCollection
+  @OneToMany(cascade = CascadeType.ALL)
   List<InvoiceEntry> entries;
 
   BigDecimal totalNetValue;

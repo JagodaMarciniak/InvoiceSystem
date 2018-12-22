@@ -1,9 +1,8 @@
 package pl.coderstrust.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.Rollback;
@@ -34,10 +33,10 @@ class InMemoryHibernateRepositoryTest {
   void shouldReturnTrueIfExistsByIdInDatabase() throws RepositoryOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    repository.save(invoice);
+    int id = repository.save(invoice).getId();
 
     //when
-    boolean existsById = repository.existsById(invoice.getId());
+    boolean existsById = repository.existsById(id);
 
     //then
     assertTrue(existsById);
@@ -62,29 +61,11 @@ class InMemoryHibernateRepositoryTest {
   @Transactional
   void shouldSaveIntoDatabase() throws RepositoryOperationException {
     //given
-    Invoice expectedInvoice = InvoiceGenerator.getRandomInvoiceWithSpecificId(20);
+    Invoice expectedInvoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificId(1);
 
     //when
-    Invoice asd = repository.save(expectedInvoice);
-    System.out.println("asd: "+asd);
-    boolean existsById = repository.existsById(expectedInvoice.getId());
-
-    //then
-    assertTrue(existsById);
-  }
-
-  @Test
-  @Transactional
-  void shouldUpdateIntoDatabase() throws RepositoryOperationException {
-    //given
-    Invoice expectedInvoice = InvoiceGenerator.getRandomInvoiceWithSpecificId(5);
-
-    //when
-    Invoice added = repository.save(expectedInvoice);
-    added.setComments("Asdasd");
-    repository.save(added);
-    System.out.println("asd: "+expectedInvoice.getId());
-    boolean existsById = repository.existsById(expectedInvoice.getId());
+    repository.save(expectedInvoice1);
+    boolean existsById = repository.existsById(expectedInvoice1.getId());
 
     //then
     assertTrue(existsById);
@@ -114,5 +95,68 @@ class InMemoryHibernateRepositoryTest {
 
     //then
     assertEquals(0, repository.count());
+  }
+
+  @Test
+  @Transactional
+  void shouldDeleteByIdFromDatabaseIfPresent() throws RepositoryOperationException {
+    //given
+    Invoice invoice = InvoiceGenerator.getRandomInvoice();
+    int id = repository.save(invoice).getId();
+
+    //when
+    repository.deleteById(id);
+    boolean existsById = repository.existsById(id);
+
+    //then
+    assertFalse(existsById);
+  }
+
+//  @Test
+//  @Transactional
+//  void shouldDeleteByIdFromDatabaseIfAbsent() throws RepositoryOperationException {
+//    //given
+//    int invoiceId = 1;
+//
+//    //when
+//    repository.deleteById(invoiceId);
+//    boolean existsById = repository.existsById(invoiceId);
+//
+//    //then
+//    assertFalse(existsById);
+//  }
+
+  @Test
+  @Transactional
+  void shouldCountingInvoicesInDatabase() throws RepositoryOperationException {
+    //given
+    Long expectedNumberOfInvoices = 5L;
+    for (int i = 0; i < expectedNumberOfInvoices; i++) {
+      repository.save(InvoiceGenerator.getRandomInvoice());
+    }
+
+    //when
+    Long actualNumberOfInvoices = repository.count();
+
+    //then
+    assertEquals(expectedNumberOfInvoices, actualNumberOfInvoices);
+  }
+
+  @Test
+  @Transactional
+  void shouldFindOneInvoice() throws RepositoryOperationException {
+    //given
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificId(1);
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoiceWithSpecificId(2);
+    repository.save(invoice1);
+    repository.save(invoice2);
+
+    //when
+    Optional invoiceFromDatabase1 = repository.findById(invoice1.getId());
+    Optional invoiceFromDatabase2 = repository.findById(invoice2.getId());
+
+    //then
+    assertEquals(invoice1, invoiceFromDatabase1.get());
+    assertEquals(invoice2, invoiceFromDatabase2.get());
   }
 }

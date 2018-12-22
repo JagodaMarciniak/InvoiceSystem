@@ -4,9 +4,20 @@ import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 @Data
 @AllArgsConstructor
+@Entity
 public class InvoiceEntry {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  int id;
+
   String item;
 
   Long quantity;
@@ -20,4 +31,7 @@ public class InvoiceEntry {
   BigDecimal netValue;
 
   BigDecimal grossValue;
+
+  public InvoiceEntry() {
+  }
 }
