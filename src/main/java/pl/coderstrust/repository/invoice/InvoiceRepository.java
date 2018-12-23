@@ -7,10 +7,10 @@ import pl.coderstrust.repository.RepositoryOperationException;
 
 public interface InvoiceRepository extends BaseRepository<Invoice, Integer> {
 
-  @Query(value = "from Invoice")
+  @Query(value = "from Invoice where seller.name=?1")
   Iterable<Invoice> findAllBySellerName(String sellerName) throws RepositoryOperationException;
 
-  @Query(value = "from Invoice")
+  @Query(value = "from Invoice where buyer.name=?1")
   Iterable<Invoice> findAllByBuyerName(String buyerName) throws RepositoryOperationException;
 
 }
