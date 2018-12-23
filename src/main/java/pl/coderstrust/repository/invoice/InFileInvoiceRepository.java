@@ -171,6 +171,6 @@ public class InFileInvoiceRepository implements InvoiceRepository {
   }
 
   private int incrementAndGetId() {
-    return lastInvoiceId++;
+    return ++lastInvoiceId;
   }
 }

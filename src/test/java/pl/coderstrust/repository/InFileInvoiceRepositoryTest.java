@@ -2,6 +2,7 @@ package pl.coderstrust.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -17,6 +18,7 @@ import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpe
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +28,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -50,31 +53,100 @@ class InFileInvoiceRepositoryTest {
   private InvoiceRepository inFileRepository;
 
   @BeforeEach
-  void setUp() throws Exception {
-    inFileRepository = new InFileInvoiceRepository(fileHelperMock, mapper);
+  void setUp(TestInfo testInfo) throws Exception {
+    String[] excludedTests = {
+        "constructorShouldThrowExceptionWhenFileHelperInitializeThrowsIOException",
+        "constructorShouldThrowExceptionWhenFileHelperInitializeThrowsFileHelperException",
+        "constructorShouldThrowExceptionWhenFileHelperReadLastLineThrowsException"
+    };
+    Optional<Method> testMethod = testInfo.getTestMethod();
+    String testName = "";
+    if (testMethod.isPresent()) {
+      testName = testMethod.get().getName();
+    }
+    if (!Arrays.asList(excludedTests).contains(testName)) {
+      inFileRepository = new InFileInvoiceRepository(fileHelperMock, mapper);
+    }
   }
 
   @Test
-  @DisplayName("Should return saved invoice when save invoked.")
-  void shouldReturnSavedInvoice() throws RepositoryOperationException, IOException {
+  @DisplayName("Should throw RepositoryOperationException when FileHelper.initialize() throws IOException.")
+  void constructorShouldThrowExceptionWhenFileHelperInitializeThrowsIOException() throws IOException, FileHelperException {
     //given
-    final Invoice expectedInvoice = getRandomInvoiceWithSpecificId(0);
-    final String invoiceAsJson = mapper.writeValueAsString(expectedInvoice);
-    doNothing().when(fileHelperMock).writeLine(invoiceAsJson);
+    doThrow(IOException.class).when(fileHelperMock).initialize();
+
+    //then
+    assertThrows(RepositoryOperationException.class, () -> new InFileInvoiceRepository(fileHelperMock, mapper));
+  }
+
+  @Test
+  @DisplayName("Should throw RepositoryOperationException when FileHelper.initialize() throws FileHelperException.")
+  void constructorShouldThrowExceptionWhenFileHelperInitializeThrowsFileHelperException() throws IOException, FileHelperException {
+    //given
+    doThrow(FileHelperException.class).when(fileHelperMock).initialize();
+
+    //then
+    assertThrows(RepositoryOperationException.class, () -> new InFileInvoiceRepository(fileHelperMock, mapper));
+  }
+
+  @Test
+  @DisplayName("Should throw RepositoryOperationException when FileHelper.readLastLine() throws IOException.")
+  void constructorShouldThrowExceptionWhenFileHelperReadLastLineThrowsException() throws IOException {
+    //given
+    doThrow(IOException.class).when(fileHelperMock).readLastLine();
+
+    //then
+    assertThrows(RepositoryOperationException.class, () -> new InFileInvoiceRepository(fileHelperMock, mapper));
+  }
+
+  @Test
+  @DisplayName("Should return saved invoice with new id when save is invoked and new invoice is passed as parameter.")
+  void saveShouldReturnSavedInvoiceWithProperIdWhenNewInvoicePassed() throws RepositoryOperationException, IOException {
+    //given
+    Invoice invoice = getRandomInvoiceWithSpecificId(5);
+    Invoice expectedInvoice = invoice;
+    expectedInvoice.setId(1);
+    String expectedInvoiceAsJson = mapper.writeValueAsString(expectedInvoice);
+    when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());
+    doNothing().when(fileHelperMock).writeLine(expectedInvoiceAsJson);
 
     //when
-    Invoice actualInvoice = inFileRepository.save(expectedInvoice);
+    Invoice actualInvoice = inFileRepository.save(invoice);
 
     //then
     assertEquals(expectedInvoice, actualInvoice);
-    verify(fileHelperMock).writeLine(invoiceAsJson);
+    verify(fileHelperMock).writeLine(expectedInvoiceAsJson);
+  }
+
+  @Test
+  @DisplayName("Should return saved invoice with original id when save is invoked and invoice with existing id is passed as parameter.")
+  void saveShouldReturnSavedInvoiceWithOriginalIdWhenExistingInvoicePassed() throws RepositoryOperationException, IOException, FileHelperException {
+    //given
+    Invoice invoice1 = getRandomInvoiceWithSpecificId(3);
+    Invoice invoice2 = getRandomInvoiceWithSpecificId(5);
+    Invoice invoice3 = getRandomInvoiceWithSpecificId(3);
+    String invoice1AsJson = mapper.writeValueAsString(invoice1);
+    String invoice2AsJson = mapper.writeValueAsString(invoice2);
+    String invoice3AsJson = mapper.writeValueAsString(invoice3);
+    when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson));
+    doNothing().when(fileHelperMock).writeLine(invoice3AsJson);
+    doNothing().when(fileHelperMock).removeLine(1);
+
+    //when
+    Invoice savedInvoice = inFileRepository.save(invoice3);
+
+    //then
+    assertNotEquals(invoice1, invoice3);
+    assertEquals(invoice3, savedInvoice);
+    verify(fileHelperMock).writeLine(invoice3AsJson);
+    verify(fileHelperMock).removeLine(1);
   }
 
   @Test
   @DisplayName("Should throw DatabaseOperationException when save is invoked and fileHelper throws exception.")
   void saveShouldThrowExceptionWhenFileHelperThrowsException() throws IOException {
     //given
-    final Invoice invoice = getRandomInvoiceWithSpecificId(0);
+    final Invoice invoice = getRandomInvoiceWithSpecificId(1);
     final String invoiceAsJson = mapper.writeValueAsString(invoice);
     doThrow(IOException.class).when(fileHelperMock).writeLine(invoiceAsJson);
 

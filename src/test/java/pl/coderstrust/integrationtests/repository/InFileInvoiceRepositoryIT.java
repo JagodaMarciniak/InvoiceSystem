@@ -18,7 +18,8 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.configuration.ApplicationConfiguration;
+import org.junit.jupiter.api.TestInfo;
+import pl.coderstrust.configuration.Configuration;
 import pl.coderstrust.helpers.FileHelperImpl;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
@@ -27,21 +28,21 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 public class InFileInvoiceRepositoryIT {
 
-  private final ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
+  private final ObjectMapper mapper = Configuration.getObjectMapper();
   private final String expectedDatabaseFilePath = String.format("%1$s%2$ssrc%2$stest%2$sresources%2$sdatabase%2$s%3$s",
       System.getProperty("user.dir"), File.separator, "expected_invoice_database.txt");
-  private final String databaseFilePath = String.format("%1$s%2$ssrc%2$smain%2$sresources%2$s%3$s",
-      System.getProperty("user.dir"), File.separator, "invoice_database.txt");
-  private final File databaseFile = new File(databaseFilePath);
+  private final File databaseFile = new File(Configuration.DATABASE_FILE_PATH);
   private final File expectedDatabaseFile = new File(expectedDatabaseFilePath);
   private InvoiceRepository inFileRepository;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp(TestInfo testInfo) throws Exception {
     if (databaseFile.exists()) {
       databaseFile.delete();
     }
-    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(databaseFilePath), mapper);
+    if (!testInfo.getTestMethod().get().getName().equals("saveShouldSaveNewInvoiceWithProperIdToNonEmptyDatabase")) {
+      inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
+    }
     if (expectedDatabaseFile.exists()) {
       expectedDatabaseFile.delete();
       expectedDatabaseFile.createNewFile();
@@ -49,26 +50,49 @@ public class InFileInvoiceRepositoryIT {
   }
 
   @Test
-  @DisplayName("Should save new invoice to database when save is invoked.")
+  @DisplayName("Should save new invoice to empty database when save is invoked.")
   void saveShouldSaveNewInvoiceToDatabase() throws IOException, RepositoryOperationException {
     //given
-    Invoice invoice = getRandomInvoiceWithSpecificId(0);
+    Invoice invoice = getRandomInvoiceWithSpecificId(1);
     String invoiceAsJson = mapper.writeValueAsString(invoice);
     FileUtils.writeLines(expectedDatabaseFile, Collections.singleton(invoiceAsJson), null);
 
     //when
-    inFileRepository.save(invoice);
+    Invoice savedInvoice = inFileRepository.save(invoice);
 
     //then
     assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
+    assertEquals(1 , savedInvoice.getId());
+  }
+
+  @Test
+  @DisplayName("Should save new invoice with proper id to non-empty database when save is invoked.")
+  void saveShouldSaveNewInvoiceWithProperIdToNonEmptyDatabase() throws IOException, RepositoryOperationException {
+    //given
+    Invoice invoice1 = getRandomInvoiceWithSpecificId(1);
+    Invoice invoice2 = getRandomInvoiceWithSpecificId(2);
+    Invoice invoice3 = getRandomInvoiceWithSpecificId(3);
+    String invoice1AsJson = mapper.writeValueAsString(invoice1);
+    String invoice2AsJson = mapper.writeValueAsString(invoice2);
+    String invoice3AsJson = mapper.writeValueAsString(invoice3);
+    FileUtils.writeLines(databaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson), null);
+    FileUtils.writeLines(expectedDatabaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), null);
+    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
+
+    //when
+    Invoice savedInvoice = inFileRepository.save(invoice3);
+
+    //then
+    assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
+    assertEquals(3, savedInvoice.getId());
   }
 
   @Test
   @DisplayName("Should replace invoice in database file when save is called and invoiceId is already present in database.")
   void saveShouldReplaceInvoiceInDatabase() throws IOException, RepositoryOperationException {
     //given
-    Invoice invoice = getRandomInvoiceWithSpecificId(0);
-    Invoice alteredInvoice = getRandomInvoiceWithSpecificId(0);
+    Invoice invoice = getRandomInvoiceWithSpecificId(1);
+    Invoice alteredInvoice = getRandomInvoiceWithSpecificId(1);
     String invoiceAsJson = mapper.writeValueAsString(invoice);
     String alteredInvoiceAsJson = mapper.writeValueAsString(alteredInvoice);
     FileUtils.writeLines(expectedDatabaseFile, Collections.singleton(alteredInvoiceAsJson), null);
