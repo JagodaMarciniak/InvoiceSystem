@@ -1,17 +1,14 @@
 package pl.coderstrust.integrationtests.helpers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +18,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.helpers.FileHelperImpl;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileHelperImplTestIT {
 
@@ -265,6 +264,42 @@ class FileHelperImplTestIT {
   @Test
   void shouldThrowExceptionWhenTryingToCheckIfFileIsEmptyOfNotExistingFile() {
     assertThrows(FileNotFoundException.class, new FileHelperImpl(INPUT_FILE)::isEmpty);
+  }
+
+  @Test
+  void shouldReadLastLineFromFile() throws IOException {
+    //given
+    createFile(INPUT_FILE, Arrays.asList("1", "2", "3"));
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+
+    //when
+    String lastLine = fileHelper.readLastLine();
+
+    //then
+    assertEquals("3", lastLine);
+  }
+
+  @Test
+  void shouldReturnNullWhenReadLastLineInvokedAndFileIsEmpty() throws IOException {
+    //given
+    createFile(INPUT_FILE, Collections.emptyList());
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+
+    //when
+    String lastLine = fileHelper.readLastLine();
+
+    //then
+    assertNull(lastLine);
+  }
+
+  @Test
+  void readLastLineShouldThrowExceptionWhenReversedLinesReaderThrowsException() {
+    //given
+    FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
+    new File(INPUT_FILE).delete();
+
+    //then
+    assertThrows(IOException.class, fileHelper::readLastLine);
   }
 
   private void createFile(String path, List<String> lines) throws IOException {
