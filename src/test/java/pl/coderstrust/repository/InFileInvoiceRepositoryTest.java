@@ -55,7 +55,7 @@ class InFileInvoiceRepositoryTest {
   @BeforeEach
   void setUp(TestInfo testInfo) throws Exception {
     String[] excludedTests = {
-        "constructorShouldThrowExceptionWhenFileHelperInitializeThrowsIOException",
+        "constructorShouldThrowExceptionWhenFileHelperInitializeThrowsIoException",
         "constructorShouldThrowExceptionWhenFileHelperInitializeThrowsFileHelperException",
         "constructorShouldThrowExceptionWhenFileHelperReadLastLineThrowsException"
     };
@@ -71,7 +71,7 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should throw RepositoryOperationException when FileHelper.initialize() throws IOException.")
-  void constructorShouldThrowExceptionWhenFileHelperInitializeThrowsIOException() throws IOException, FileHelperException {
+  void constructorShouldThrowExceptionWhenFileHelperInitializeThrowsIoException() throws IOException, FileHelperException {
     //given
     doThrow(IOException.class).when(fileHelperMock).initialize();
 

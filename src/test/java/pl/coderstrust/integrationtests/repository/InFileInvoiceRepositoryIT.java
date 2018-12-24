@@ -11,6 +11,7 @@ import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpe
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -40,7 +41,12 @@ public class InFileInvoiceRepositoryIT {
     if (databaseFile.exists()) {
       databaseFile.delete();
     }
-    if (!testInfo.getTestMethod().get().getName().equals("saveShouldSaveNewInvoiceWithProperIdToNonEmptyDatabase")) {
+    Optional<Method> testMethod = testInfo.getTestMethod();
+    String testName = "";
+    if (testMethod.isPresent()) {
+      testName = testMethod.get().getName();
+    }
+    if (!testName.equals("saveShouldSaveNewInvoiceWithProperIdToNonEmptyDatabase")) {
       inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
     }
     if (expectedDatabaseFile.exists()) {
@@ -62,7 +68,7 @@ public class InFileInvoiceRepositoryIT {
 
     //then
     assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
-    assertEquals(1 , savedInvoice.getId());
+    assertEquals(1, savedInvoice.getId());
   }
 
   @Test

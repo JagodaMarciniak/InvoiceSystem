@@ -1,5 +1,11 @@
 package pl.coderstrust.integrationtests.helpers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,7 +25,6 @@ import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.helpers.FileHelperImpl;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class FileHelperImplTestIT {
 
