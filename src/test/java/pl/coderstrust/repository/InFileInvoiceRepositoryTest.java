@@ -104,7 +104,8 @@ class InFileInvoiceRepositoryTest {
   void saveShouldReturnSavedInvoiceWithProperIdWhenNewInvoicePassed() throws RepositoryOperationException, IOException {
     //given
     Invoice invoice = getRandomInvoiceWithSpecificId(5);
-    Invoice expectedInvoice = invoice;
+    String invoiceAsJson = mapper.writeValueAsString(invoice);
+    Invoice expectedInvoice = mapper.readValue(invoiceAsJson, Invoice.class);
     expectedInvoice.setId(1);
     String expectedInvoiceAsJson = mapper.writeValueAsString(expectedInvoice);
     when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());

@@ -64,11 +64,10 @@ public class InFileInvoiceRepositoryIT {
     FileUtils.writeLines(expectedDatabaseFile, Collections.singleton(invoiceAsJson), null);
 
     //when
-    Invoice savedInvoice = inFileRepository.save(invoice);
+    inFileRepository.save(invoice);
 
     //then
     assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
-    assertEquals(1, savedInvoice.getId());
   }
 
   @Test
@@ -90,12 +89,11 @@ public class InFileInvoiceRepositoryIT {
 
     //then
     assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
-    assertEquals(3, savedInvoice.getId());
   }
 
   @Test
   @DisplayName("Should replace invoice in database file when save is called and invoiceId is already present in database.")
-  void saveShouldReplaceInvoiceInDatabase() throws IOException, RepositoryOperationException {
+  void saveShouldReplaceInvoiceInNewDatabase() throws IOException, RepositoryOperationException {
     //given
     Invoice invoice = getRandomInvoiceWithSpecificId(1);
     Invoice alteredInvoice = getRandomInvoiceWithSpecificId(1);

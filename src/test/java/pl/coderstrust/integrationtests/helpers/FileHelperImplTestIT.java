@@ -25,7 +25,6 @@ import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.helpers.FileHelperImpl;
 
-
 class FileHelperImplTestIT {
 
   private static final String INPUT_FILE = String.format("src%1$stest%1$sresources%1$shelpers%1$sinput_file", File.separator);
@@ -298,7 +297,7 @@ class FileHelperImplTestIT {
   }
 
   @Test
-  void readLastLineShouldThrowExceptionWhenReversedLinesReaderThrowsException() {
+  void shouldThrowExceptionWhenTryingToReadLastLineFromNotExistingFile() {
     //given
     FileHelper fileHelper = new FileHelperImpl(INPUT_FILE);
     new File(INPUT_FILE).delete();

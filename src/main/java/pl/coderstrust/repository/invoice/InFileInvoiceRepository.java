@@ -22,17 +22,13 @@ public class InFileInvoiceRepository implements InvoiceRepository {
   public InFileInvoiceRepository(@NonNull FileHelper fileHelper, @NonNull ObjectMapper mapper) throws RepositoryOperationException {
     this.fileHelper = fileHelper;
     this.mapper = mapper;
-    if (!fileHelper.exists()) {
-      try {
-        fileHelper.initialize();
-      } catch (IOException | FileHelperException e) {
-        throw new RepositoryOperationException("Could not create In-file Invoice Repository", e);
-      }
-    }
     try {
+      if (!fileHelper.exists()) {
+        fileHelper.initialize();
+      }
       lastInvoiceId = getLastInvoiceId();
-    } catch (IOException e) {
-      throw new RepositoryOperationException("Could not create In-file Invoice Repository", e);
+    } catch (IOException | FileHelperException e) {
+      throw new RepositoryOperationException("Encountered problems while initializing in-file invoice repository.", e);
     }
   }
 
@@ -51,7 +47,7 @@ public class InFileInvoiceRepository implements InvoiceRepository {
     if (existsById(invoice.getId())) {
       deleteById(invoice.getId());
     } else {
-      invoice.setId(incrementAndGetId());
+      invoice.setId(getNextInvoiceId());
     }
     try {
       fileHelper.writeLine(mapper.writeValueAsString(invoice));
@@ -170,7 +166,7 @@ public class InFileInvoiceRepository implements InvoiceRepository {
         .collect(Collectors.toList());
   }
 
-  private int incrementAndGetId() {
+  private int getNextInvoiceId() {
     return ++lastInvoiceId;
   }
 }
