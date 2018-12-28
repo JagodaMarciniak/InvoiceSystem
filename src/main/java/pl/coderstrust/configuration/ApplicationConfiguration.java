@@ -46,7 +46,7 @@ public class ApplicationConfiguration {
 
   @Bean
   @ConditionalOnProperty(name = "repository", havingValue = "in-file")
-  public InvoiceRepository getInFileInvoiceRepository(FileHelper fileHelper) throws Exception {
-    return new InFileInvoiceRepository(fileHelper, getObjectMapper());
+  public InvoiceRepository getInFileInvoiceRepository(FileHelper fileHelper, ObjectMapper objectMapper) throws Exception {
+    return new InFileInvoiceRepository(fileHelper, objectMapper);
   }
 }
