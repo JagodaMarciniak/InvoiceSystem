@@ -1,7 +1,6 @@
 package pl.coderstrust.configuration;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Properties;
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
