@@ -11,7 +11,6 @@ import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpe
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -19,7 +18,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import pl.coderstrust.configuration.Configuration;
 import pl.coderstrust.helpers.FileHelperImpl;
 import pl.coderstrust.model.Invoice;
@@ -37,18 +35,11 @@ public class InFileInvoiceRepositoryIT {
   private InvoiceRepository inFileRepository;
 
   @BeforeEach
-  void setUp(TestInfo testInfo) throws Exception {
+  void setUp() throws RepositoryOperationException, IOException {
     if (databaseFile.exists()) {
       databaseFile.delete();
     }
-    Optional<Method> testMethod = testInfo.getTestMethod();
-    String testName = "";
-    if (testMethod.isPresent()) {
-      testName = testMethod.get().getName();
-    }
-    if (!testName.equals("saveShouldSaveNewInvoiceWithProperIdToNonEmptyDatabase")) {
-      inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
-    }
+    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
     if (expectedDatabaseFile.exists()) {
       expectedDatabaseFile.delete();
       expectedDatabaseFile.createNewFile();
@@ -82,10 +73,10 @@ public class InFileInvoiceRepositoryIT {
     String invoice3AsJson = mapper.writeValueAsString(invoice3);
     FileUtils.writeLines(databaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson), null);
     FileUtils.writeLines(expectedDatabaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), null);
-    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
+    InFileInvoiceRepository testInFileInvoiceRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
 
     //when
-    Invoice savedInvoice = inFileRepository.save(invoice3);
+    testInFileInvoiceRepository.save(invoice3);
 
     //then
     assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));

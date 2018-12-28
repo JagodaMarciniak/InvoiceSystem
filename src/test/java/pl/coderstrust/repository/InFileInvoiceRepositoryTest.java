@@ -18,7 +18,6 @@ import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpe
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +27,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -53,20 +51,8 @@ class InFileInvoiceRepositoryTest {
   private InvoiceRepository inFileRepository;
 
   @BeforeEach
-  void setUp(TestInfo testInfo) throws Exception {
-    String[] excludedTests = {
-        "constructorShouldThrowExceptionWhenFileHelperInitializeThrowsIoException",
-        "constructorShouldThrowExceptionWhenFileHelperInitializeThrowsFileHelperException",
-        "constructorShouldThrowExceptionWhenFileHelperReadLastLineThrowsException"
-    };
-    Optional<Method> testMethod = testInfo.getTestMethod();
-    String testName = "";
-    if (testMethod.isPresent()) {
-      testName = testMethod.get().getName();
-    }
-    if (!Arrays.asList(excludedTests).contains(testName)) {
-      inFileRepository = new InFileInvoiceRepository(fileHelperMock, mapper);
-    }
+  void setUp() throws RepositoryOperationException {
+    inFileRepository = new InFileInvoiceRepository(fileHelperMock, mapper);
   }
 
   @Test
