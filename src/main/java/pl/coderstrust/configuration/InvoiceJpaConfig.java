@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "pl.coderstrust.repository.invoice")
-@PropertySource("persistence-invoice.properties")
+@PropertySource("in-memory-hibernate-invoice-repository.properties")
 @EnableTransactionManagement
 public class InvoiceJpaConfig {
 

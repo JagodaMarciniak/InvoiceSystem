@@ -55,11 +55,10 @@ class InMemoryHibernateRepositoryTest {
   void shouldReturnFalseIfInvoiceNotExistsInDatabase() throws RepositoryOperationException {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
-    Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
     repository.save(invoice1);
 
     //when
-    boolean invoiceExist = repository.existsById(invoice2.getId());
+    boolean invoiceExist = repository.existsById(3234);
 
     //then
     assertFalse(invoiceExist);
@@ -69,7 +68,7 @@ class InMemoryHibernateRepositoryTest {
   @Transactional
   void shouldSaveIntoDatabase() throws RepositoryOperationException {
     //given
-    Invoice expectedInvoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificId(1);
+    Invoice expectedInvoice1 = InvoiceGenerator.getRandomInvoice();
 
     //when
     int id = repository.save(expectedInvoice1).getId();
@@ -138,13 +137,13 @@ class InMemoryHibernateRepositoryTest {
   @Transactional
   void shouldCountingInvoicesInDatabase() throws RepositoryOperationException {
     //given
-    Long expectedNumberOfInvoices = 5L;
-    for (int i = 0; i < expectedNumberOfInvoices; i++) {
+    long expectedNumberOfInvoices = 5L;
+    for (long i = 0; i < expectedNumberOfInvoices; i++) {
       repository.save(InvoiceGenerator.getRandomInvoice());
     }
 
     //when
-    Long actualNumberOfInvoices = repository.count();
+    long actualNumberOfInvoices = repository.count();
 
     //then
     assertEquals(expectedNumberOfInvoices, actualNumberOfInvoices);
