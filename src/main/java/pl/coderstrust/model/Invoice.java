@@ -5,13 +5,16 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Invoice {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   int id;
@@ -37,7 +40,4 @@ public class Invoice {
   BigDecimal totalGrossValue;
 
   String comments;
-
-  public Invoice() {
-  }
 }

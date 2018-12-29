@@ -3,6 +3,7 @@ package pl.coderstrust.model;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class InvoiceEntry {
 
@@ -31,7 +33,4 @@ public class InvoiceEntry {
   BigDecimal netValue;
 
   BigDecimal grossValue;
-
-  public InvoiceEntry() {
-  }
 }

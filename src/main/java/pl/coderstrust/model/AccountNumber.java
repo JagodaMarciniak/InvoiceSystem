@@ -12,6 +12,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Entity
 public class AccountNumber {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   int id;

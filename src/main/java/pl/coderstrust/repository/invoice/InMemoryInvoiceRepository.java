@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import pl.coderstrust.model.Invoice;
 
 @NoArgsConstructor
@@ -14,21 +15,21 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   private List<Invoice> invoices = Collections.synchronizedList(new ArrayList<>());
 
   @Override
-  public boolean existsById(Integer id) {
+  public boolean existsById(@NonNull Integer id) {
     return invoices
         .stream()
         .anyMatch(i -> i.getId() == id);
   }
 
   @Override
-  public Invoice save(Invoice invoice) {
+  public Invoice save(@NonNull Invoice invoice) {
     deleteById(invoice.getId());
     invoices.add(invoice);
     return invoice;
   }
 
   @Override
-  public void deleteById(Integer id) {
+  public void deleteById(@NonNull Integer id) {
     invoices.removeIf(i -> i.getId() == id);
   }
 
@@ -43,7 +44,7 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   @Override
-  public Optional<Invoice> findById(Integer id) {
+  public Optional<Invoice> findById(@NonNull Integer id) {
     return invoices
         .stream()
         .filter(invoice -> invoice.getId() == id)
@@ -56,7 +57,7 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   @Override
-  public Iterable<Invoice> findAllBySellerName(String sellerName) {
+  public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) {
     return invoices
         .stream()
         .filter(invoice -> invoice.getSeller().getName().equals(sellerName))
@@ -64,7 +65,7 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   @Override
-  public Iterable<Invoice> findAllByBuyerName(String buyerName) {
+  public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) {
     return invoices
         .stream()
         .filter(invoice -> invoice.getBuyer().getName().equals(buyerName))
