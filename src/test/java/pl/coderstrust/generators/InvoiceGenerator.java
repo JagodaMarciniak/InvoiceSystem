@@ -19,9 +19,9 @@ public class InvoiceGenerator {
     int sampleInvoiceId = sampleInvoice.getId()
         + atomicInteger.incrementAndGet();
     String sampleSellerName = sampleInvoice.getSeller().getName()
-        + String.valueOf(atomicInteger.incrementAndGet());
+        + atomicInteger.incrementAndGet();
     String sampleBuyerName = sampleInvoice.getBuyer().getName()
-        + String.valueOf(atomicInteger.incrementAndGet());
+        + atomicInteger.incrementAndGet();
 
     Company sampleSeller = new Company(sampleSellerName,
         sampleInvoice.getSeller().getTaxIdentificationNumber(),
@@ -110,6 +110,11 @@ public class InvoiceGenerator {
         randomInvoice.getSeller(), randomInvoice.getBuyer(), randomInvoice.getEntries(),
         randomInvoice.getTotalNetValue(), randomInvoice.getTotalGrossValue(),
         randomInvoice.getComments());
+  }
+
+  public static Invoice copyInvoice(Invoice invoice) {
+    return new Invoice(invoice.getId(), invoice.getType(), invoice.getIssueDate(), invoice.getDueDate(), invoice.getSeller(), invoice.getBuyer(),
+        invoice.getEntries(), invoice.getTotalNetValue(), invoice.getTotalGrossValue(), invoice.getComments());
   }
 
   public static List<Invoice> getRandomInvoicesIssuedInSpecificDateRange(LocalDate startDate, LocalDate endDate) {

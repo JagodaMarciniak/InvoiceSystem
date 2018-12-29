@@ -3,6 +3,7 @@ package pl.coderstrust.integrationtests.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static pl.coderstrust.generators.InvoiceGenerator.copyInvoice;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoice;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificId;
@@ -68,6 +69,8 @@ public class InFileInvoiceRepositoryIT {
     Invoice invoice1 = getRandomInvoiceWithSpecificId(1);
     Invoice invoice2 = getRandomInvoiceWithSpecificId(2);
     Invoice invoice3 = getRandomInvoiceWithSpecificId(3);
+    Invoice alteredInvoice3 = copyInvoice(invoice3);
+    alteredInvoice3.setId(15);
     String invoice1AsJson = mapper.writeValueAsString(invoice1);
     String invoice2AsJson = mapper.writeValueAsString(invoice2);
     String invoice3AsJson = mapper.writeValueAsString(invoice3);
@@ -76,7 +79,7 @@ public class InFileInvoiceRepositoryIT {
     InFileInvoiceRepository testInFileInvoiceRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
 
     //when
-    testInFileInvoiceRepository.save(invoice3);
+    testInFileInvoiceRepository.save(alteredInvoice3);
 
     //then
     assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));

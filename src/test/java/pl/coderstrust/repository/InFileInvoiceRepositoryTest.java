@@ -11,6 +11,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static pl.coderstrust.generators.InvoiceGenerator.copyInvoice;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoice;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName;
 import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificId;
@@ -90,8 +91,7 @@ class InFileInvoiceRepositoryTest {
   void saveShouldReturnSavedInvoiceWithProperIdWhenNewInvoicePassed() throws RepositoryOperationException, IOException {
     //given
     Invoice invoice = getRandomInvoiceWithSpecificId(5);
-    String invoiceAsJson = mapper.writeValueAsString(invoice);
-    Invoice expectedInvoice = mapper.readValue(invoiceAsJson, Invoice.class);
+    Invoice expectedInvoice = copyInvoice(invoice);
     expectedInvoice.setId(1);
     String expectedInvoiceAsJson = mapper.writeValueAsString(expectedInvoice);
     when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());
