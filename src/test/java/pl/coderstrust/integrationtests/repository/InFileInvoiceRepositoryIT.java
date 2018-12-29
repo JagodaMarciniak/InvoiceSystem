@@ -19,7 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pl.coderstrust.configuration.Configuration;
+import pl.coderstrust.configuration.ApplicationConfiguration;
 import pl.coderstrust.helpers.FileHelperImpl;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
@@ -28,10 +28,12 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 public class InFileInvoiceRepositoryIT {
 
-  private final ObjectMapper mapper = Configuration.getObjectMapper();
+  private final ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String expectedDatabaseFilePath = String.format("%1$s%2$ssrc%2$stest%2$sresources%2$sdatabase%2$s%3$s",
       System.getProperty("user.dir"), File.separator, "expected_invoice_database.txt");
-  private final File databaseFile = new File(Configuration.DATABASE_FILE_PATH);
+  private final String databaseFilePath = String.format("%1$s%2$ssrc%2$stest%2$sresources%2$sdatabase%2$s%3$s",
+      System.getProperty("user.dir"), File.separator, "invoice_database.txt");
+  private final File databaseFile = new File(databaseFilePath);
   private final File expectedDatabaseFile = new File(expectedDatabaseFilePath);
   private InvoiceRepository inFileRepository;
 
@@ -40,7 +42,7 @@ public class InFileInvoiceRepositoryIT {
     if (databaseFile.exists()) {
       databaseFile.delete();
     }
-    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
+    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(databaseFilePath), mapper);
     if (expectedDatabaseFile.exists()) {
       expectedDatabaseFile.delete();
       expectedDatabaseFile.createNewFile();
@@ -76,7 +78,7 @@ public class InFileInvoiceRepositoryIT {
     String invoice3AsJson = mapper.writeValueAsString(invoice3);
     FileUtils.writeLines(databaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson), null);
     FileUtils.writeLines(expectedDatabaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), null);
-    InFileInvoiceRepository testInFileInvoiceRepository = new InFileInvoiceRepository(new FileHelperImpl(Configuration.DATABASE_FILE_PATH), mapper);
+    InFileInvoiceRepository testInFileInvoiceRepository = new InFileInvoiceRepository(new FileHelperImpl(databaseFilePath), mapper);
 
     //when
     testInFileInvoiceRepository.save(alteredInvoice3);
