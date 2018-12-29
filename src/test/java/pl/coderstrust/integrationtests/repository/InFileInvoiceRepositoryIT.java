@@ -51,14 +51,16 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should save new invoice to empty database when save is invoked.")
-  void saveShouldSaveNewInvoiceToDatabase() throws IOException, RepositoryOperationException {
+  void saveShouldSaveNewInvoiceToNewDatabase() throws IOException, RepositoryOperationException {
     //given
     Invoice invoice = getRandomInvoiceWithSpecificId(1);
+    Invoice alteredInvoice = copyInvoice(invoice);
+    alteredInvoice.setId(17);
     String invoiceAsJson = mapper.writeValueAsString(invoice);
     FileUtils.writeLines(expectedDatabaseFile, Collections.singleton(invoiceAsJson), null);
 
     //when
-    inFileRepository.save(invoice);
+    inFileRepository.save(alteredInvoice);
 
     //then
     assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
