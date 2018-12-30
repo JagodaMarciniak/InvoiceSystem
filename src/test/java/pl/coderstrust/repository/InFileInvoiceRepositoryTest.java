@@ -34,6 +34,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import pl.coderstrust.configuration.ApplicationConfiguration;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
@@ -576,22 +577,9 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should not pass line number to fileHelper.removeLine when deleteById is invoked and invoice with particular id does not exist.")
-  void shouldNotPassLineNumberToFileHelperRemoveLineWhenDeleteByIdInvokedAndInvoiceDoesNotExist() throws Exception {
-    //given
-    final Invoice invoice1 = getRandomInvoice();
-    final Invoice invoice2 = getRandomInvoice();
-    final Invoice invoice3 = getRandomInvoice();
-    final String invoice1AsJson = mapper.writeValueAsString(invoice1);
-    final String invoice2AsJson = mapper.writeValueAsString(invoice2);
-    final String invoice3AsJson = mapper.writeValueAsString(invoice3);
-    when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
-
-    //when
-    inFileRepository.deleteById(123456789);
-
-    //then
-    verify(fileHelperMock, times(0)).removeLine(anyInt());
+  @DisplayName("Should throw exception when trying deleteById from database if absent.")
+  void shouldThrowExceptionWhenTryingDeleteByIdFromDatabaseIfAbsent() throws Exception {
+    assertThrows(EmptyResultDataAccessException.class, () -> inFileRepository.deleteById(32645));
   }
 
   @Test

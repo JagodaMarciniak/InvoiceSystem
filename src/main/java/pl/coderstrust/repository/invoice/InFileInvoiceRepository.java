@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.Synchronized;
+import org.springframework.dao.EmptyResultDataAccessException;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.model.Invoice;
@@ -124,6 +125,8 @@ public class InFileInvoiceRepository implements InvoiceRepository {
           .findFirst();
       if (invoice.isPresent()) {
         fileHelper.removeLine(invoices.indexOf(invoice.get()) + 1);
+      } else {
+        throw new EmptyResultDataAccessException(id);
       }
     } catch (IOException | FileHelperException e) {
       throw new RepositoryOperationException(String.format("Encountered problem while deleting invoice: %d", id), e);

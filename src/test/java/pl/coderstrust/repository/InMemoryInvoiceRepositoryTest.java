@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.EmptyResultDataAccessException;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.invoice.InMemoryInvoiceRepository;
@@ -99,16 +100,8 @@ class InMemoryInvoiceRepositoryTest {
   }
 
   @Test
-  void shouldDeleteByIdFromDatabaseIfAbsent() throws RepositoryOperationException {
-    //given
-    int invoiceId = 1;
-
-    //when
-    testInvoiceRepository.deleteById(invoiceId);
-    boolean existsById = testInvoiceRepository.existsById(invoiceId);
-
-    //then
-    assertFalse(existsById);
+  void shouldThrowExceptionWhenTryingDeleteByIdFromDatabaseIfAbsent() {
+    assertThrows(EmptyResultDataAccessException.class, () -> testInvoiceRepository.deleteById(5));
   }
 
   @Test

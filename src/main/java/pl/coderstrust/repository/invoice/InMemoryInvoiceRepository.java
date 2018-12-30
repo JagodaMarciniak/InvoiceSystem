@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.dao.EmptyResultDataAccessException;
 import pl.coderstrust.model.Invoice;
 
 @NoArgsConstructor
@@ -30,7 +31,11 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
 
   @Override
   public void deleteById(@NonNull Integer id) {
-    invoices.removeIf(i -> i.getId() == id);
+    if (invoices.removeIf(i -> i.getId() == id)) {
+      return;
+    } else {
+      throw new EmptyResultDataAccessException(id);
+    }
   }
 
   @Override

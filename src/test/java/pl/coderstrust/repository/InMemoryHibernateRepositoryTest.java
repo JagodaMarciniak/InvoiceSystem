@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,7 +23,7 @@ import javax.annotation.Resource;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(
-    classes = { InvoiceJpaConfig.class },
+    classes = {InvoiceJpaConfig.class},
     loader = AnnotationConfigContextLoader.class)
 @Rollback
 @Transactional(transactionManager = "myTransactionManager")
@@ -114,19 +115,11 @@ class InMemoryHibernateRepositoryTest {
     assertFalse(existsById);
   }
 
-//  @Test
-//  @Transactional
-//  void shouldDeleteByIdFromDatabaseIfAbsent() throws RepositoryOperationException {
-//    //given
-//    int invoiceId = 1;
-//
-//    //when
-//    repository.deleteById(invoiceId);
-//    boolean existsById = repository.existsById(invoiceId);
-//
-//    //then
-//    assertFalse(existsById);
-//  }
+  @Test
+  @Transactional
+  void shouldThrowExceptionWhenTryingDeleteByIdFromDatabaseIfAbsent() {
+    assertThrows(EmptyResultDataAccessException.class, () -> repository.deleteById(5));
+  }
 
   @Test
   @Transactional
@@ -171,7 +164,7 @@ class InMemoryHibernateRepositoryTest {
     Invoice expectedInvoice1 = repository.save(invoice1);
     generatedInvoices.add(expectedInvoice1);
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
-    Invoice expectedInvoice2 =repository.save(invoice2);
+    Invoice expectedInvoice2 = repository.save(invoice2);
     generatedInvoices.add(expectedInvoice2);
 
     //when
