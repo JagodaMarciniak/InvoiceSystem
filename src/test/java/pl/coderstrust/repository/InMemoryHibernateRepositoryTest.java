@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.Rollback;
@@ -31,10 +30,6 @@ class InMemoryHibernateRepositoryTest {
 
   @Resource
   private InvoiceRepository repository;
-
-  <T> String returnInvoiceToStringWithoutId(T invoice) {
-    return invoice.toString().replaceAll("id=\\d+", "");
-  }
 
   @Test
   @Transactional
@@ -155,40 +150,34 @@ class InMemoryHibernateRepositoryTest {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
-    int idInvoice1 = repository.save(invoice1).getId();
-    int idInvoice2 = repository.save(invoice2).getId();
+    Invoice expectedInvoice1 = repository.save(invoice1);
+    Invoice expectedInvoice2 = repository.save(invoice2);
 
     //when
-    Optional invoiceFromDatabase1 = repository.findById(idInvoice1);
-    Optional invoiceFromDatabase2 = repository.findById(idInvoice2);
-
-    String resultInvoice1 = returnInvoiceToStringWithoutId(invoiceFromDatabase1.get());
-    String resultInvoice2 = returnInvoiceToStringWithoutId(invoiceFromDatabase2.get());
-
-    String expectedInvoice1 = returnInvoiceToStringWithoutId(invoice1);
-    String expectedInvoice2 = returnInvoiceToStringWithoutId(invoice2);
+    Invoice invoiceFromDatabase1 = repository.findById(expectedInvoice1.getId()).get();
+    Invoice invoiceFromDatabase2 = repository.findById(expectedInvoice2.getId()).get();
 
     //then
-    assertEquals(expectedInvoice1, resultInvoice1);
-    assertEquals(expectedInvoice2, resultInvoice2);
+    assertEquals(expectedInvoice1, invoiceFromDatabase1);
+    assertEquals(expectedInvoice2, invoiceFromDatabase2);
   }
 
   @Test
   @Transactional
   void shouldFindAllInvoices() throws RepositoryOperationException {
     //given
-    List<String> generatedInvoices = new ArrayList<>();
+    List<Invoice> generatedInvoices = new ArrayList<>();
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
-    generatedInvoices.add(returnInvoiceToStringWithoutId(invoice1));
-    repository.save(invoice1);
+    Invoice expectedInvoice1 = repository.save(invoice1);
+    generatedInvoices.add(expectedInvoice1);
     Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
-    generatedInvoices.add(returnInvoiceToStringWithoutId(invoice2));
-    repository.save(invoice2);
+    Invoice expectedInvoice2 =repository.save(invoice2);
+    generatedInvoices.add(expectedInvoice2);
 
     //when
     Iterable<Invoice> actualInvoices = repository.findAll();
-    List<String> result = new ArrayList<>();
-    actualInvoices.forEach(invoice-> result.add(returnInvoiceToStringWithoutId(invoice)));
+    List<Invoice> result = new ArrayList<>();
+    actualInvoices.forEach(result::add);
 
     //then
     assertArrayEquals(generatedInvoices.toArray(), result.toArray());
@@ -207,22 +196,22 @@ class InMemoryHibernateRepositoryTest {
     Invoice invoice5 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice6 = InvoiceGenerator.getRandomInvoice();
 
-    repository.save(invoice1);
-    repository.save(invoice2);
-    repository.save(invoice3);
+    Invoice expectedInvoice1 = repository.save(invoice1);
+    Invoice expectedInvoice2 = repository.save(invoice2);
+    Invoice expectedInvoice3 = repository.save(invoice3);
     repository.save(invoice4);
     repository.save(invoice5);
     repository.save(invoice6);
 
-    List<String> expectedInvoices = new ArrayList<>();
-    expectedInvoices.add(returnInvoiceToStringWithoutId(invoice1));
-    expectedInvoices.add(returnInvoiceToStringWithoutId(invoice2));
-    expectedInvoices.add(returnInvoiceToStringWithoutId(invoice3));
+    List<Invoice> expectedInvoices = new ArrayList<>();
+    expectedInvoices.add(expectedInvoice1);
+    expectedInvoices.add(expectedInvoice2);
+    expectedInvoices.add(expectedInvoice3);
 
     //when
     Iterable<Invoice> actualInvoices = repository.findAllBySellerName(sellerName);
-    List<String> result = new ArrayList<>();
-    actualInvoices.forEach(invoice -> result.add(returnInvoiceToStringWithoutId(invoice)));
+    List<Invoice> result = new ArrayList<>();
+    actualInvoices.forEach(result::add);
 
     //then
     assertArrayEquals(expectedInvoices.toArray(), result.toArray());
@@ -241,22 +230,22 @@ class InMemoryHibernateRepositoryTest {
     Invoice invoice5 = InvoiceGenerator.getRandomInvoice();
     Invoice invoice6 = InvoiceGenerator.getRandomInvoice();
 
-    repository.save(invoice1);
-    repository.save(invoice2);
-    repository.save(invoice3);
+    Invoice expectedInvoice1 = repository.save(invoice1);
+    Invoice expectedInvoice2 = repository.save(invoice2);
+    Invoice expectedInvoice3 = repository.save(invoice3);
     repository.save(invoice4);
     repository.save(invoice5);
     repository.save(invoice6);
 
-    List<String> expectedInvoices = new ArrayList<>();
-    expectedInvoices.add(returnInvoiceToStringWithoutId(invoice1));
-    expectedInvoices.add(returnInvoiceToStringWithoutId(invoice2));
-    expectedInvoices.add(returnInvoiceToStringWithoutId(invoice3));
+    List<Invoice> expectedInvoices = new ArrayList<>();
+    expectedInvoices.add(expectedInvoice1);
+    expectedInvoices.add(expectedInvoice2);
+    expectedInvoices.add(expectedInvoice3);
 
     //when
     Iterable<Invoice> actualInvoices = repository.findAllByBuyerName(buyerName);
-    List<String> result = new ArrayList<>();
-    actualInvoices.forEach(invoice -> result.add(returnInvoiceToStringWithoutId(invoice)));
+    List<Invoice> result = new ArrayList<>();
+    actualInvoices.forEach(result::add);
 
     //then
     assertArrayEquals(expectedInvoices.toArray(), result.toArray());
@@ -267,20 +256,15 @@ class InMemoryHibernateRepositoryTest {
   void shouldUpdateExistingInvoice() throws RepositoryOperationException {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
-    int id = repository.save(invoice1).getId();
-    Invoice invoice1Update = InvoiceGenerator.getRandomInvoiceWithSpecificId(id);
+    Invoice invoice1Update = repository.save(invoice1);
 
     //when
     repository.save(invoice1Update);
-    Optional updatedInvoiceFromDatabase = repository.findById(id);
-    Invoice resultAfterUpdate = (Invoice) updatedInvoiceFromDatabase.get();
-
-    String invoiceUpdateToString = returnInvoiceToStringWithoutId(invoice1Update);
-    String updatedInvoiceFromDB = returnInvoiceToStringWithoutId(resultAfterUpdate);
+    Invoice updatedInvoiceFromDatabase = repository.findById(invoice1Update.getId()).get();
 
     //then
-    assertEquals(id, resultAfterUpdate.getId());
-    assertEquals(invoiceUpdateToString, updatedInvoiceFromDB);
+    assertEquals(invoice1Update.getId(), updatedInvoiceFromDatabase.getId());
+    assertEquals(invoice1Update, updatedInvoiceFromDatabase);
   }
 
   @Test
@@ -300,8 +284,8 @@ class InMemoryHibernateRepositoryTest {
     repository.save(invoice2);
     Iterable<Invoice> getAllInvoices = repository.findAll();
     List<String> sellerFromDB = new ArrayList<>();
-    getAllInvoices.forEach(invoice -> sellerFromDB.add(returnInvoiceToStringWithoutId(invoice.getSeller())));
-    String expectedSellerToString = returnInvoiceToStringWithoutId(seller);
+    getAllInvoices.forEach(invoice -> sellerFromDB.add(invoice.getSeller().toString().replaceAll("id=\\d+", "")));
+    String expectedSellerToString = seller.toString().replaceAll("id=\\d+", "");
 
     //then
     assertEquals(sellerId, getAllInvoices.iterator().next().getSeller().getId());
