@@ -49,4 +49,10 @@ public class ApplicationConfiguration {
   public InvoiceRepository getInFileInvoiceRepository(FileHelper fileHelper, ObjectMapper objectMapper) throws Exception {
     return new InFileInvoiceRepository(fileHelper, objectMapper);
   }
+
+  @Bean
+  @ConditionalOnProperty(name = "repository", havingValue = "in-memory-h2-hibernate")
+  public InvoiceJpaConfig getHibernateH2Repository() {
+    return new InvoiceJpaConfig();
+  }
 }

@@ -1,4 +1,4 @@
-package pl.coderstrust.repository;
+package pl.coderstrust.integrationtests.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +17,7 @@ import pl.coderstrust.generators.CompanyGenerator;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
+import pl.coderstrust.repository.RepositoryOperationException;
 import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 import javax.annotation.Resource;
@@ -27,7 +28,7 @@ import javax.annotation.Resource;
     loader = AnnotationConfigContextLoader.class)
 @Rollback
 @Transactional(transactionManager = "myTransactionManager")
-class InMemoryHibernateRepositoryTest {
+class InMemoryHibernateRepositoryIT {
 
   @Resource
   private InvoiceRepository repository;
