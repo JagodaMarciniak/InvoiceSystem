@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import pl.coderstrust.model.Address;
 
-public class AdressValidator {
+public class AddressValidator {
 
   public static List<String> validateAddress(Address adress) {
     List<String> result = new ArrayList<>();
