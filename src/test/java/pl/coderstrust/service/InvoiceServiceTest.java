@@ -115,7 +115,7 @@ class InvoiceServiceTest {
   @Test
   void shouldDeleteInvoice() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
-    int id = 3448;
+    String id = "3448";
     doNothing().when(repository).deleteById(id);
 
     //when
@@ -141,7 +141,7 @@ class InvoiceServiceTest {
   void shouldReturnInvoice() throws InvoiceServiceOperationException, RepositoryOperationException {
     //given
     Optional<Invoice> invoice = Optional.of(InvoiceGenerator.getRandomInvoice());
-    int id = invoice.get().getId();
+    String id = invoice.get().getId();
     when(repository.findById(id)).thenReturn(invoice);
 
     //when
@@ -156,7 +156,7 @@ class InvoiceServiceTest {
   void shouldUpdateInvoice() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    int id = invoice.getId();
+    String id = invoice.getId();
     when(repository.existsById(id)).thenReturn(true);
     when(repository.save(invoice)).thenReturn(invoice);
 
@@ -180,13 +180,13 @@ class InvoiceServiceTest {
 
   @Test
   void shouldThrowExceptionWhenGetInvoiceInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.getInvoice(Integer.parseInt((null))));
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.getInvoice(null));
   }
 
   @Test
   void shouldReturnEmptyOptionalIfInvoiceDoesNotExistInDatabase() throws RepositoryOperationException, InvoiceServiceOperationException {
     //given
-    int id = -1;
+    String id = "-1";
     when(repository.findById(id)).thenReturn(Optional.empty());
 
     //then
@@ -200,7 +200,7 @@ class InvoiceServiceTest {
   @Test
   void shouldThrowExceptionWhenGettingInvoiceWentWrong() throws RepositoryOperationException {
     //given
-    int id = 234;
+    String id = "234";
     doThrow(RepositoryOperationException.class).when(repository).findById(id);
 
     //then
@@ -233,7 +233,7 @@ class InvoiceServiceTest {
   void shouldThrowExceptionWhenUpdatingInvoiceWentWrong() throws RepositoryOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    int id = invoice.getId();
+    String id = invoice.getId();
     when(repository.existsById(id)).thenReturn(true);
     doThrow(RepositoryOperationException.class).when(repository).save(invoice);
 
@@ -247,7 +247,7 @@ class InvoiceServiceTest {
   void shouldThrowExceptionIfInvoiceWithGivenIdDoesNotExist() throws RepositoryOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    int id = invoice.getId();
+    String id = invoice.getId();
     when(repository.existsById(id)).thenReturn(false);
 
     //then
@@ -257,13 +257,13 @@ class InvoiceServiceTest {
 
   @Test
   void shouldThrowExceptionWhenDeleteInvoiceInvokedWithNull() {
-    assertThrows(IllegalArgumentException.class, () -> invoiceService.deleteInvoice(Integer.parseInt(null)));
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.deleteInvoice(null));
   }
 
   @Test
   void shouldThrowExceptionWhenDeleteInvoiceWentWrong() throws RepositoryOperationException {
     //given
-    int id = -234;
+    String id = "-234";
     doThrow(RepositoryOperationException.class).when(repository).deleteById(id);
 
     //then

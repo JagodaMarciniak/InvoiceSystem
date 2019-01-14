@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.springframework.dao.EmptyResultDataAccessException;
 import pl.coderstrust.model.Invoice;
 
 @NoArgsConstructor
@@ -16,10 +15,10 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   private List<Invoice> invoices = Collections.synchronizedList(new ArrayList<>());
 
   @Override
-  public boolean existsById(@NonNull Integer id) {
+  public boolean existsById(@NonNull String id) {
     return invoices
         .stream()
-        .anyMatch(i -> i.getId() == id);
+        .anyMatch(i -> i.getId().equals(id));
   }
 
   @Override
@@ -30,12 +29,8 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   @Override
-  public void deleteById(@NonNull Integer id) {
-    if (invoices.removeIf(i -> i.getId() == id)) {
-      return;
-    } else {
-      throw new EmptyResultDataAccessException(id);
-    }
+  public void deleteById(@NonNull String id) {
+    invoices.removeIf(i -> i.getId().equals(id));
   }
 
   @Override
@@ -49,10 +44,10 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   @Override
-  public Optional<Invoice> findById(@NonNull Integer id) {
+  public Optional<Invoice> findById(@NonNull String id) {
     return invoices
         .stream()
-        .filter(invoice -> invoice.getId() == id)
+        .filter(invoice -> invoice.getId().equals(id))
         .findFirst();
   }
 

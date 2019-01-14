@@ -1,14 +1,13 @@
 package pl.coderstrust.repository.invoice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.Synchronized;
-import org.springframework.dao.EmptyResultDataAccessException;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.model.Invoice;
@@ -39,7 +38,7 @@ public class InFileInvoiceRepository implements InvoiceRepository {
       return 0;
     }
     Invoice lastInvoice = mapper.readValue(lastInvoiceAsJson, Invoice.class);
-    return lastInvoice.getId();
+    return Integer.parseInt(lastInvoice.getId());
   }
 
   @Override
@@ -48,7 +47,7 @@ public class InFileInvoiceRepository implements InvoiceRepository {
     if (existsById(invoice.getId())) {
       deleteById(invoice.getId());
     } else {
-      invoice.setId(getNextInvoiceId());
+      invoice.setId(String.valueOf(getNextInvoiceId()));
     }
     try {
       fileHelper.writeLine(mapper.writeValueAsString(invoice));
@@ -59,13 +58,13 @@ public class InFileInvoiceRepository implements InvoiceRepository {
   }
 
   @Synchronized
-  public Optional<Invoice> findById(@NonNull Integer id) throws RepositoryOperationException {
+  public Optional<Invoice> findById(@NonNull String id) throws RepositoryOperationException {
     try {
       return getAllInvoices().stream()
-          .filter(invoice -> invoice != null && invoice.getId() == id)
+          .filter(invoice -> invoice != null && invoice.getId().equals(id))
           .findFirst();
     } catch (IOException e) {
-      throw new RepositoryOperationException(String.format("Encountered problems while searching for invoice:, %d", id), e);
+      throw new RepositoryOperationException(String.format("Encountered problems while searching for invoice:, %s", id), e);
     }
   }
 
@@ -117,28 +116,26 @@ public class InFileInvoiceRepository implements InvoiceRepository {
   }
 
   @Synchronized
-  public void deleteById(@NonNull Integer id) throws RepositoryOperationException {
+  public void deleteById(@NonNull String id) throws RepositoryOperationException {
     try {
       List<Invoice> invoices = getAllInvoices();
       Optional<Invoice> invoice = invoices.stream()
-          .filter(i -> i.getId() == id)
+          .filter(i -> i.getId().equals(id))
           .findFirst();
       if (invoice.isPresent()) {
         fileHelper.removeLine(invoices.indexOf(invoice.get()) + 1);
-      } else {
-        throw new EmptyResultDataAccessException(id);
       }
     } catch (IOException | FileHelperException e) {
-      throw new RepositoryOperationException(String.format("Encountered problem while deleting invoice: %d", id), e);
+      throw new RepositoryOperationException(String.format("Encountered problem while deleting invoice: %s", id), e);
     }
   }
 
   @Synchronized
-  public boolean existsById(@NonNull Integer id) throws RepositoryOperationException {
+  public boolean existsById(@NonNull String id) throws RepositoryOperationException {
     try {
       return getAllInvoices().stream()
           .filter(Objects::nonNull)
-          .anyMatch(invoice -> invoice.getId() == id);
+          .anyMatch(invoice -> invoice.getId().equals(id));
     } catch (IOException e) {
       throw new RepositoryOperationException(String.format("Encountered problems looking for invoice: %s", id), e);
     }

@@ -1,30 +1,14 @@
 package pl.coderstrust.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static pl.coderstrust.generators.InvoiceGenerator.copyInvoice;
-import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoice;
-import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName;
-import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificId;
-import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificSellerName;
+import static org.mockito.Mockito.*;
+import static pl.coderstrust.generators.InvoiceGenerator.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +18,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.EmptyResultDataAccessException;
 import pl.coderstrust.configuration.ApplicationConfiguration;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
@@ -91,9 +74,9 @@ class InFileInvoiceRepositoryTest {
   @DisplayName("Should return saved invoice with new id when save is invoked and new invoice is passed as parameter.")
   void saveShouldReturnSavedInvoiceWithProperIdWhenNewInvoicePassed() throws RepositoryOperationException, IOException {
     //given
-    Invoice invoice = getRandomInvoiceWithSpecificId(5);
+    Invoice invoice = getRandomInvoiceWithSpecificId("5");
     Invoice expectedInvoice = copyInvoice(invoice);
-    expectedInvoice.setId(1);
+    expectedInvoice.setId("1");
     String expectedInvoiceAsJson = mapper.writeValueAsString(expectedInvoice);
     when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());
     doNothing().when(fileHelperMock).writeLine(expectedInvoiceAsJson);
@@ -110,9 +93,9 @@ class InFileInvoiceRepositoryTest {
   @DisplayName("Should return saved invoice with original id when save is invoked and invoice with existing id is passed as parameter.")
   void saveShouldReturnSavedInvoiceWithOriginalIdWhenExistingInvoicePassed() throws RepositoryOperationException, IOException, FileHelperException {
     //given
-    Invoice invoice1 = getRandomInvoiceWithSpecificId(3);
-    Invoice invoice2 = getRandomInvoiceWithSpecificId(5);
-    Invoice invoice3 = getRandomInvoiceWithSpecificId(3);
+    Invoice invoice1 = getRandomInvoiceWithSpecificId("3");
+    Invoice invoice2 = getRandomInvoiceWithSpecificId("5");
+    Invoice invoice3 = getRandomInvoiceWithSpecificId("3");
     String invoice1AsJson = mapper.writeValueAsString(invoice1);
     String invoice2AsJson = mapper.writeValueAsString(invoice2);
     String invoice3AsJson = mapper.writeValueAsString(invoice3);
@@ -134,7 +117,7 @@ class InFileInvoiceRepositoryTest {
   @DisplayName("Should throw DatabaseOperationException when save is invoked and fileHelper throws exception.")
   void saveShouldThrowExceptionWhenFileHelperThrowsException() throws IOException {
     //given
-    final Invoice invoice = getRandomInvoiceWithSpecificId(1);
+    final Invoice invoice = getRandomInvoiceWithSpecificId("1");
     final String invoiceAsJson = mapper.writeValueAsString(invoice);
     doThrow(IOException.class).when(fileHelperMock).writeLine(invoiceAsJson);
 
@@ -171,7 +154,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList(invoiceAsJson));
 
     //when
-    Optional<Invoice> actualInvoice = inFileRepository.findById(123456789);
+    Optional<Invoice> actualInvoice = inFileRepository.findById("-1");
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
@@ -185,7 +168,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());
 
     //when
-    Optional<Invoice> actualInvoice = inFileRepository.findById(123456789);
+    Optional<Invoice> actualInvoice = inFileRepository.findById("-1");
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
@@ -199,7 +182,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList("xyz"));
 
     //when
-    Optional<Invoice> actualInvoice = inFileRepository.findById(123456789);
+    Optional<Invoice> actualInvoice = inFileRepository.findById("-1");
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
@@ -498,7 +481,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList("xyz"));
 
     //when
-    boolean result = inFileRepository.existsById(123456789);
+    boolean result = inFileRepository.existsById("-1");
 
     //then
     assertFalse(result);
@@ -538,7 +521,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    boolean result = inFileRepository.existsById(123456789);
+    boolean result = inFileRepository.existsById("-1");
 
     //then
     assertFalse(result);
@@ -577,9 +560,22 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should throw exception when trying deleteById from database if absent.")
-  void shouldThrowExceptionWhenTryingDeleteByIdFromDatabaseIfAbsent() throws Exception {
-    assertThrows(EmptyResultDataAccessException.class, () -> inFileRepository.deleteById(32645));
+  @DisplayName("Should not pass line number to fileHelper.removeLine when deleteById is invoked and invoice with particular id does not exist.")
+  void shouldNotPassLineNumberToFileHelperRemoveLineWhenDeleteByIdInvokedAndInvoiceDoesNotExist() throws Exception {
+    //given
+    final Invoice invoice1 = getRandomInvoice();
+    final Invoice invoice2 = getRandomInvoice();
+    final Invoice invoice3 = getRandomInvoice();
+    final String invoice1AsJson = mapper.writeValueAsString(invoice1);
+    final String invoice2AsJson = mapper.writeValueAsString(invoice2);
+    final String invoice3AsJson = mapper.writeValueAsString(invoice3);
+    when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
+
+    //when
+    inFileRepository.deleteById("-1");
+
+    //then
+    verify(fileHelperMock, times(0)).removeLine(anyInt());
   }
 
   @Test

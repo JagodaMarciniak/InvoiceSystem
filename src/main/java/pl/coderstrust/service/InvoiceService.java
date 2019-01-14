@@ -14,6 +14,7 @@ import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @RequiredArgsConstructor
 public class InvoiceService {
+
   @NonNull
   private InvoiceRepository invoiceRepository;
 
@@ -27,7 +28,7 @@ public class InvoiceService {
     }
   }
 
-  public Optional<Invoice> getInvoice(int invoiceId) throws InvoiceServiceOperationException {
+  public Optional<Invoice> getInvoice(@NonNull String invoiceId) throws InvoiceServiceOperationException {
     try {
       return invoiceRepository.findById(invoiceId);
     } catch (RepositoryOperationException e) {
@@ -46,7 +47,7 @@ public class InvoiceService {
 
   public void updateInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
     try {
-      int id = invoice.getId();
+      String id = invoice.getId();
       if (invoiceRepository.existsById(id)) {
         invoiceRepository.save(invoice);
       } else {
@@ -57,7 +58,7 @@ public class InvoiceService {
     }
   }
 
-  public void deleteInvoice(int invoiceId) throws InvoiceServiceOperationException {
+  public void deleteInvoice(@NonNull String invoiceId) throws InvoiceServiceOperationException {
     try {
       invoiceRepository.deleteById(invoiceId);
     } catch (RepositoryOperationException e) {

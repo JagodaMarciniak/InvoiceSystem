@@ -1,20 +1,14 @@
 package pl.coderstrust.integrationtests.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pl.coderstrust.generators.InvoiceGenerator.copyInvoice;
-import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoice;
-import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName;
-import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificId;
-import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificSellerName;
+import static org.junit.jupiter.api.Assertions.*;
+import static pl.coderstrust.generators.InvoiceGenerator.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,9 +47,9 @@ public class InFileInvoiceRepositoryIT {
   @DisplayName("Should save new invoice to empty database when save is invoked.")
   void saveShouldSaveNewInvoiceToNewDatabase() throws IOException, RepositoryOperationException {
     //given
-    Invoice invoice = getRandomInvoiceWithSpecificId(1);
+    Invoice invoice = getRandomInvoiceWithSpecificId("1");
     Invoice alteredInvoice = copyInvoice(invoice);
-    alteredInvoice.setId(17);
+    alteredInvoice.setId("17");
     String invoiceAsJson = mapper.writeValueAsString(invoice);
     FileUtils.writeLines(expectedDatabaseFile, Collections.singleton(invoiceAsJson), null);
 
@@ -70,11 +64,11 @@ public class InFileInvoiceRepositoryIT {
   @DisplayName("Should save new invoice with proper id to non-empty database when save is invoked.")
   void saveShouldSaveNewInvoiceWithProperIdToNonEmptyDatabase() throws IOException, RepositoryOperationException {
     //given
-    Invoice invoice1 = getRandomInvoiceWithSpecificId(1);
-    Invoice invoice2 = getRandomInvoiceWithSpecificId(2);
-    Invoice invoice3 = getRandomInvoiceWithSpecificId(3);
+    Invoice invoice1 = getRandomInvoiceWithSpecificId("1");
+    Invoice invoice2 = getRandomInvoiceWithSpecificId("2");
+    Invoice invoice3 = getRandomInvoiceWithSpecificId("3");
     Invoice alteredInvoice3 = copyInvoice(invoice3);
-    alteredInvoice3.setId(15);
+    alteredInvoice3.setId("15");
     String invoice1AsJson = mapper.writeValueAsString(invoice1);
     String invoice2AsJson = mapper.writeValueAsString(invoice2);
     String invoice3AsJson = mapper.writeValueAsString(invoice3);
@@ -93,8 +87,8 @@ public class InFileInvoiceRepositoryIT {
   @DisplayName("Should replace invoice in database file when save is called and invoiceId is already present in database.")
   void saveShouldReplaceInvoiceInNewDatabase() throws IOException, RepositoryOperationException {
     //given
-    Invoice invoice = getRandomInvoiceWithSpecificId(1);
-    Invoice alteredInvoice = getRandomInvoiceWithSpecificId(1);
+    Invoice invoice = getRandomInvoiceWithSpecificId("1");
+    Invoice alteredInvoice = getRandomInvoiceWithSpecificId("1");
     String invoiceAsJson = mapper.writeValueAsString(invoice);
     String alteredInvoiceAsJson = mapper.writeValueAsString(alteredInvoice);
     FileUtils.writeLines(expectedDatabaseFile, Collections.singleton(alteredInvoiceAsJson), null);
@@ -135,7 +129,7 @@ public class InFileInvoiceRepositoryIT {
     FileUtils.writeLines(databaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson), null);
 
     //when
-    Optional<Invoice> actualInvoice = inFileRepository.findById(123456789);
+    Optional<Invoice> actualInvoice = inFileRepository.findById("-1");
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
@@ -437,9 +431,9 @@ public class InFileInvoiceRepositoryIT {
   @DisplayName("Should not alter database contents if deleteById invoked and specified invoice does not exist.")
   void deleteByIdShouldNotChangeDatabaseContentsWhenInvoiceDoesNotExist() throws IOException, RepositoryOperationException {
     //given
-    Invoice invoice1 = getRandomInvoiceWithSpecificId(10);
-    Invoice invoice2 = getRandomInvoiceWithSpecificId(11);
-    Invoice invoice3 = getRandomInvoiceWithSpecificId(12);
+    Invoice invoice1 = getRandomInvoiceWithSpecificId("10");
+    Invoice invoice2 = getRandomInvoiceWithSpecificId("11");
+    Invoice invoice3 = getRandomInvoiceWithSpecificId("12");
     String invoice1AsJson = mapper.writeValueAsString(invoice1);
     String invoice2AsJson = mapper.writeValueAsString(invoice2);
     String invoice3AsJson = mapper.writeValueAsString(invoice3);
@@ -447,7 +441,7 @@ public class InFileInvoiceRepositoryIT {
     FileUtils.writeLines(expectedDatabaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), null);
 
     //when
-    inFileRepository.deleteById(123456789);
+    inFileRepository.deleteById("-1");
 
     //then
     assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
