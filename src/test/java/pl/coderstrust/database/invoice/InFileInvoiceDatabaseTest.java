@@ -1,4 +1,4 @@
-package pl.coderstrust.repository;
+package pl.coderstrust.database.invoice;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -19,60 +19,59 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.coderstrust.configuration.ApplicationConfiguration;
+import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.model.Invoice;
-import pl.coderstrust.repository.invoice.InFileInvoiceRepository;
-import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @ExtendWith(MockitoExtension.class)
-class InFileInvoiceRepositoryTest {
+class InFileInvoiceDatabaseTest {
 
   private static ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
 
   @Mock
   private FileHelper fileHelperMock;
 
-  private InvoiceRepository inFileRepository;
+  private InvoiceDatabase database;
 
   @BeforeEach
-  void setUp() throws RepositoryOperationException {
-    inFileRepository = new InFileInvoiceRepository(fileHelperMock, mapper);
+  void setUp() throws DatabaseOperationException {
+    database = new InFileInvoiceDatabase(fileHelperMock, mapper);
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when FileHelper.initialize() throws IOException.")
+  @DisplayName("Should throw DatabaseOperationException when FileHelper.initialize() throws IOException.")
   void constructorShouldThrowExceptionWhenFileHelperInitializeThrowsIoException() throws IOException, FileHelperException {
     //given
     doThrow(IOException.class).when(fileHelperMock).initialize();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> new InFileInvoiceRepository(fileHelperMock, mapper));
+    assertThrows(DatabaseOperationException.class, () -> new InFileInvoiceDatabase(fileHelperMock, mapper));
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when FileHelper.initialize() throws FileHelperException.")
+  @DisplayName("Should throw DatabaseOperationException when FileHelper.initialize() throws FileHelperException.")
   void constructorShouldThrowExceptionWhenFileHelperInitializeThrowsFileHelperException() throws IOException, FileHelperException {
     //given
     doThrow(FileHelperException.class).when(fileHelperMock).initialize();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> new InFileInvoiceRepository(fileHelperMock, mapper));
+    assertThrows(DatabaseOperationException.class, () -> new InFileInvoiceDatabase(fileHelperMock, mapper));
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when FileHelper.readLastLine() throws IOException.")
+  @DisplayName("Should throw DatabaseOperationException when FileHelper.readLastLine() throws IOException.")
   void constructorShouldThrowExceptionWhenFileHelperReadLastLineThrowsException() throws IOException {
     //given
     doThrow(IOException.class).when(fileHelperMock).readLastLine();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> new InFileInvoiceRepository(fileHelperMock, mapper));
+    assertThrows(DatabaseOperationException.class, () -> new InFileInvoiceDatabase(fileHelperMock, mapper));
   }
 
   @Test
   @DisplayName("Should return saved invoice with new id when save is invoked and new invoice is passed as parameter.")
-  void saveShouldReturnSavedInvoiceWithProperIdWhenNewInvoicePassed() throws RepositoryOperationException, IOException {
+  void saveShouldReturnSavedInvoiceWithProperIdWhenNewInvoicePassed() throws DatabaseOperationException, IOException {
     //given
     Invoice invoice = getRandomInvoiceWithSpecificId("5");
     Invoice expectedInvoice = copyInvoice(invoice);
@@ -82,7 +81,7 @@ class InFileInvoiceRepositoryTest {
     doNothing().when(fileHelperMock).writeLine(expectedInvoiceAsJson);
 
     //when
-    Invoice actualInvoice = inFileRepository.save(invoice);
+    Invoice actualInvoice = database.save(invoice);
 
     //then
     assertEquals(expectedInvoice, actualInvoice);
@@ -91,7 +90,7 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return saved invoice with original id when save is invoked and invoice with existing id is passed as parameter.")
-  void saveShouldReturnSavedInvoiceWithOriginalIdWhenExistingInvoicePassed() throws RepositoryOperationException, IOException, FileHelperException {
+  void saveShouldReturnSavedInvoiceWithOriginalIdWhenExistingInvoicePassed() throws DatabaseOperationException, IOException, FileHelperException {
     //given
     Invoice invoice1 = getRandomInvoiceWithSpecificId("3");
     Invoice invoice2 = getRandomInvoiceWithSpecificId("5");
@@ -104,7 +103,7 @@ class InFileInvoiceRepositoryTest {
     doNothing().when(fileHelperMock).removeLine(1);
 
     //when
-    Invoice savedInvoice = inFileRepository.save(invoice3);
+    Invoice savedInvoice = database.save(invoice3);
 
     //then
     assertNotEquals(invoice1, invoice3);
@@ -122,13 +121,13 @@ class InFileInvoiceRepositoryTest {
     doThrow(IOException.class).when(fileHelperMock).writeLine(invoiceAsJson);
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.save(invoice));
+    assertThrows(DatabaseOperationException.class, () -> database.save(invoice));
     verify(fileHelperMock).writeLine(invoiceAsJson);
   }
 
   @Test
   @DisplayName("Should return invoice with specified id when findById is invoked.")
-  void shouldReturnInvoiceWithSpecifiedId() throws RepositoryOperationException, IOException {
+  void shouldReturnInvoiceWithSpecifiedId() throws DatabaseOperationException, IOException {
     //given
     final Invoice invoice1 = getRandomInvoice();
     final Invoice invoice2 = getRandomInvoice();
@@ -139,7 +138,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    Optional<Invoice> actualInvoice = inFileRepository.findById(invoice2.getId());
+    Optional<Invoice> actualInvoice = database.findById(invoice2.getId());
 
     //then
     assertEquals(Optional.of(invoice2), actualInvoice);
@@ -148,13 +147,13 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty optional when findById is invoked and invoice does not exist.")
-  void findByIdShouldReturnEmptyOptionalWhenInvoiceDoesNotExist() throws RepositoryOperationException, IOException {
+  void findByIdShouldReturnEmptyOptionalWhenInvoiceDoesNotExist() throws DatabaseOperationException, IOException {
     //given
     final String invoiceAsJson = mapper.writeValueAsString(getRandomInvoice());
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList(invoiceAsJson));
 
     //when
-    Optional<Invoice> actualInvoice = inFileRepository.findById("-1");
+    Optional<Invoice> actualInvoice = database.findById("-1");
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
@@ -163,12 +162,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty optional when findById is invoked and input stream is empty.")
-  void findByIdShouldReturnEmptyOptionalWhenInputStreamIsEmpty() throws IOException, RepositoryOperationException {
+  void findByIdShouldReturnEmptyOptionalWhenInputStreamIsEmpty() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());
 
     //when
-    Optional<Invoice> actualInvoice = inFileRepository.findById("-1");
+    Optional<Invoice> actualInvoice = database.findById("-1");
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
@@ -177,12 +176,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty optional when findById is invoked and input stream contains invalid data.")
-  void findByIdShouldReturnEmptyOptionalWhenInputStreamContainsInvalidData() throws IOException, RepositoryOperationException {
+  void findByIdShouldReturnEmptyOptionalWhenInputStreamContainsInvalidData() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList("xyz"));
 
     //when
-    Optional<Invoice> actualInvoice = inFileRepository.findById("-1");
+    Optional<Invoice> actualInvoice = database.findById("-1");
 
     //then
     assertEquals(Optional.empty(), actualInvoice);
@@ -190,19 +189,19 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when findById is invoked and fileHelper throws exception.")
+  @DisplayName("Should throw DatabaseOperationException when findById is invoked and fileHelper throws exception.")
   void findByIdShouldThrowExceptionWhenFileHelperThrowsException() throws IOException {
     //given
     doThrow(IOException.class).when(fileHelperMock).readLines();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.findById(getRandomInvoice().getId()));
+    assertThrows(DatabaseOperationException.class, () -> database.findById(getRandomInvoice().getId()));
     verify(fileHelperMock).readLines();
   }
 
   @Test
-  @DisplayName("Should return all invoices from inFileRepository when findAll is invoked.")
-  void shouldReturnAllInvoices() throws RepositoryOperationException, IOException {
+  @DisplayName("Should return all invoices from database when findAll is invoked.")
+  void shouldReturnAllInvoices() throws DatabaseOperationException, IOException {
     //given
     final Invoice invoice1 = getRandomInvoice();
     final Invoice invoice2 = getRandomInvoice();
@@ -213,7 +212,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAll();
+    Iterable<Invoice> actualInvoices = database.findAll();
 
     //then
     assertEquals(Arrays.asList(invoice1, invoice2, invoice3), actualInvoices);
@@ -222,12 +221,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty list when findAll is invoked and input stream is empty.")
-  void findAllShouldReturnEmptyListWhenInputStreamIsEmpty() throws IOException, RepositoryOperationException {
+  void findAllShouldReturnEmptyListWhenInputStreamIsEmpty() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAll();
+    Iterable<Invoice> actualInvoices = database.findAll();
 
     //then
     assertEquals(new ArrayList<>(), actualInvoices);
@@ -236,12 +235,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty list when findAll is invoked and input stream contains invalid data.")
-  void findAllShouldReturnEmptyListWhenInputStreamContainsInvalidData() throws IOException, RepositoryOperationException {
+  void findAllShouldReturnEmptyListWhenInputStreamContainsInvalidData() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList("xyz"));
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAll();
+    Iterable<Invoice> actualInvoices = database.findAll();
 
     //then
     assertEquals(new ArrayList<>(), actualInvoices);
@@ -249,19 +248,19 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when findAll is invoked and fileHelper.readLines throws exception.")
+  @DisplayName("Should throw DatabaseOperationException when findAll is invoked and fileHelper.readLines throws exception.")
   void findAllShouldThrowExceptionWhenFileHelperReadLinesThrowsException() throws IOException {
     //given
     doThrow(IOException.class).when(fileHelperMock).readLines();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.findAll());
+    assertThrows(DatabaseOperationException.class, () -> database.findAll());
     verify(fileHelperMock).readLines();
   }
 
   @Test
   @DisplayName("Should return all invoices associated with particular seller name.")
-  void shouldReturnAllInvoicesBySellerName() throws RepositoryOperationException, IOException {
+  void shouldReturnAllInvoicesBySellerName() throws DatabaseOperationException, IOException {
     //given
     final Invoice invoice1 = getRandomInvoiceWithSpecificSellerName("Company One");
     final Invoice invoice2 = getRandomInvoiceWithSpecificSellerName("Company One");
@@ -272,7 +271,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAllBySellerName(invoice1.getSeller().getName());
+    Iterable<Invoice> actualInvoices = database.findAllBySellerName(invoice1.getSeller().getName());
 
     //then
     assertEquals(Arrays.asList(invoice1, invoice2), actualInvoices);
@@ -281,12 +280,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty list when findAllBySellerName is invoked and input stream is empty.")
-  void findAllBySellerNameShouldReturnEmptyListWhenInputStreamEmpty() throws IOException, RepositoryOperationException {
+  void findAllBySellerNameShouldReturnEmptyListWhenInputStreamEmpty() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAllBySellerName(getRandomInvoice().getSeller().getName());
+    Iterable<Invoice> actualInvoices = database.findAllBySellerName(getRandomInvoice().getSeller().getName());
 
     //then
     assertEquals(Collections.emptyList(), actualInvoices);
@@ -295,12 +294,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty list when findAllBySellerName is invoked and input stream contains invalid data.")
-  void findAllInvoicesBySellerNameShouldReturnEmptyListWhenInputStreamContainsInvalidData() throws IOException, RepositoryOperationException {
+  void findAllInvoicesBySellerNameShouldReturnEmptyListWhenInputStreamContainsInvalidData() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList("xyz"));
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAllBySellerName("Sample Company");
+    Iterable<Invoice> actualInvoices = database.findAllBySellerName("Sample Company");
 
     //then
     assertEquals(new ArrayList<>(), actualInvoices);
@@ -308,8 +307,8 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should empty list when findAllBySellerName is invoked and requested seller is not present in inFileRepository.")
-  void findAllBySellerNameShouldReturnEmptyListWhenSellerMissing() throws IOException, RepositoryOperationException {
+  @DisplayName("Should empty list when findAllBySellerName is invoked and requested seller is not present in database.")
+  void findAllBySellerNameShouldReturnEmptyListWhenSellerMissing() throws IOException, DatabaseOperationException {
     //given
     final Invoice invoice1 = getRandomInvoiceWithSpecificSellerName("Company One");
     final Invoice invoice2 = getRandomInvoiceWithSpecificSellerName("Company Two");
@@ -320,7 +319,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    Iterable<Invoice> actualInvoicesBySellerName = inFileRepository.findAllBySellerName("A.C.M.E. Incorporated");
+    Iterable<Invoice> actualInvoicesBySellerName = database.findAllBySellerName("A.C.M.E. Incorporated");
 
     //then
     assertEquals(Collections.emptyList(), actualInvoicesBySellerName);
@@ -328,20 +327,20 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when findAllBySellerName is invoked and fileHelper.readLines throws exception.")
+  @DisplayName("Should throw DatabaseOperationException when findAllBySellerName is invoked and fileHelper.readLines throws exception.")
   void findAllBySellerNameShouldThrowExceptionWhenFileHelperReadLinesThrowsException() throws IOException {
     //given
     Invoice invoice = getRandomInvoice();
     doThrow(IOException.class).when(fileHelperMock).readLines();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.findAllBySellerName(invoice.getSeller().getName()));
+    assertThrows(DatabaseOperationException.class, () -> database.findAllBySellerName(invoice.getSeller().getName()));
     verify(fileHelperMock).readLines();
   }
 
   @Test
   @DisplayName("Should return all invoices associated with particular buyer name when findAllByBuyerName is invoked.")
-  void shouldReturnAllInvoicesByBuyerName() throws RepositoryOperationException, IOException {
+  void shouldReturnAllInvoicesByBuyerName() throws DatabaseOperationException, IOException {
     //given
     final Invoice invoice1 = getRandomInvoiceWithSpecificBuyerName("Company One");
     final Invoice invoice2 = getRandomInvoiceWithSpecificBuyerName("Company Two");
@@ -352,7 +351,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAllByBuyerName(invoice1.getBuyer().getName());
+    Iterable<Invoice> actualInvoices = database.findAllByBuyerName(invoice1.getBuyer().getName());
 
     //then
     assertEquals(Arrays.asList(invoice1, invoice3), actualInvoices);
@@ -361,12 +360,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty list when findAllByBuyerName is invoked and input stream is empty.")
-  void shouldReturnEmptyListWhenFindAllByBuyerNameInvokedAndInputStreamIsEmpty() throws IOException, RepositoryOperationException {
+  void shouldReturnEmptyListWhenFindAllByBuyerNameInvokedAndInputStreamIsEmpty() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.emptyList());
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAllByBuyerName(getRandomInvoice().getBuyer().getName());
+    Iterable<Invoice> actualInvoices = database.findAllByBuyerName(getRandomInvoice().getBuyer().getName());
 
     //then
     assertEquals(Collections.emptyList(), actualInvoices);
@@ -375,12 +374,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty list when findAllByBuyerName is invoked and input stream contains invalid data.")
-  void findAllByBuyerNameShouldReturnEmptyListWhenInputStreamContainsInvalidData() throws IOException, RepositoryOperationException {
+  void findAllByBuyerNameShouldReturnEmptyListWhenInputStreamContainsInvalidData() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList("xyz"));
 
     //when
-    Iterable<Invoice> actualInvoices = inFileRepository.findAllByBuyerName(getRandomInvoice().getBuyer().getName());
+    Iterable<Invoice> actualInvoices = database.findAllByBuyerName(getRandomInvoice().getBuyer().getName());
 
     //then
     assertEquals(Collections.emptyList(), actualInvoices);
@@ -389,7 +388,7 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return empty list when findAllByBuyerName is invoked and specified buyer is missing.")
-  void findAllByBuyerNameShouldReturnEmptyListWhenBuyerMissing() throws IOException, RepositoryOperationException {
+  void findAllByBuyerNameShouldReturnEmptyListWhenBuyerMissing() throws IOException, DatabaseOperationException {
     //given
     final Invoice invoice1 = getRandomInvoiceWithSpecificBuyerName("Company One");
     final Invoice invoice2 = getRandomInvoiceWithSpecificBuyerName("Company Two");
@@ -400,7 +399,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    Iterable<Invoice> actualInvoicesByBuyerName = inFileRepository.findAllByBuyerName("A.C.M.E. Incorporated");
+    Iterable<Invoice> actualInvoicesByBuyerName = database.findAllByBuyerName("A.C.M.E. Incorporated");
 
     //then
     assertEquals(Collections.emptyList(), actualInvoicesByBuyerName);
@@ -414,20 +413,20 @@ class InFileInvoiceRepositoryTest {
     doThrow(IOException.class).when(fileHelperMock).readLines();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.findAllByBuyerName(getRandomInvoice().getBuyer().getName()));
+    assertThrows(DatabaseOperationException.class, () -> database.findAllByBuyerName(getRandomInvoice().getBuyer().getName()));
     verify(fileHelperMock).readLines();
   }
 
   @ParameterizedTest
-  @DisplayName("Should return number of invoices in inFileRepository.")
+  @DisplayName("Should return number of invoices in database.")
   @MethodSource("countInvoicesTestParameters")
-  void shouldReturnInvoiceCount(List<String> invoices, Long expectedInvoiceCount) throws IOException, RepositoryOperationException {
+  void shouldReturnInvoiceCount(List<String> invoices, Long expectedInvoiceCount) throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.isEmpty()).thenReturn(false);
     when(fileHelperMock.readLines()).thenReturn(invoices);
 
     //when
-    Long actualInvoiceCount = inFileRepository.count();
+    Long actualInvoiceCount = database.count();
 
     //then
     assertEquals(expectedInvoiceCount, actualInvoiceCount);
@@ -447,13 +446,13 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should return 0 when inFileRepository is empty and count is invoked.")
-  void countShouldReturnZeroWhenDatabaseIsEmpty() throws IOException, RepositoryOperationException {
+  @DisplayName("Should return 0 when database is empty and count is invoked.")
+  void countShouldReturnZeroWhenDatabaseIsEmpty() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.isEmpty()).thenReturn(false);
 
     //when
-    Long actualInvoiceCount = inFileRepository.count();
+    Long actualInvoiceCount = database.count();
 
     //then
     assertEquals(Long.valueOf(0), actualInvoiceCount);
@@ -461,13 +460,13 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should return 0 when inFileRepository contains invalid data and count is invoked.")
-  void countShouldReturnZeroWhenDatabaseContainsInvalidData() throws IOException, RepositoryOperationException {
+  @DisplayName("Should return 0 when database contains invalid data and count is invoked.")
+  void countShouldReturnZeroWhenDatabaseContainsInvalidData() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList("xyz"));
 
     //when
-    Long actualInvoiceCount = inFileRepository.count();
+    Long actualInvoiceCount = database.count();
 
     //then
     assertEquals(Long.valueOf(0), actualInvoiceCount);
@@ -476,12 +475,12 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should return false when existsById is invoked and input stream contains invalid data.")
-  void existsByIdShouldReturnFalseWhenInputStreamContainsInvalidData() throws IOException, RepositoryOperationException {
+  void existsByIdShouldReturnFalseWhenInputStreamContainsInvalidData() throws IOException, DatabaseOperationException {
     //given
     when(fileHelperMock.readLines()).thenReturn(Collections.singletonList("xyz"));
 
     //when
-    boolean result = inFileRepository.existsById("-1");
+    boolean result = database.existsById("-1");
 
     //then
     assertFalse(result);
@@ -489,8 +488,8 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should return true when existsById is invoked and given invoice is present in inFileRepository.")
-  void shouldReturnTrueWhenInvoiceExists() throws RepositoryOperationException, IOException {
+  @DisplayName("Should return true when existsById is invoked and given invoice is present in database.")
+  void shouldReturnTrueWhenInvoiceExists() throws DatabaseOperationException, IOException {
     //given
     final Invoice invoice1 = getRandomInvoice();
     final Invoice invoice2 = getRandomInvoice();
@@ -501,7 +500,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    boolean result = inFileRepository.existsById(invoice2.getId());
+    boolean result = database.existsById(invoice2.getId());
 
     //then
     assertTrue(result);
@@ -509,8 +508,8 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should return false when existsById is invoked and given invoice is not present in inFileRepository.")
-  void shouldReturnFalseWhenInvoiceDoesNotExist() throws RepositoryOperationException, IOException {
+  @DisplayName("Should return false when existsById is invoked and given invoice is not present in database.")
+  void shouldReturnFalseWhenInvoiceDoesNotExist() throws DatabaseOperationException, IOException {
     //given
     final Invoice invoice1 = getRandomInvoice();
     final Invoice invoice2 = getRandomInvoice();
@@ -521,7 +520,7 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //when
-    boolean result = inFileRepository.existsById("-1");
+    boolean result = database.existsById("-1");
 
     //then
     assertFalse(result);
@@ -529,13 +528,13 @@ class InFileInvoiceRepositoryTest {
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when existsById invoked and fileHelper throws exception.")
+  @DisplayName("Should throw DatabaseOperationException when existsById invoked and fileHelper throws exception.")
   void existsByIdShouldThrowExceptionWhenFileHelperReadLinesThrowsException() throws IOException {
     //given
     doThrow(IOException.class).when(fileHelperMock).readLines();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.existsById(getRandomInvoice().getId()));
+    assertThrows(DatabaseOperationException.class, () -> database.existsById(getRandomInvoice().getId()));
     verify(fileHelperMock).readLines();
   }
 
@@ -553,7 +552,7 @@ class InFileInvoiceRepositoryTest {
     doNothing().when(fileHelperMock).removeLine(anyInt());
 
     //when
-    inFileRepository.deleteById(invoice2.getId());
+    database.deleteById(invoice2.getId());
 
     //then
     verify(fileHelperMock).removeLine(2);
@@ -572,12 +571,12 @@ class InFileInvoiceRepositoryTest {
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.deleteById("-1"));
+    assertThrows(DatabaseOperationException.class, () -> database.deleteById("-1"));
     verify(fileHelperMock, times(0)).removeLine(anyInt());
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when deleteById is invoked and fileHelper.removeLine throws exception.")
+  @DisplayName("Should throw DatabaseOperationException when deleteById is invoked and fileHelper.removeLine throws exception.")
   void deleteByIdShouldThrowExceptionWhenFileHelperRemoveLineThrowsException() throws Exception {
     //given
     Invoice invoice = getRandomInvoice();
@@ -586,30 +585,30 @@ class InFileInvoiceRepositoryTest {
     doThrow(FileHelperException.class).when(fileHelperMock).removeLine(anyInt());
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.deleteById(invoice.getId()));
+    assertThrows(DatabaseOperationException.class, () -> database.deleteById(invoice.getId()));
     verify(fileHelperMock).readLines();
     verify(fileHelperMock).removeLine(anyInt());
   }
 
   @Test
-  @DisplayName("Should throw RepositoryOperationException when deleteAll is invoked and fileHelper.clear throws exception.")
+  @DisplayName("Should throw DatabaseOperationException when deleteAll is invoked and fileHelper.clear throws exception.")
   void deleteAllShouldThrowExceptionWhenFileHelperClearThrowsException() throws IOException {
     //given
     doThrow(IOException.class).when(fileHelperMock).clear();
 
     //then
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.deleteAll());
+    assertThrows(DatabaseOperationException.class, () -> database.deleteAll());
     verify(fileHelperMock).clear();
   }
 
   @Test
   @DisplayName("Should clear database file when deleteAll is invoked.")
-  void deleteAllShouldClearDatabaseFile() throws IOException, RepositoryOperationException {
+  void deleteAllShouldClearDatabaseFile() throws IOException, DatabaseOperationException {
     //given
     doNothing().when(fileHelperMock).clear();
 
     //when
-    inFileRepository.deleteAll();
+    database.deleteAll();
 
     //then
     verify(fileHelperMock).clear();
@@ -618,36 +617,36 @@ class InFileInvoiceRepositoryTest {
   @Test
   @DisplayName("Should throw IllegalArgumentException when null is passed as argument to save.")
   void shouldThrowExceptionWhenNullArgumentPassedToSave() {
-    assertThrows(IllegalArgumentException.class, () -> inFileRepository.save(null));
+    assertThrows(IllegalArgumentException.class, () -> database.save(null));
   }
 
   @Test
   @DisplayName("Should throw IllegalArgumentException when null is passed as argument to findById.")
   void shouldThrowExceptionWhenNullArgumentPassedToFindById() {
-    assertThrows(IllegalArgumentException.class, () -> inFileRepository.findById(null));
+    assertThrows(IllegalArgumentException.class, () -> database.findById(null));
   }
 
   @Test
   @DisplayName("Should throw IllegalArgumentException when null is passed as argument to findAllBySellerName.")
   void shouldThrowExceptionWhenNullArgumentPassedToFindAllBySellerName() {
-    assertThrows(IllegalArgumentException.class, () -> inFileRepository.findAllBySellerName(null));
+    assertThrows(IllegalArgumentException.class, () -> database.findAllBySellerName(null));
   }
 
   @Test
   @DisplayName("Should throw IllegalArgumentException when null is passed as argument to findAllByBuyerName.")
   void shouldThrowExceptionWhenNullArgumentPassedToFindAllByBuyerName() {
-    assertThrows(IllegalArgumentException.class, () -> inFileRepository.findAllByBuyerName(null));
+    assertThrows(IllegalArgumentException.class, () -> database.findAllByBuyerName(null));
   }
 
   @Test
   @DisplayName("Should throw IllegalArgumentException when null is passed as argument to deleteById.")
   void shouldThrowExceptionWhenNullArgumentPassedToDeleteById() {
-    assertThrows(IllegalArgumentException.class, () -> inFileRepository.deleteById(null));
+    assertThrows(IllegalArgumentException.class, () -> database.deleteById(null));
   }
 
   @Test
   @DisplayName("Should throw IllegalArgumentException when null is passed as argument to existsById.")
   void shouldThrowExceptionWhenNullArgumentPassedToExistsById() {
-    assertThrows(IllegalArgumentException.class, () -> inFileRepository.existsById(null));
+    assertThrows(IllegalArgumentException.class, () -> database.existsById(null));
   }
 }

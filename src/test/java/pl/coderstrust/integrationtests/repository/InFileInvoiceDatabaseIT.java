@@ -14,13 +14,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pl.coderstrust.configuration.ApplicationConfiguration;
+import pl.coderstrust.database.DatabaseOperationException;
+import pl.coderstrust.database.invoice.InFileInvoiceDatabase;
+import pl.coderstrust.database.invoice.InvoiceDatabase;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.model.Invoice;
-import pl.coderstrust.repository.RepositoryOperationException;
-import pl.coderstrust.repository.invoice.InFileInvoiceRepository;
-import pl.coderstrust.repository.invoice.InvoiceRepository;
 
-public class InFileInvoiceRepositoryIT {
+public class InFileInvoiceDatabaseIT {
 
   private final ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String expectedDatabaseFilePath = String.format("%1$s%2$ssrc%2$stest%2$sresources%2$sdatabase%2$s%3$s",
@@ -29,14 +29,14 @@ public class InFileInvoiceRepositoryIT {
       System.getProperty("user.dir"), File.separator, "invoice_database.txt");
   private final File databaseFile = new File(databaseFilePath);
   private final File expectedDatabaseFile = new File(expectedDatabaseFilePath);
-  private InvoiceRepository inFileRepository;
+  private InvoiceDatabase inFileRepository;
 
   @BeforeEach
-  void setUp() throws RepositoryOperationException, IOException {
+  void setUp() throws DatabaseOperationException, IOException {
     if (databaseFile.exists()) {
       databaseFile.delete();
     }
-    inFileRepository = new InFileInvoiceRepository(new FileHelper(databaseFilePath), mapper);
+    inFileRepository = new InFileInvoiceDatabase(new FileHelper(databaseFilePath), mapper);
     if (expectedDatabaseFile.exists()) {
       expectedDatabaseFile.delete();
       expectedDatabaseFile.createNewFile();
@@ -45,7 +45,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should save new invoice to empty database when save is invoked.")
-  void saveShouldSaveNewInvoiceToNewDatabase() throws IOException, RepositoryOperationException {
+  void saveShouldSaveNewInvoiceToNewDatabase() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice = getRandomInvoiceWithSpecificId("1");
     Invoice alteredInvoice = copyInvoice(invoice);
@@ -62,7 +62,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should save new invoice with proper id to non-empty database when save is invoked.")
-  void saveShouldSaveNewInvoiceWithProperIdToNonEmptyDatabase() throws IOException, RepositoryOperationException {
+  void saveShouldSaveNewInvoiceWithProperIdToNonEmptyDatabase() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoiceWithSpecificId("1");
     Invoice invoice2 = getRandomInvoiceWithSpecificId("2");
@@ -74,7 +74,7 @@ public class InFileInvoiceRepositoryIT {
     String invoice3AsJson = mapper.writeValueAsString(invoice3);
     FileUtils.writeLines(databaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson), null);
     FileUtils.writeLines(expectedDatabaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), null);
-    InFileInvoiceRepository testInFileInvoiceRepository = new InFileInvoiceRepository(new FileHelper(databaseFilePath), mapper);
+    InFileInvoiceDatabase testInFileInvoiceRepository = new InFileInvoiceDatabase(new FileHelper(databaseFilePath), mapper);
 
     //when
     testInFileInvoiceRepository.save(alteredInvoice3);
@@ -85,7 +85,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should replace invoice in database file when save is called and invoiceId is already present in database.")
-  void saveShouldReplaceInvoiceInNewDatabase() throws IOException, RepositoryOperationException {
+  void saveShouldReplaceInvoiceInNewDatabase() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice = getRandomInvoiceWithSpecificId("1");
     Invoice alteredInvoice = getRandomInvoiceWithSpecificId("1");
@@ -103,7 +103,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return specified invoice when findById is invoked.")
-  void findByIdShouldReturnSpecifiedInvoice() throws IOException, RepositoryOperationException {
+  void findByIdShouldReturnSpecifiedInvoice() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoice();
@@ -120,7 +120,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty optional when findById is invoked and invoice that is searched for is missing.")
-  void findByIdShouldReturnEmptyOptionalWhenInvoiceIsMissing() throws IOException, RepositoryOperationException {
+  void findByIdShouldReturnEmptyOptionalWhenInvoiceIsMissing() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoice();
@@ -137,7 +137,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty optional when findById is called and database file is empty.")
-  void shouldReturnEmptyOptionalWhenFidByIdCalledAndDatabaseFileIsEmpty() throws RepositoryOperationException {
+  void shouldReturnEmptyOptionalWhenFidByIdCalledAndDatabaseFileIsEmpty() throws DatabaseOperationException {
     //when
     Optional<Invoice> actualInvoice = inFileRepository.findById(getRandomInvoice().getId());
 
@@ -147,7 +147,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty optional when findById is called and database file contains invalid data.")
-  void shouldReturnEmptyOptionalWhenFindByIdCalledAndDatabaseFileContainsInvalidData() throws RepositoryOperationException, IOException {
+  void shouldReturnEmptyOptionalWhenFindByIdCalledAndDatabaseFileContainsInvalidData() throws DatabaseOperationException, IOException {
     //given
     FileUtils.writeLines(databaseFile, Collections.singletonList("xyz"), null);
 
@@ -160,7 +160,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return all invoices from database when findAll is invoked.")
-  void shouldReturnAllInvoices() throws IOException, RepositoryOperationException {
+  void shouldReturnAllInvoices() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoice();
@@ -177,7 +177,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty list when findAll is invoked and database file is empty.")
-  void findAllShouldReturnEmptyListWhenDatabaseIsEmpty() throws RepositoryOperationException {
+  void findAllShouldReturnEmptyListWhenDatabaseIsEmpty() throws DatabaseOperationException {
     //when
     Iterable<Invoice> actualInvoices = inFileRepository.findAll();
 
@@ -187,7 +187,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return all invoices by specified seller name when findAllBySellerName is invoked.")
-  void shouldReturnAllInvoicesBySpecifiedSellerName() throws IOException, RepositoryOperationException {
+  void shouldReturnAllInvoicesBySpecifiedSellerName() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoiceWithSpecificSellerName("Warner Brothers");
@@ -206,7 +206,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty list when findAllBySellerName is called and specified seller is missing.")
-  void findAllBySellerNameShouldReturnEmptyListWhenSellerMissing() throws IOException, RepositoryOperationException {
+  void findAllBySellerNameShouldReturnEmptyListWhenSellerMissing() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoiceWithSpecificSellerName("Universal Studios");
     Invoice invoice2 = getRandomInvoiceWithSpecificSellerName("Walt Disney");
@@ -225,7 +225,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty list when findAllBySellerName is invoked and database file is empty.")
-  void findAllBySellerNameShouldReturnEmptyListWhenDatabaseIsEmpty() throws RepositoryOperationException {
+  void findAllBySellerNameShouldReturnEmptyListWhenDatabaseIsEmpty() throws DatabaseOperationException {
     //when
     Iterable<Invoice> actualInvoicesBySellerName = inFileRepository.findAllBySellerName(getRandomInvoice().getSeller().getName());
 
@@ -235,7 +235,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty list when findAllBySellerName is invoked and database file contains invalid data.")
-  void findAllBySellerNameShouldReturnEmptyListWhenDatabaseContainsInvalidData() throws RepositoryOperationException, IOException {
+  void findAllBySellerNameShouldReturnEmptyListWhenDatabaseContainsInvalidData() throws DatabaseOperationException, IOException {
     //given
     FileUtils.writeLines(databaseFile, Collections.singletonList("xyz"), null);
 
@@ -248,7 +248,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return all invoices by specified buyer name when findAllByBuyerName is called.")
-  void shouldReturnAllInvoicesByBuyerName() throws IOException, RepositoryOperationException {
+  void shouldReturnAllInvoicesByBuyerName() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoiceWithSpecificBuyerName("Logitech");
     Invoice invoice2 = getRandomInvoiceWithSpecificBuyerName("Logitech");
@@ -267,7 +267,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty list when findAllByBuyerName invoked and specified buyer is missing.")
-  void findAllByBuyerNameShouldReturnEmptyListWhenBuyerIsMissing() throws IOException, RepositoryOperationException {
+  void findAllByBuyerNameShouldReturnEmptyListWhenBuyerIsMissing() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoiceWithSpecificBuyerName("Logitech");
     Invoice invoice2 = getRandomInvoiceWithSpecificBuyerName("Apple");
@@ -286,7 +286,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty list when findAllByBuyerName is called and database file is empty.")
-  void findAllByBuyerNameShouldReturnEmptyListWhenDatabaseFileIsEmpty() throws RepositoryOperationException {
+  void findAllByBuyerNameShouldReturnEmptyListWhenDatabaseFileIsEmpty() throws DatabaseOperationException {
     //when
     Iterable<Invoice> actualInvoicesByBuyerName = inFileRepository.findAllByBuyerName(getRandomInvoice().getBuyer().getName());
 
@@ -296,7 +296,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return empty list when findAllByBuyerName is called and repository file contains invalid data.")
-  void findAllByBuyerNameShouldReturnEmptyListWhenDatabaseFileContainsInvalidData() throws RepositoryOperationException, IOException {
+  void findAllByBuyerNameShouldReturnEmptyListWhenDatabaseFileContainsInvalidData() throws DatabaseOperationException, IOException {
     //given
     FileUtils.writeLines(databaseFile, Collections.singletonList("xyz"), null);
 
@@ -309,7 +309,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return number of invoices in database when count is called.")
-  void countShouldReturnProperNumberOfInvoices() throws IOException, RepositoryOperationException {
+  void countShouldReturnProperNumberOfInvoices() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoice();
@@ -328,7 +328,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return 0 when count is called and database file is empty.")
-  void countInvoicesShouldReturnZeroWhenDatabaseIsEmpty() throws RepositoryOperationException {
+  void countInvoicesShouldReturnZeroWhenDatabaseIsEmpty() throws DatabaseOperationException {
     //when
     long actualInvoiceCount = inFileRepository.count();
 
@@ -338,7 +338,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return 0 when count is called and database file contains invalid data.")
-  void countShouldReturnZeroWhenDatabaseContainsInvalidData() throws RepositoryOperationException, IOException {
+  void countShouldReturnZeroWhenDatabaseContainsInvalidData() throws DatabaseOperationException, IOException {
     //given
     FileUtils.writeLines(databaseFile, Collections.singletonList("xyz"), null);
 
@@ -351,7 +351,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return true when existsById is called and specified invoice is present in database.")
-  void shouldReturnTrueWhenSpecifiedInvoiceExists() throws IOException, RepositoryOperationException {
+  void shouldReturnTrueWhenSpecifiedInvoiceExists() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoice();
@@ -368,7 +368,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return false when existsById is called and specified invoice is not present in database.")
-  void shouldReturnFalseWhenSpecifiedInvoiceDoesNotExist() throws IOException, RepositoryOperationException {
+  void shouldReturnFalseWhenSpecifiedInvoiceDoesNotExist() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoice();
@@ -386,7 +386,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return false when existsById is called and database file is empty.")
-  void existsByIdShouldReturnFalseWhenDatabaseIsEmpty() throws RepositoryOperationException {
+  void existsByIdShouldReturnFalseWhenDatabaseIsEmpty() throws DatabaseOperationException {
     //when
     boolean actualResult = inFileRepository.existsById(getRandomInvoice().getId());
 
@@ -396,7 +396,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should return false when existsById is called and database file contains invalid data.")
-  void existsByIdShouldReturnFalseWhenDatabaseContainsInvalidData() throws IOException, RepositoryOperationException {
+  void existsByIdShouldReturnFalseWhenDatabaseContainsInvalidData() throws IOException, DatabaseOperationException {
     //given
     FileUtils.writeLines(databaseFile, Collections.singletonList("xyz"), null);
 
@@ -409,7 +409,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should delete specified invoice when deleteById is invoked.")
-  void shouldDeleteSpecifiedInvoice() throws IOException, RepositoryOperationException {
+  void shouldDeleteSpecifiedInvoice() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoice();
@@ -429,7 +429,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should not alter database contents if deleteById invoked and specified invoice does not exist.")
-  void deleteByIdShouldNotChangeDatabaseContentsWhenInvoiceDoesNotExist() throws IOException, RepositoryOperationException {
+  void deleteByIdShouldNotChangeDatabaseContentsWhenInvoiceDoesNotExist() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoiceWithSpecificId("10");
     Invoice invoice2 = getRandomInvoiceWithSpecificId("11");
@@ -441,19 +441,19 @@ public class InFileInvoiceRepositoryIT {
     FileUtils.writeLines(expectedDatabaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), null);
 
     //when
-    assertThrows(RepositoryOperationException.class, () -> inFileRepository.deleteById("-1"));
+    assertThrows(DatabaseOperationException.class, () -> inFileRepository.deleteById("-1"));
   }
 
   @Test
   @DisplayName("Should not alter database file contents if deleteById invoked and database file is empty.")
-  void shouldThrowExceptionWhenTryingToDeleteByIdWhenDatabaseFileIsEmpty() throws IOException, RepositoryOperationException {
+  void shouldThrowExceptionWhenTryingToDeleteByIdWhenDatabaseFileIsEmpty() throws IOException, DatabaseOperationException {
     //when
-    assertThrows(RepositoryOperationException.class, ()-> inFileRepository.deleteById(getRandomInvoice().getId()));
+    assertThrows(DatabaseOperationException.class, ()-> inFileRepository.deleteById(getRandomInvoice().getId()));
   }
 
   @Test
   @DisplayName("Should delete all invoices when deleteAll is invoked.")
-  void shouldDeleteAllInvoices() throws IOException, RepositoryOperationException {
+  void shouldDeleteAllInvoices() throws IOException, DatabaseOperationException {
     //given
     Invoice invoice1 = getRandomInvoice();
     Invoice invoice2 = getRandomInvoice();
@@ -473,7 +473,7 @@ public class InFileInvoiceRepositoryIT {
 
   @Test
   @DisplayName("Should not alter database file contents if deleteAll invoked and database file is empty.")
-  void deleteAllShouldDoNothingWhenDatabaseFileIsEmpty() throws IOException, RepositoryOperationException {
+  void deleteAllShouldDoNothingWhenDatabaseFileIsEmpty() throws IOException, DatabaseOperationException {
     //when
     inFileRepository.deleteAll();
 

@@ -1,4 +1,4 @@
-package pl.coderstrust.repository.invoice;
+package pl.coderstrust.database.invoice;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
+import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
-import pl.coderstrust.repository.RepositoryOperationException;
 
 @NoArgsConstructor
-@ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-memory")
+@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "in-memory")
 @Repository
-public class InMemoryInvoiceRepository implements InvoiceRepository {
+public class InMemoryInvoiceDatabase implements InvoiceDatabase {
 
   private List<Invoice> invoices = Collections.synchronizedList(new ArrayList<>());
 
@@ -27,18 +27,18 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   @Override
-  public Invoice save(@NonNull Invoice invoice) throws RepositoryOperationException {
+  public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
     deleteById(invoice.getId());
     invoices.add(invoice);
     return invoice;
   }
 
   @Override
-  public void deleteById(@NonNull String id) throws RepositoryOperationException{
+  public void deleteById(@NonNull String id) throws DatabaseOperationException {
     if (invoices.removeIf(i -> i.getId().equals(id))) {
       return;
     } else {
-      throw new RepositoryOperationException(String.format("There was no invoice in database with id %s", id));
+      throw new DatabaseOperationException(String.format("There was no invoice in database with id %s", id));
     }
   }
 

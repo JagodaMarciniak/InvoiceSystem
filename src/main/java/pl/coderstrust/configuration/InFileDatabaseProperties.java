@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("in-file-repository")
-public class InFileRepositoryProperties {
+@ConfigurationProperties("in-file-database")
+public class InFileDatabaseProperties {
 
   @Getter
   @Setter

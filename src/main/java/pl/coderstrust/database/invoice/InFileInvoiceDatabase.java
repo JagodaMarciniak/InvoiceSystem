@@ -1,4 +1,4 @@
-package pl.coderstrust.repository.invoice;
+package pl.coderstrust.database.invoice;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,21 +11,21 @@ import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
+import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.model.Invoice;
-import pl.coderstrust.repository.RepositoryOperationException;
 
-@ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-file")
+@ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "in-file")
 @Repository
-public class InFileInvoiceRepository implements InvoiceRepository {
+public class InFileInvoiceDatabase implements InvoiceDatabase {
 
   private FileHelper fileHelper;
   private ObjectMapper mapper;
   private int lastInvoiceId;
 
   @Autowired
-  public InFileInvoiceRepository(@NonNull FileHelper fileHelper, @NonNull ObjectMapper mapper) throws RepositoryOperationException {
+  public InFileInvoiceDatabase(@NonNull FileHelper fileHelper, @NonNull ObjectMapper mapper) throws DatabaseOperationException {
     this.fileHelper = fileHelper;
     this.mapper = mapper;
     try {
@@ -34,7 +34,7 @@ public class InFileInvoiceRepository implements InvoiceRepository {
       }
       lastInvoiceId = getLastInvoiceId();
     } catch (IOException | FileHelperException e) {
-      throw new RepositoryOperationException("Encountered problems while initializing in-file invoice repository.", e);
+      throw new DatabaseOperationException("Encountered problems while initializing in-file invoice database.", e);
     }
   }
 
@@ -49,7 +49,7 @@ public class InFileInvoiceRepository implements InvoiceRepository {
 
   @Override
   @Synchronized
-  public Invoice save(@NonNull Invoice invoice) throws RepositoryOperationException {
+  public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
     if (existsById(invoice.getId())) {
       deleteById(invoice.getId());
     } else {
@@ -58,71 +58,71 @@ public class InFileInvoiceRepository implements InvoiceRepository {
     try {
       fileHelper.writeLine(mapper.writeValueAsString(invoice));
     } catch (IOException e) {
-      throw new RepositoryOperationException(String.format("Encountered problems saving invoice: %s", invoice), e);
+      throw new DatabaseOperationException(String.format("Encountered problems saving invoice: %s", invoice), e);
     }
     return invoice;
   }
 
   @Synchronized
-  public Optional<Invoice> findById(@NonNull String id) throws RepositoryOperationException {
+  public Optional<Invoice> findById(@NonNull String id) throws DatabaseOperationException {
     try {
       return getAllInvoices().stream()
           .filter(invoice -> invoice != null && invoice.getId().equals(id))
           .findFirst();
     } catch (IOException e) {
-      throw new RepositoryOperationException(String.format("Encountered problems while searching for invoice:, %s", id), e);
+      throw new DatabaseOperationException(String.format("Encountered problems while searching for invoice:, %s", id), e);
     }
   }
 
   @Override
   @Synchronized
-  public Iterable<Invoice> findAll() throws RepositoryOperationException {
+  public Iterable<Invoice> findAll() throws DatabaseOperationException {
     try {
       return getAllInvoices();
     } catch (IOException e) {
-      throw new RepositoryOperationException("Encountered problems while searching for invoices.", e);
+      throw new DatabaseOperationException("Encountered problems while searching for invoices.", e);
     }
   }
 
   @Override
   @Synchronized
-  public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) throws RepositoryOperationException {
+  public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) throws DatabaseOperationException {
     try {
       return getAllInvoices().stream()
           .filter(invoice -> invoice != null && invoice.getSeller().getName().equals(sellerName))
           .collect(Collectors.toList());
     } catch (IOException e) {
-      throw new RepositoryOperationException(String.format("Encountered problems while searching for invoices with seller name: %s", sellerName), e);
+      throw new DatabaseOperationException(String.format("Encountered problems while searching for invoices with seller name: %s", sellerName), e);
     }
   }
 
   @Override
   @Synchronized
-  public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) throws RepositoryOperationException {
+  public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) throws DatabaseOperationException {
     try {
       return getAllInvoices().stream()
           .filter(invoice -> invoice != null && invoice.getBuyer().getName().equals(buyerName))
           .collect(Collectors.toList());
     } catch (IOException e) {
-      throw new RepositoryOperationException(String.format("Encountered problems while searching for invoices with buyer name: %s", buyerName), e);
+      throw new DatabaseOperationException(String.format("Encountered problems while searching for invoices with buyer name: %s", buyerName), e);
     }
   }
 
   @Override
   @Synchronized
-  public long count() throws RepositoryOperationException {
+  public long count() throws DatabaseOperationException {
     try {
       if (fileHelper.isEmpty()) {
         return 0L;
       }
       return (long) getAllInvoices().size();
     } catch (IOException e) {
-      throw new RepositoryOperationException("Encountered problems while counting invoices.", e);
+      throw new DatabaseOperationException("Encountered problems while counting invoices.", e);
     }
   }
 
   @Synchronized
-  public void deleteById(@NonNull String id) throws RepositoryOperationException {
+  public void deleteById(@NonNull String id) throws DatabaseOperationException {
     try {
       List<Invoice> invoices = getAllInvoices();
       Optional<Invoice> invoice = invoices.stream()
@@ -131,30 +131,30 @@ public class InFileInvoiceRepository implements InvoiceRepository {
       if (invoice.isPresent()) {
         fileHelper.removeLine(invoices.indexOf(invoice.get()) + 1);
       } else {
-        throw new RepositoryOperationException(String.format("There was no invoice in database with id %s", id));
+        throw new DatabaseOperationException(String.format("There was no invoice in database with id %s", id));
       }
     } catch (IOException | FileHelperException e) {
-      throw new RepositoryOperationException(String.format("Encountered problem while deleting invoice: %s", id), e);
+      throw new DatabaseOperationException(String.format("Encountered problem while deleting invoice: %s", id), e);
     }
   }
 
   @Synchronized
-  public boolean existsById(@NonNull String id) throws RepositoryOperationException {
+  public boolean existsById(@NonNull String id) throws DatabaseOperationException {
     try {
       return getAllInvoices().stream()
           .filter(Objects::nonNull)
           .anyMatch(invoice -> invoice.getId().equals(id));
     } catch (IOException e) {
-      throw new RepositoryOperationException(String.format("Encountered problems looking for invoice: %s", id), e);
+      throw new DatabaseOperationException(String.format("Encountered problems looking for invoice: %s", id), e);
     }
   }
 
   @Synchronized
-  public void deleteAll() throws RepositoryOperationException {
+  public void deleteAll() throws DatabaseOperationException {
     try {
       fileHelper.clear();
     } catch (IOException e) {
-      throw new RepositoryOperationException("Encountered problem while deleting invoices.", e);
+      throw new DatabaseOperationException("Encountered problem while deleting invoices.", e);
     }
   }
 

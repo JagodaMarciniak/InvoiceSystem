@@ -9,34 +9,34 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.coderstrust.database.DatabaseOperationException;
+import pl.coderstrust.database.invoice.InvoiceDatabase;
 import pl.coderstrust.model.Invoice;
-import pl.coderstrust.repository.RepositoryOperationException;
-import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @Service
 public class InvoiceService {
 
-  private InvoiceRepository invoiceRepository;
+  private InvoiceDatabase invoiceDatabase;
 
   @Autowired
-  public InvoiceService(@NonNull InvoiceRepository invoiceRepository){
-    this.invoiceRepository = invoiceRepository;
+  public InvoiceService(@NonNull InvoiceDatabase invoiceDatabase){
+    this.invoiceDatabase = invoiceDatabase;
   }
 
   public List<Invoice> getAllInvoices() throws InvoiceServiceOperationException {
     try {
       List<Invoice> result = new ArrayList<>();
-      invoiceRepository.findAll().forEach(result::add);
+      invoiceDatabase.findAll().forEach(result::add);
       return result;
-    } catch (RepositoryOperationException e) {
+    } catch (DatabaseOperationException e) {
       throw new InvoiceServiceOperationException("An error occurred during getting all invoices", e);
     }
   }
 
   public Optional<Invoice> getInvoice(@NonNull String invoiceId) throws InvoiceServiceOperationException {
     try {
-      return invoiceRepository.findById(invoiceId);
-    } catch (RepositoryOperationException e) {
+      return invoiceDatabase.findById(invoiceId);
+    } catch (DatabaseOperationException e) {
       throw new InvoiceServiceOperationException(String.format("An error occurred during getting single invoice by id. Invoice id: %s",
           invoiceId), e);
     }
@@ -44,8 +44,8 @@ public class InvoiceService {
 
   public Invoice addInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
     try {
-      return invoiceRepository.save(invoice);
-    } catch (RepositoryOperationException e) {
+      return invoiceDatabase.save(invoice);
+    } catch (DatabaseOperationException e) {
       throw new InvoiceServiceOperationException(String.format("An error occurred during adding new invoice. Invoice: %s", invoice), e);
     }
   }
@@ -53,28 +53,28 @@ public class InvoiceService {
   public void updateInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
     try {
       String id = invoice.getId();
-      if (invoiceRepository.existsById(id)) {
-        invoiceRepository.save(invoice);
+      if (invoiceDatabase.existsById(id)) {
+        invoiceDatabase.save(invoice);
       } else {
-        throw new InvoiceServiceOperationException("Invoice with id " + id + " does not exist");
+        throw new InvoiceServiceOperationException(String.format("Invoice with id %s does not exist", id));
       }
-    } catch (RepositoryOperationException e) {
+    } catch (DatabaseOperationException e) {
       throw new InvoiceServiceOperationException(String.format("An error occurred during updating invoice. Invoice: %s", invoice), e);
     }
   }
 
   public void deleteInvoice(@NonNull String invoiceId) throws InvoiceServiceOperationException {
     try {
-      invoiceRepository.deleteById(invoiceId);
-    } catch (RepositoryOperationException e) {
+      invoiceDatabase.deleteById(invoiceId);
+    } catch (DatabaseOperationException e) {
       throw new InvoiceServiceOperationException(String.format("An error occurred during deleting invoice. Invoice: %s", invoiceId), e);
     }
   }
 
   public void deleteAllInvoices() throws InvoiceServiceOperationException {
     try {
-      invoiceRepository.deleteAll();
-    } catch (RepositoryOperationException e) {
+      invoiceDatabase.deleteAll();
+    } catch (DatabaseOperationException e) {
       throw new InvoiceServiceOperationException(("An error occurred during deleting all invoices"), e);
     }
   }

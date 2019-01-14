@@ -237,9 +237,9 @@
                                         <exclude>database.impl.ConfigurationProvider</exclude>
                                         <exclude>pl.coderstrust.Application</exclude>
                                         <exclude>pl.coderstrust.service.InvoiceServiceOperationException</exclude>
-                                        <exclude>pl.coderstrust.repository.RepositoryOperationException</exclude>
+                                        <exclude>pl.coderstrust.repository.DatabaseOperationException</exclude>
                                         <exclude>pl.coderstrust.configuration.ApplicationConfiguration</exclude>
-                                        <exclude>pl.coderstrust.configuration.InFileRepositoryProperties</exclude>
+                                        <exclude>pl.coderstrust.configuration.InFileDatabaseProperties</exclude>
                                         <exclude>pl.coderstrust.configuration.YamlPropertySourceFactory</exclude>
                                     </excludes>
                                 </rule>

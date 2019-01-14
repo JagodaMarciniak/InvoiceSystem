@@ -12,15 +12,15 @@ import org.springframework.context.annotation.PropertySource;
 import pl.coderstrust.helpers.FileHelper;
 
 @Configuration
-@EnableConfigurationProperties(InFileRepositoryProperties.class)
-@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:in-file-repository.yml")
+@EnableConfigurationProperties(InFileDatabaseProperties.class)
+@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:in-file-database.yml")
 public class ApplicationConfiguration {
 
   @Autowired
-  private InFileRepositoryProperties inFileRepositoryProperties;
+  private InFileDatabaseProperties inFileDatabaseProperties;
 
   @Bean
-  @ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-file")
+  @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "in-file")
   public ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JavaTimeModule());
@@ -29,8 +29,8 @@ public class ApplicationConfiguration {
   }
 
   @Bean
-  @ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-file")
+  @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "in-file")
   public FileHelper getFileHelper() {
-    return new FileHelper(inFileRepositoryProperties.getDatabaseFilePath());
+    return new FileHelper(inFileDatabaseProperties.getDatabaseFilePath());
   }
 }
