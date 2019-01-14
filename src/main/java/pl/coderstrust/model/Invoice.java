@@ -6,6 +6,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -16,8 +18,9 @@ import javax.persistence.*;
 public class Invoice {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  int id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
+  @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  String id;
 
   InvoiceType type;
 
@@ -40,4 +43,18 @@ public class Invoice {
   BigDecimal totalGrossValue;
 
   String comments;
+
+  public Invoice(@NonNull InvoiceType type, @NonNull LocalDate issueDate, @NonNull LocalDate dueDate,
+                 @NonNull Company seller, @NonNull Company buyer, @NonNull List<InvoiceEntry> entries, @NonNull BigDecimal totalNetValue,
+                 @NonNull BigDecimal totalGrossValue, @NonNull String comments) {
+    this.type = type;
+    this.issueDate = issueDate;
+    this.dueDate = dueDate;
+    this.seller = seller;
+    this.buyer = buyer;
+    this.entries = entries;
+    this.totalNetValue = totalNetValue;
+    this.totalGrossValue = totalGrossValue;
+    this.comments = comments;
+  }
 }

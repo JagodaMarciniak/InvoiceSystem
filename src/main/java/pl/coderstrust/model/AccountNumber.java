@@ -2,6 +2,7 @@ package pl.coderstrust.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,8 +15,9 @@ import javax.persistence.Id;
 public class AccountNumber {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  int id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
+  @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  String id;
   private String ibanNumber;
   private String localNumber;
 
