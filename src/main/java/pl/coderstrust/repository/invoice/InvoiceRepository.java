@@ -5,7 +5,7 @@ import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.BaseRepository;
 import pl.coderstrust.repository.RepositoryOperationException;
 
-public interface InvoiceRepository extends BaseRepository<Invoice, Integer> {
+public interface InvoiceRepository extends BaseRepository<Invoice, String> {
 
   @Query(value = "from Invoice where seller.name=?1")
   Iterable<Invoice> findAllBySellerName(String sellerName) throws RepositoryOperationException;
