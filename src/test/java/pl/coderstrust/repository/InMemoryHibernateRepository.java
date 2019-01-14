@@ -20,7 +20,7 @@ import pl.coderstrust.repository.invoice.HibernateRepository;
 import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @ExtendWith(MockitoExtension.class)
-class InMemoryHibernateRepositoryIT {
+class InMemoryHibernateRepository {
 
   @Mock
   HibernateInvoiceRepository hibernateInvoiceRepository;
