@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pl.coderstrust.configuration.ApplicationConfiguration;
-import pl.coderstrust.helpers.FileHelperImpl;
+import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
 import pl.coderstrust.repository.invoice.InFileInvoiceRepository;
@@ -36,7 +36,7 @@ public class InFileInvoiceRepositoryIT {
     if (databaseFile.exists()) {
       databaseFile.delete();
     }
-    inFileRepository = new InFileInvoiceRepository(new FileHelperImpl(databaseFilePath), mapper);
+    inFileRepository = new InFileInvoiceRepository(new FileHelper(databaseFilePath), mapper);
     if (expectedDatabaseFile.exists()) {
       expectedDatabaseFile.delete();
       expectedDatabaseFile.createNewFile();
@@ -74,7 +74,7 @@ public class InFileInvoiceRepositoryIT {
     String invoice3AsJson = mapper.writeValueAsString(invoice3);
     FileUtils.writeLines(databaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson), null);
     FileUtils.writeLines(expectedDatabaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), null);
-    InFileInvoiceRepository testInFileInvoiceRepository = new InFileInvoiceRepository(new FileHelperImpl(databaseFilePath), mapper);
+    InFileInvoiceRepository testInFileInvoiceRepository = new InFileInvoiceRepository(new FileHelper(databaseFilePath), mapper);
 
     //when
     testInFileInvoiceRepository.save(alteredInvoice3);

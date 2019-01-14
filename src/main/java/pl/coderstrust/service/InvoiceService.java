@@ -7,16 +7,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
 import pl.coderstrust.repository.invoice.InvoiceRepository;
 
-@RequiredArgsConstructor
+@Service
 public class InvoiceService {
 
-  @NonNull
   private InvoiceRepository invoiceRepository;
+
+  @Autowired
+  public InvoiceService(@NonNull InvoiceRepository invoiceRepository){
+    this.invoiceRepository = invoiceRepository;
+  }
 
   public List<Invoice> getAllInvoices() throws InvoiceServiceOperationException {
     try {

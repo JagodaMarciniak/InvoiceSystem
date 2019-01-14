@@ -11,7 +11,7 @@ class CompanyTest {
   @Test
   public void checkFullyInitialization() {
     //given
-    int id = 1;
+    String id = "1";
     String name = "SampleCompanyName";
     String taxId = "573-213-99";
     AccountNumber accountNumber = AccountNumberGenerator.getSampleAccountNumber();

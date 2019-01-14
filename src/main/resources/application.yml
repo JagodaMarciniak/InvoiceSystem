@@ -1,1 +1,3 @@
-repository: in-memory-h2-hibernate
+pl:
+  coderstrust:
+    repository: hibernate

@@ -10,7 +10,7 @@ class ContactDetailsTest {
   @Test
   public void checkFullyInitialization() {
     //given
-    int id = 0;
+    String id = "1";
     String email = "janusz@gmail.com";
     String phoneNumber = "885-941-002";
     String website = "www.sampleWebsite.com";

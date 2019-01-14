@@ -10,10 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import pl.coderstrust.helpers.FileHelper;
-import pl.coderstrust.helpers.FileHelperImpl;
-import pl.coderstrust.repository.invoice.InFileInvoiceRepository;
-import pl.coderstrust.repository.invoice.InMemoryInvoiceRepository;
-import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @Configuration
 @EnableConfigurationProperties(InFileRepositoryProperties.class)
@@ -24,7 +20,7 @@ public class ApplicationConfiguration {
   private InFileRepositoryProperties inFileRepositoryProperties;
 
   @Bean
-  @ConditionalOnProperty(name = "repository", havingValue = "in-file")
+  @ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-file")
   public ObjectMapper getObjectMapper() {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JavaTimeModule());
@@ -33,26 +29,8 @@ public class ApplicationConfiguration {
   }
 
   @Bean
-  @ConditionalOnProperty(name = "repository", havingValue = "in-file")
+  @ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-file")
   public FileHelper getFileHelper() {
-    return new FileHelperImpl(inFileRepositoryProperties.getDatabaseFilePath());
-  }
-
-  @Bean
-  @ConditionalOnProperty(name = "repository", havingValue = "in-memory")
-  public InvoiceRepository getInMemoryInvoiceRepository() {
-    return new InMemoryInvoiceRepository();
-  }
-
-  @Bean
-  @ConditionalOnProperty(name = "repository", havingValue = "in-file")
-  public InvoiceRepository getInFileInvoiceRepository(FileHelper fileHelper, ObjectMapper objectMapper) throws Exception {
-    return new InFileInvoiceRepository(fileHelper, objectMapper);
-  }
-
-  @Bean
-  @ConditionalOnProperty(name = "repository", havingValue = "in-memory-h2-hibernate")
-  public InvoiceJpaConfig getHibernateH2Repository() {
-    return new InvoiceJpaConfig();
+    return new FileHelper(inFileRepositoryProperties.getDatabaseFilePath());
   }
 }

@@ -8,17 +8,23 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.Synchronized;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import pl.coderstrust.helpers.FileHelper;
 import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
 
+@ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-file")
+@Repository
 public class InFileInvoiceRepository implements InvoiceRepository {
 
   private FileHelper fileHelper;
   private ObjectMapper mapper;
   private int lastInvoiceId;
 
+  @Autowired
   public InFileInvoiceRepository(@NonNull FileHelper fileHelper, @NonNull ObjectMapper mapper) throws RepositoryOperationException {
     this.fileHelper = fileHelper;
     this.mapper = mapper;

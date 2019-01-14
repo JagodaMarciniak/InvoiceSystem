@@ -1,27 +1,107 @@
 package pl.coderstrust.helpers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Collections;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.input.ReversedLinesFileReader;
 
-public interface FileHelper {
+@AllArgsConstructor
+public class FileHelper {
 
-  void initialize() throws IOException, FileHelperException;
+  @NonNull
+  private String filePath;
 
-  void writeLines(List<String> lines) throws IOException;
+  public void initialize() throws IOException, FileHelperException {
+    File file = new File(filePath);
+    if (file.exists()) {
+      throw new FileHelperException("File already exists.");
+    }
+    file.createNewFile();
+  }
 
-  void writeLine(String line) throws IOException;
+  public void removeLine(int lineNumber) throws IOException, FileHelperException {
+    if (lineNumber < 1) {
+      throw new IllegalArgumentException("lineNumber cannot be lower than 1");
+    }
+    if (!exists()) {
+      throw new FileNotFoundException("File does not exist");
+    }
+    if (isEmpty()) {
+      throw new FileHelperException("Can't delete a line in an empty file");
+    }
+    RandomAccessFile file = new RandomAccessFile(filePath, "rw");
 
-  List<String> readLines() throws IOException;
+    long numberOfLines = 1;
+    long offset = 0;
 
-  void clear() throws IOException;
+    while (file.readLine() != null && numberOfLines != lineNumber) {
+      numberOfLines++;
+      offset = file.getFilePointer();
+    }
 
-  void delete();
+    if (lineNumber > numberOfLines) {
+      file.close();
+      throw new IllegalArgumentException("lineNumber is higher than file length");
+    }
 
-  boolean exists();
+    long length = file.getFilePointer() - offset;
 
-  boolean isEmpty() throws IOException;
+    byte[] buffer = new byte[4096];
+    int read = -1;
+    while ((read = file.read(buffer)) > -1) {
+      file.seek(file.getFilePointer() - read - length);
+      file.write(buffer, 0, read);
+      file.seek(file.getFilePointer() + length);
+    }
+    file.setLength(file.length() - length);
+    file.close();
+  }
 
-  void removeLine(int lineNumber) throws IOException, FileHelperException;
+  public String readLastLine() throws IOException {
+    try (ReversedLinesFileReader reversedLinesReader = new ReversedLinesFileReader(new File(filePath))) {
+      return reversedLinesReader.readLine();
+    }
+  }
 
-  String readLastLine() throws IOException;
+  public void writeLines(@NonNull List<String> lines) throws IOException {
+    FileUtils.writeLines(new java.io.File(filePath), lines, true);
+  }
+
+  public void writeLine(@NonNull String line) throws IOException {
+    FileUtils.writeLines(new java.io.File(filePath), Collections.singleton(line), true);
+  }
+
+  public List<String> readLines() throws IOException {
+    return FileUtils.readLines(new java.io.File(filePath));
+  }
+
+  public void clear() throws IOException {
+    if (!exists()) {
+      throw new FileNotFoundException("File does not exist");
+    }
+    FileUtils.write(new java.io.File(filePath), "");
+  }
+
+  public void delete() {
+    if (exists()) {
+      new java.io.File(filePath).delete();
+    }
+  }
+
+  public boolean exists() {
+    return new java.io.File(filePath).exists();
+  }
+
+  public boolean isEmpty() throws IOException {
+    if (!exists()) {
+      throw new FileNotFoundException("File does not exist");
+    }
+    return new java.io.File(filePath).length() == 0;
+  }
 }

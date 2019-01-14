@@ -12,6 +12,7 @@ class InvoiceEntryTest {
   @Test
   void checkFullInitialization() {
     //given
+    String id = "1";
     String item = "Kurs Java";
     Long quantity = 1L;
     UnitType unit = PIECE;
@@ -21,7 +22,7 @@ class InvoiceEntryTest {
     BigDecimal grossValue = new BigDecimal(108);
 
     //when
-    InvoiceEntry invoiceEntry = new InvoiceEntry(0, item, quantity, unit, price, vatRate,
+    InvoiceEntry invoiceEntry = new InvoiceEntry(id, item, quantity, unit, price, vatRate,
         netValue, grossValue);
 
     //then

@@ -7,9 +7,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import pl.coderstrust.model.Invoice;
 
 @NoArgsConstructor
+@ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-memory")
+@Repository
 public class InMemoryInvoiceRepository implements InvoiceRepository {
 
   private List<Invoice> invoices = Collections.synchronizedList(new ArrayList<>());

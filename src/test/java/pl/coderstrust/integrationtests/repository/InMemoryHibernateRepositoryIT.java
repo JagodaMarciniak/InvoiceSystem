@@ -1,50 +1,51 @@
 package pl.coderstrust.integrationtests.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
-import pl.coderstrust.configuration.InvoiceJpaConfig;
 import pl.coderstrust.generators.CompanyGenerator;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.repository.RepositoryOperationException;
+import pl.coderstrust.repository.invoice.HibernateInvoiceRepository;
+import pl.coderstrust.repository.invoice.HibernateRepository;
 import pl.coderstrust.repository.invoice.InvoiceRepository;
 
-import javax.annotation.Resource;
-
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(
-    classes = {InvoiceJpaConfig.class},
-    loader = AnnotationConfigContextLoader.class)
-@Rollback
-@Transactional(transactionManager = "myTransactionManager")
+@ExtendWith(MockitoExtension.class)
 class InMemoryHibernateRepositoryIT {
 
-  @Resource
+  @Mock
+  HibernateInvoiceRepository hibernateInvoiceRepository;
+
   private InvoiceRepository repository;
 
+  @BeforeEach
+  void setUp() throws Exception {
+    repository = new HibernateRepository(hibernateInvoiceRepository);
+  }
+
   @Test
-  @Transactional
-  void shouldReturnTrueIfExistsByIdInDatabase() throws RepositoryOperationException {
-    //given
-    Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    int id = repository.save(invoice).getId();
+  void shouldSaveInvoiceToDatabase() throws RepositoryOperationException {
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoice();
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoice();
 
-    //when
-    boolean existsById = repository.existsById(id);
+    when(hibernateInvoiceRepository.save(invoice1)).thenReturn(invoice2);
 
-    //then
-    assertTrue(existsById);
+    Invoice actual = repository.save(invoice1);
+
+    assertEquals(invoice2, actual);
+    Mockito.verify(hibernateInvoiceRepository).save(invoice1);
   }
 
   @Test
@@ -55,7 +56,7 @@ class InMemoryHibernateRepositoryIT {
     repository.save(invoice1);
 
     //when
-    boolean invoiceExist = repository.existsById(3234);
+    boolean invoiceExist = repository.existsById("");
 
     //then
     assertFalse(invoiceExist);
@@ -68,7 +69,7 @@ class InMemoryHibernateRepositoryIT {
     Invoice expectedInvoice1 = InvoiceGenerator.getRandomInvoice();
 
     //when
-    int id = repository.save(expectedInvoice1).getId();
+    String id = repository.save(expectedInvoice1).getId();
     boolean existsById = repository.existsById(id);
 
     //then
@@ -106,7 +107,7 @@ class InMemoryHibernateRepositoryIT {
   void shouldDeleteByIdFromDatabaseIfPresent() throws RepositoryOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    int id = repository.save(invoice).getId();
+    String id = repository.save(invoice).getId();
 
     //when
     repository.deleteById(id);
@@ -119,7 +120,7 @@ class InMemoryHibernateRepositoryIT {
   @Test
   @Transactional
   void shouldThrowExceptionWhenTryingDeleteByIdFromDatabaseIfAbsent() {
-    assertThrows(EmptyResultDataAccessException.class, () -> repository.deleteById(5));
+    assertThrows(EmptyResultDataAccessException.class, () -> repository.deleteById("95cdbbad-61c4-4ba6-858f-445d7bcf048e"));
   }
 
   @Test
@@ -272,7 +273,7 @@ class InMemoryHibernateRepositoryIT {
     invoice2.setSeller(seller);
 
     //when
-    int sellerId = repository.save(invoice1).getSeller().getId();
+    String sellerId = repository.save(invoice1).getSeller().getId();
     seller.setId(sellerId);
     seller.setName("Example Seller Name");
     repository.save(invoice2);

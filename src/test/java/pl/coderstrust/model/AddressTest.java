@@ -9,7 +9,7 @@ class AddressTest {
   @Test
   public void checkFullyInitialization() {
     //given
-    int id = 1;
+    String id = "1";
     String street = "Szarych Szeregów";
     String number = "8b";
     String postalCode = "66-843";
