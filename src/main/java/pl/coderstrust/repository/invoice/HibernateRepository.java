@@ -62,11 +62,11 @@ public class HibernateRepository implements InvoiceRepository {
 
   @Override
   public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) {
-    return hibernateInvoiceRepository.findAll().stream().filter(invoice -> invoice.getSeller().getName() == sellerName).collect(Collectors.toList());
+    return hibernateInvoiceRepository.findAll().stream().filter(invoice -> invoice.getSeller().getName().equals(sellerName)).collect(Collectors.toList());
   }
 
   @Override
   public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) {
-    return hibernateInvoiceRepository.findAll().stream().filter(invoice -> invoice.getBuyer().getName() == buyerName).collect(Collectors.toList());
+    return hibernateInvoiceRepository.findAll().stream().filter(invoice -> invoice.getBuyer().getName().equals(buyerName)).collect(Collectors.toList());
   }
 }

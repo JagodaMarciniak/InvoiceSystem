@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -44,9 +43,9 @@ public class Invoice {
 
   String comments;
 
-  public Invoice(@NonNull InvoiceType type, @NonNull LocalDate issueDate, @NonNull LocalDate dueDate,
-                 @NonNull Company seller, @NonNull Company buyer, @NonNull List<InvoiceEntry> entries, @NonNull BigDecimal totalNetValue,
-                 @NonNull BigDecimal totalGrossValue, @NonNull String comments) {
+  public Invoice(InvoiceType type, LocalDate issueDate, LocalDate dueDate,
+                 Company seller, Company buyer, List<InvoiceEntry> entries, BigDecimal totalNetValue,
+                 BigDecimal totalGrossValue, String comments) {
     this.type = type;
     this.issueDate = issueDate;
     this.dueDate = dueDate;

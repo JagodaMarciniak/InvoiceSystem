@@ -2,6 +2,7 @@ package pl.coderstrust.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
@@ -20,7 +21,7 @@ import pl.coderstrust.repository.invoice.HibernateRepository;
 import pl.coderstrust.repository.invoice.InvoiceRepository;
 
 @ExtendWith(MockitoExtension.class)
-class InMemoryHibernateRepository {
+class HibernateRepositoryTest {
 
   @Mock
   HibernateInvoiceRepository hibernateInvoiceRepository;
@@ -75,21 +76,6 @@ class InMemoryHibernateRepository {
   }
 
   @Test
-  void shouldDeleteByIdFromDatabase() throws RepositoryOperationException {
-    //given
-    Invoice invoice = InvoiceGenerator.getRandomInvoice();
-    when(hibernateInvoiceRepository.save(invoice)).thenReturn(invoice);
-    doNothing().when(hibernateInvoiceRepository).deleteById(invoice.getId());
-
-    //when
-    repository.save(invoice);
-    repository.deleteById(invoice.getId());
-
-    //then
-    verify(hibernateInvoiceRepository).deleteById(invoice.getId());
-  }
-
-  @Test
   void shouldCountingInvoicesInDatabase() throws RepositoryOperationException {
     //given
     when(hibernateInvoiceRepository.count()).thenReturn(0L);
@@ -134,6 +120,45 @@ class InMemoryHibernateRepository {
     assertEquals(invoice1, iterator.next());
     assertEquals(invoice2, iterator.next());
     assertEquals(invoice3, iterator.next());
+    verify(hibernateInvoiceRepository).findAll();
+  }
+
+  @Test
+  void shouldThrowExceptionWhenDeleteByIdAndRepositoryIsEmpty()throws RepositoryOperationException{
+    assertThrows(RepositoryOperationException.class, ()-> repository.deleteById("3"));
+  }
+
+  @Test
+  void shouldFindAllInvoicesBySellerName() throws RepositoryOperationException {
+    //given
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName("SampleSeller");
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName("SampleSeller");
+    when(hibernateInvoiceRepository.findAll()).thenReturn(Arrays.asList(invoice1, invoice2));
+
+    //when
+    Iterable<Invoice> result = repository.findAllBySellerName("SampleSeller");
+    Iterator<Invoice> expectedInvoice = result.iterator();
+
+    //
+    assertEquals(expectedInvoice.next(), invoice1);
+    assertEquals(expectedInvoice.next(), invoice2);
+    verify(hibernateInvoiceRepository).findAll();
+  }
+
+  @Test
+  void shouldFindAllInvoicesByBuyerName() throws RepositoryOperationException {
+    //given
+    Invoice invoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName("SampleBuyer");
+    Invoice invoice2 = InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName("SampleBuyer");
+    when(hibernateInvoiceRepository.findAll()).thenReturn(Arrays.asList(invoice1, invoice2));
+
+    //when
+    Iterable<Invoice> result = repository.findAllByBuyerName("SampleBuyer");
+    Iterator<Invoice> expectedInvoice = result.iterator();
+
+    //
+    assertEquals(expectedInvoice.next(), invoice1);
+    assertEquals(expectedInvoice.next(), invoice2);
     verify(hibernateInvoiceRepository).findAll();
   }
 }

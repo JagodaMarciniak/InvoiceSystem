@@ -241,8 +241,6 @@
                                         <exclude>pl.coderstrust.configuration.ApplicationConfiguration</exclude>
                                         <exclude>pl.coderstrust.configuration.InFileRepositoryProperties</exclude>
                                         <exclude>pl.coderstrust.configuration.YamlPropertySourceFactory</exclude>
-                                        <exclude>pl.coderstrust.repository.invoice.HibernateRepository</exclude>
-                                        <exclude>pl.coderstrust.repository.invoice.HibernateRepository</exclude>
                                     </excludes>
                                 </rule>
                             </rules>

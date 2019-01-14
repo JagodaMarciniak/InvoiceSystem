@@ -3,7 +3,6 @@ package pl.coderstrust.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -28,8 +27,8 @@ public class ContactDetails {
   @OneToOne(cascade = CascadeType.ALL)
   Address address;
 
-  public ContactDetails(@NonNull String email, @NonNull String phoneNumber,
-                        @NonNull String website, @NonNull Address address) {
+  public ContactDetails(String email, String phoneNumber,
+                        String website, Address address) {
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.website = website;

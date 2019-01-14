@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -37,9 +36,9 @@ public class InvoiceEntry {
 
   BigDecimal grossValue;
 
-  public InvoiceEntry(@NonNull String item, @NonNull Long quantity, @NonNull UnitType unit,
-                      @NonNull BigDecimal price, @NonNull Vat vatRate, @NonNull BigDecimal netValue,
-                      @NonNull BigDecimal grossValue) {
+  public InvoiceEntry(String item, Long quantity, UnitType unit,
+                      BigDecimal price, Vat vatRate, BigDecimal netValue,
+                      BigDecimal grossValue) {
     this.item = item;
     this.quantity = quantity;
     this.unit = unit;

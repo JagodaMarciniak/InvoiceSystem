@@ -3,7 +3,6 @@ package pl.coderstrust.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -32,8 +31,8 @@ public class Address {
 
   String country;
 
-  public Address(@NonNull String street, @NonNull String number, @NonNull String postalCode,
-                 @NonNull String city, @NonNull String country) {
+  public Address(String street, String number, String postalCode,
+                 String city, String country) {
     this.street = street;
     this.number = number;
     this.postalCode = postalCode;
