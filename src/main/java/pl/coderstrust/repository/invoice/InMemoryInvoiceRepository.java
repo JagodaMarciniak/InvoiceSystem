@@ -10,6 +10,7 @@ import lombok.NonNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import pl.coderstrust.model.Invoice;
+import pl.coderstrust.repository.RepositoryOperationException;
 
 @NoArgsConstructor
 @ConditionalOnProperty(name = "pl.coderstrust.repository", havingValue = "in-memory")
@@ -26,15 +27,19 @@ public class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   @Override
-  public Invoice save(@NonNull Invoice invoice) {
+  public Invoice save(@NonNull Invoice invoice) throws RepositoryOperationException {
     deleteById(invoice.getId());
     invoices.add(invoice);
     return invoice;
   }
 
   @Override
-  public void deleteById(@NonNull String id) {
-    invoices.removeIf(i -> i.getId().equals(id));
+  public void deleteById(@NonNull String id) throws RepositoryOperationException{
+    if (invoices.removeIf(i -> i.getId().equals(id))) {
+      return;
+    } else {
+      throw new RepositoryOperationException(String.format("There was no invoice in database with id %s", id));
+    }
   }
 
   @Override

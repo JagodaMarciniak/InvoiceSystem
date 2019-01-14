@@ -64,49 +64,49 @@ class InvoiceTest {
 
   @Test
   public void shouldThrowExceptionWhenInvoiceTypeIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, null, issueDate, dueDate,
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(null, issueDate, dueDate,
         seller, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenIssueDateIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, null, dueDate,
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(invoiceType, null, dueDate,
         seller, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenDueDateIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate, null,
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(invoiceType, issueDate, null,
         seller, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenSellerIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(invoiceType, issueDate,
         dueDate, null, buyer, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenBuyerIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(invoiceType, issueDate,
         dueDate, seller, null, entries, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenEntriesIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(invoiceType, issueDate,
         dueDate, seller, buyer, null, totalNetValue, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenTotalNetValueIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(invoiceType, issueDate,
         dueDate, seller, buyer, entries, null, totalGrossValue, comments));
   }
 
   @Test
   public void shouldThrowExceptionWhenTotalGrossValueIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> new Invoice(id, invoiceType, issueDate,
+    assertThrows(IllegalArgumentException.class, () -> new Invoice(invoiceType, issueDate,
         dueDate, seller, buyer, entries, totalNetValue, null, comments));
   }
 }

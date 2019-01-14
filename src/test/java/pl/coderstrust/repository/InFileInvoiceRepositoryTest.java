@@ -561,7 +561,7 @@ class InFileInvoiceRepositoryTest {
 
   @Test
   @DisplayName("Should not pass line number to fileHelper.removeLine when deleteById is invoked and invoice with particular id does not exist.")
-  void shouldNotPassLineNumberToFileHelperRemoveLineWhenDeleteByIdInvokedAndInvoiceDoesNotExist() throws Exception {
+  void shouldThrowExceptionWhenTryingPassLineNumberToFileHelperRemoveLineWhenDeleteByIdInvokedAndInvoiceDoesNotExist() throws Exception {
     //given
     final Invoice invoice1 = getRandomInvoice();
     final Invoice invoice2 = getRandomInvoice();
@@ -571,10 +571,8 @@ class InFileInvoiceRepositoryTest {
     final String invoice3AsJson = mapper.writeValueAsString(invoice3);
     when(fileHelperMock.readLines()).thenReturn(Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson));
 
-    //when
-    inFileRepository.deleteById("-1");
-
     //then
+    assertThrows(RepositoryOperationException.class, () -> inFileRepository.deleteById("-1"));
     verify(fileHelperMock, times(0)).removeLine(anyInt());
   }
 

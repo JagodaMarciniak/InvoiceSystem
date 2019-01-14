@@ -130,6 +130,8 @@ public class InFileInvoiceRepository implements InvoiceRepository {
           .findFirst();
       if (invoice.isPresent()) {
         fileHelper.removeLine(invoices.indexOf(invoice.get()) + 1);
+      } else {
+        throw new RepositoryOperationException(String.format("There was no invoice in database with id %s", id));
       }
     } catch (IOException | FileHelperException e) {
       throw new RepositoryOperationException(String.format("Encountered problem while deleting invoice: %s", id), e);

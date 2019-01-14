@@ -441,20 +441,14 @@ public class InFileInvoiceRepositoryIT {
     FileUtils.writeLines(expectedDatabaseFile, Arrays.asList(invoice1AsJson, invoice2AsJson, invoice3AsJson), null);
 
     //when
-    inFileRepository.deleteById("-1");
-
-    //then
-    assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
+    assertThrows(RepositoryOperationException.class, () -> inFileRepository.deleteById("-1"));
   }
 
   @Test
   @DisplayName("Should not alter database file contents if deleteById invoked and database file is empty.")
-  void deleteByIdShouldDoNothingWhenDatabaseFileIsEmpty() throws IOException, RepositoryOperationException {
+  void shouldThrowExceptionWhenTryingToDeleteByIdWhenDatabaseFileIsEmpty() throws IOException, RepositoryOperationException {
     //when
-    inFileRepository.deleteById(getRandomInvoice().getId());
-
-    //then
-    assertTrue(FileUtils.contentEquals(expectedDatabaseFile, databaseFile));
+    assertThrows(RepositoryOperationException.class, ()-> inFileRepository.deleteById(getRandomInvoice().getId()));
   }
 
   @Test
