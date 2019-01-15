@@ -135,14 +135,6 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenDeleteByIdAndDatabaseIsEmpty() {
-    String invoiceId = "33";
-    doThrow(EmptyResultDataAccessException.class).when(hibernateInvoiceRepository).deleteById(invoiceId);
-    assertThrows(DatabaseOperationException.class, ()-> database.deleteById(invoiceId));
-    verify(hibernateInvoiceRepository).deleteById(invoiceId);
-  }
-
-  @Test
   void shouldFindAllInvoicesBySellerName() throws DatabaseOperationException {
     //given
     Invoice invoice1 = InvoiceGenerator.getRandomInvoiceWithSpecificSellerName("SampleSeller");
@@ -176,5 +168,18 @@ class HibernateInvoiceDatabaseTest {
     assertEquals(invoice1, expectedInvoice.next());
     assertEquals(invoice3, expectedInvoice.next());
     verify(hibernateInvoiceRepository).findAll();
+  }
+
+  @Test
+  void shouldThrowExceptionWhenDeleteByIdAndDatabaseIsEmpty() {
+    //given
+    String invoiceId = "33";
+
+    //when
+    doThrow(EmptyResultDataAccessException.class).when(hibernateInvoiceRepository).deleteById(invoiceId);
+
+    //then
+    assertThrows(DatabaseOperationException.class, () -> database.deleteById(invoiceId));
+    verify(hibernateInvoiceRepository).deleteById(invoiceId);
   }
 }

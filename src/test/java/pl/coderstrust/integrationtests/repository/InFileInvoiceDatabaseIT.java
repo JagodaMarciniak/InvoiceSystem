@@ -448,7 +448,7 @@ public class InFileInvoiceDatabaseIT {
   @DisplayName("Should not alter database file contents if deleteById invoked and database file is empty.")
   void shouldThrowExceptionWhenTryingToDeleteByIdWhenDatabaseFileIsEmpty() throws IOException, DatabaseOperationException {
     //when
-    assertThrows(DatabaseOperationException.class, ()-> inFileRepository.deleteById(getRandomInvoice().getId()));
+    assertThrows(DatabaseOperationException.class, () -> inFileRepository.deleteById(getRandomInvoice().getId()));
   }
 
   @Test

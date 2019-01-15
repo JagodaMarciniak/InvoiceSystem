@@ -19,7 +19,7 @@ public class InvoiceService {
   private InvoiceDatabase invoiceDatabase;
 
   @Autowired
-  public InvoiceService(@NonNull InvoiceDatabase invoiceDatabase){
+  public InvoiceService(@NonNull InvoiceDatabase invoiceDatabase) {
     this.invoiceDatabase = invoiceDatabase;
   }
 
