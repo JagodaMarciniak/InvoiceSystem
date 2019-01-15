@@ -14,15 +14,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import pl.coderstrust.helpers.FileHelperException;
 import pl.coderstrust.helpers.FileHelper;
+import pl.coderstrust.helpers.FileHelperException;
 
 class FileHelperTestIT {
 

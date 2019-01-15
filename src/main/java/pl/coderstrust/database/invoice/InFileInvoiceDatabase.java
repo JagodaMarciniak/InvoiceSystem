@@ -1,11 +1,11 @@
 package pl.coderstrust.database.invoice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,14 +1,21 @@
 package pl.coderstrust.integrationtests.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static pl.coderstrust.generators.InvoiceGenerator.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static pl.coderstrust.generators.InvoiceGenerator.copyInvoice;
+import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoice;
+import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificBuyerName;
+import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificId;
+import static pl.coderstrust.generators.InvoiceGenerator.getRandomInvoiceWithSpecificSellerName;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

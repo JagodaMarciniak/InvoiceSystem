@@ -89,7 +89,10 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
   @Override
   public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) throws DatabaseOperationException {
     try {
-      return hibernateInvoiceRepository.findAll().stream().filter(invoice -> invoice.getSeller().getName().equals(sellerName)).collect(Collectors.toList());
+      return hibernateInvoiceRepository.findAll()
+          .stream()
+          .filter(invoice -> invoice.getSeller().getName().equals(sellerName))
+          .collect(Collectors.toList());
     } catch (NonTransientDataAccessException e) {
       throw new DatabaseOperationException(String.format("Encountered problems while searching for invoices with seller name: %s", sellerName), e);
     }
@@ -98,7 +101,10 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
   @Override
   public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) throws DatabaseOperationException {
     try {
-      return hibernateInvoiceRepository.findAll().stream().filter(invoice -> invoice.getBuyer().getName().equals(buyerName)).collect(Collectors.toList());
+      return hibernateInvoiceRepository.findAll()
+          .stream()
+          .filter(invoice -> invoice.getBuyer().getName().equals(buyerName))
+          .collect(Collectors.toList());
     } catch (NonTransientDataAccessException e) {
       throw new DatabaseOperationException(String.format("Encountered problems while searching for invoices with buyer name: %s", buyerName), e);
     }
