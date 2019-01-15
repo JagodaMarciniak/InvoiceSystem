@@ -24,6 +24,7 @@
         <checkstylePlugin.version>3.0.0</checkstylePlugin.version>
         <projectInfoReportsPlugin.version>3.0.0</projectInfoReportsPlugin.version>
         <hibernate.entity-manager.version>5.4.0.Final</hibernate.entity-manager.version>
+        <h2database.version>1.4.197</h2database.version>
         <checkstyle.config.location>checkstyle-config/google_style_settings.xml</checkstyle.config.location>
     </properties>
 
@@ -102,6 +103,11 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.entity-manager.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2database.version}</version>
         </dependency>
     </dependencies>
 
