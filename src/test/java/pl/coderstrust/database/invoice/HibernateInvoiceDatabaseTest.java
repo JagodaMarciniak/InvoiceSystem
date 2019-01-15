@@ -180,7 +180,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenSaveInvoiceMethodEncounterAProblemDuringExecution() {
+  void saveMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     NonTransientDataAccessException mockedException = Mockito.mock(NonTransientDataAccessException.class);
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
@@ -194,7 +194,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenFindByIdEncounterAProblemDuringExecution() {
+  void findByIdMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     String id = "d823bd11-0ba5-4474-a2dc-810ae027d7c1";
 
@@ -207,7 +207,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenExistByIdEncounterAProblemDuringExecution() {
+  void existByIdMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     NonTransientDataAccessException mockedException = Mockito.mock(NonTransientDataAccessException.class);
     String id = "d823bd11-0ba5-4474-a2dc-810ae027d7c1";
@@ -221,7 +221,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenFindAllEncounterAProblemDuringExecution() {
+  void findAllMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     NonTransientDataAccessException mockedException = Mockito.mock(NonTransientDataAccessException.class);
 
@@ -234,7 +234,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenCountEncounterAProblemDuringExecution() {
+  void countMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     NonTransientDataAccessException mockedException = Mockito.mock(NonTransientDataAccessException.class);
 
@@ -247,7 +247,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenDeleteByIdAndDatabaseIsEmpty() {
+  void deleteByIdMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     String invoiceId = "33";
 
@@ -260,7 +260,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenDeleteAllEncounterAProblemDuringExecution() {
+  void deleteAllMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     NonTransientDataAccessException mockedException = Mockito.mock(NonTransientDataAccessException.class);
 
@@ -273,7 +273,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenFindBySellerNameEncounterAProblemDuringExecution() {
+  void findBySellerNameMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     NonTransientDataAccessException mockedException = Mockito.mock(NonTransientDataAccessException.class);
     String name = "SampleSellerName";
@@ -287,7 +287,7 @@ class HibernateInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldThrowExceptionWhenFindByBuyerNameEncounterAProblemDuringExecution() {
+  void findByBuyerNameMethodShouldThrowExceptionWhenAnErrorOccurDuringExecution() {
     //given
     NonTransientDataAccessException mockedException = Mockito.mock(NonTransientDataAccessException.class);
     String name = "SampleBuyerName";
@@ -298,5 +298,35 @@ class HibernateInvoiceDatabaseTest {
     //then
     assertThrows(DatabaseOperationException.class, () -> database.findAllByBuyerName(name));
     verify(hibernateInvoiceRepository).findAll();
+  }
+
+  @Test
+  void saveMethodShouldThrowExceptionWhenPassedArgumentIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> database.save(null));
+  }
+
+  @Test
+  void findByIdMethodShouldThrowExceptionWhenPassedArgumentIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> database.findById(null));
+  }
+
+  @Test
+  void existByIdMethodShouldThrowExceptionWhenPassedArgumentIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> database.existsById(null));
+  }
+
+  @Test
+  void deleteByIdMethodShouldThrowExceptionWhenPassedArgumentIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> database.deleteById(null));
+  }
+
+  @Test
+  void findAllBySellerNameMethodShouldThrowExceptionWhenPassedArgumentIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> database.findAllBySellerName(null));
+  }
+
+  @Test
+  void findAllByBuyerNameMethodShouldThrowExceptionWhenPassedArgumentIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> database.findAllByBuyerName(null));
   }
 }

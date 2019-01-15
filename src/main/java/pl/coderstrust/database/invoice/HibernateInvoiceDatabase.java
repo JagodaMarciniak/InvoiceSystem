@@ -69,7 +69,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
   }
 
   @Override
-  public void deleteById(String id) throws DatabaseOperationException {
+  public void deleteById(@NonNull String id) throws DatabaseOperationException {
     try {
       hibernateInvoiceRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e) {
