@@ -42,7 +42,7 @@ public class InvoiceService {
     }
   }
 
-  public boolean invoiceExists(String invoiceId) throws InvoiceServiceOperationException {
+  public boolean invoiceExists(@NonNull String invoiceId) throws InvoiceServiceOperationException {
     try {
       return invoiceDatabase.existsById(invoiceId);
     } catch (DatabaseOperationException e) {

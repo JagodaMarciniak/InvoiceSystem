@@ -1,7 +1,11 @@
 package pl.coderstrust.service;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -32,6 +36,50 @@ class InvoiceServiceTest {
   @BeforeEach
   void setUp() {
     invoiceService = new InvoiceService(database);
+  }
+
+  @Test
+  void shouldReturnTrueIfInvoiceExists() throws DatabaseOperationException, InvoiceServiceOperationException {
+    //given
+    Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
+    when(database.existsById(expectedInvoice.getId())).thenReturn(true);
+
+    //when
+    Boolean invoiceExists = invoiceService.invoiceExists(expectedInvoice.getId());
+
+    //then
+    assertNotNull(expectedInvoice);
+    assertTrue(invoiceExists);
+    verify(database).existsById(expectedInvoice.getId());
+  }
+
+  @Test
+  void shouldThrowExceptionWhenInvoiceExistsInvokedWithNull() {
+    assertThrows(IllegalArgumentException.class, () -> invoiceService.invoiceExists(null));
+  }
+
+  @Test
+  void shouldReturnFalseIfInvoiceNotExisting() throws DatabaseOperationException, InvoiceServiceOperationException {
+    //given
+    Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
+    when(database.existsById(expectedInvoice.getId())).thenReturn(false);
+
+    //when
+    Boolean invoiceExists = invoiceService.invoiceExists(expectedInvoice.getId());
+
+    //then
+    assertNotNull(expectedInvoice);
+    assertFalse(invoiceExists);
+    verify(database).existsById(expectedInvoice.getId());
+  }
+
+  @Test
+  void shouldThrowExceptionWhenCheckingIfInvoiceExists() throws DatabaseOperationException {
+    //given
+    doThrow(DatabaseOperationException.class).when(database).existsById(anyString());
+
+    //then
+    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.invoiceExists("1"));
   }
 
   @Test
