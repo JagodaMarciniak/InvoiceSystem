@@ -103,16 +103,8 @@ class InMemoryInvoiceDatabaseTest {
   }
 
   @Test
-  void shouldDeleteByIdFromDatabaseIfAbsent() throws DatabaseOperationException {
-    //given
-    String invoiceId = "1";
-
-    //when
-    database.deleteById(invoiceId);
-    boolean existsById = database.existsById(invoiceId);
-
-    //then
-    assertFalse(existsById);
+  void shouldThrowExceptionIfMethodDeleteByIdIsInvokedForNonExistingInvoice() {
+    assertThrows(DatabaseOperationException.class, () -> database.deleteById("1"));
   }
 
   @Test

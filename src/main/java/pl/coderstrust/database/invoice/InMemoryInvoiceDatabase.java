@@ -28,7 +28,7 @@ public class InMemoryInvoiceDatabase implements InvoiceDatabase {
   }
 
   @Override
-  public Invoice save(@NonNull Invoice invoice) {
+  public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
     if (existsById(invoice.getId())) {
       updateInvoice(invoice);
     } else {
@@ -85,8 +85,8 @@ public class InMemoryInvoiceDatabase implements InvoiceDatabase {
         .collect(Collectors.toList());
   }
 
-  private Invoice updateInvoice(Invoice invoice) {
-    deleteById(String.valueOf(invoice.getId()));
+  private Invoice updateInvoice(Invoice invoice) throws DatabaseOperationException {
+    deleteById(invoice.getId());
     invoices.add(invoice);
     return invoice;
   }

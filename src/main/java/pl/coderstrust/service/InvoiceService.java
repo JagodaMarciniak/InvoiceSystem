@@ -42,8 +42,13 @@ public class InvoiceService {
     }
   }
 
-  public boolean invoiceExists(int invoiceId) throws InvoiceServiceOperationException, RepositoryOperationException {
-    return invoiceDatabase.existsById(invoiceId);
+  public boolean invoiceExists(String invoiceId) throws InvoiceServiceOperationException {
+    try {
+      return invoiceDatabase.existsById(invoiceId);
+    } catch (DatabaseOperationException e) {
+      throw new InvoiceServiceOperationException(String.format("An error occurred during checking if invoice exists. Invoice id: %s",
+          invoiceId), e);
+    }
   }
 
   public Invoice addInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {

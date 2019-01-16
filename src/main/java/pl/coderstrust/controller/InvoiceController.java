@@ -39,7 +39,7 @@ public class InvoiceController {
   }
 
   @GetMapping("/{invoiceId}")
-  public ResponseEntity<?> get(@PathVariable("invoiceId") int invoiceId) {
+  public ResponseEntity<?> get(@PathVariable("invoiceId") String invoiceId) {
     try {
       Optional<Invoice> optionalInvoice = invoiceService.getInvoice(invoiceId);
       if (optionalInvoice.isPresent()) {
@@ -47,7 +47,7 @@ public class InvoiceController {
       }
       return new ResponseEntity<>(new ResponseMessage("Invoice not found for passed id."), HttpStatus.NOT_FOUND);
     } catch (Exception e) {
-      return new ResponseEntity<>(new ResponseMessage(String.format("Internal server error while getting invoice by id: %d", invoiceId)),
+      return new ResponseEntity<>(new ResponseMessage(String.format("Internal server error while getting invoice by id: %s", invoiceId)),
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -65,9 +65,9 @@ public class InvoiceController {
   }
 
   @PutMapping("/{invoiceId}")
-  public ResponseEntity<?> update(@PathVariable int invoiceId, @RequestBody Invoice invoice) {
+  public ResponseEntity<?> update(@PathVariable String invoiceId, @RequestBody Invoice invoice) {
     try {
-      if (invoiceId != invoice.getId()) {
+      if (!invoiceId.equals(invoice.getId())) {
         return new ResponseEntity<>(new ResponseMessage("Passed data is invalid. Please verify invoice id."), HttpStatus.BAD_REQUEST);
       }
       if (!invoiceService.invoiceExists(invoiceId)) {
@@ -81,7 +81,7 @@ public class InvoiceController {
   }
 
   @DeleteMapping("/{invoiceId}")
-  public ResponseEntity<?> delete(@PathVariable("invoiceId") int invoiceId) {
+  public ResponseEntity<?> delete(@PathVariable("invoiceId") String invoiceId) {
     try {
       Optional<Invoice> optionalInvoice = invoiceService.getInvoice(invoiceId);
       if (!optionalInvoice.isPresent()) {

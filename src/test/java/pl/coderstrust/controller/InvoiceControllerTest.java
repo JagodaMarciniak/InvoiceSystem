@@ -142,7 +142,7 @@ class InvoiceControllerTest {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new InvoiceServiceOperationException());
-    ResponseMessage expectedResponseMessage = new ResponseMessage(String.format("Internal server error while getting invoice by id: %d",
+    ResponseMessage expectedResponseMessage = new ResponseMessage(String.format("Internal server error while getting invoice by id: %s",
         expectedInvoice.getId()));
 
     //when
@@ -248,7 +248,7 @@ class InvoiceControllerTest {
   void shouldReturnBadRequestDuringUpdatingInvoiceWithWrongId() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
-    int wrongInvoiceId = expectedInvoice.getId() + 1;
+    String wrongInvoiceId = String.valueOf(Integer.valueOf(expectedInvoice.getId()) + 1);
     String invoiceAsJson = mapper.writeValueAsString(expectedInvoice);
 
     //when
