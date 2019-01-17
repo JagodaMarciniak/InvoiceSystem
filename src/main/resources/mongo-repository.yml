@@ -1,0 +1,5 @@
+mongo-repository:
+  repository-name: invoices-repository
+  collection-name: invoices
+  host: localhost
+  port: 27017

@@ -3,21 +3,28 @@ package pl.coderstrust.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import pl.coderstrust.helpers.FileHelper;
 
 @Configuration
-@EnableConfigurationProperties(InFileDatabaseProperties.class)
-@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:in-file-database.yml")
+@EnableConfigurationProperties({InFileDatabaseProperties.class, MongoRepositoryProperties.class})
+@PropertySource(factory = YamlPropertySourceFactory.class, value = {"classpath:in-file-repository.yml", "classpath:mongo-repository.yml"})
 public class ApplicationConfiguration {
 
   @Autowired
   private InFileDatabaseProperties inFileDatabaseProperties;
+
+  @Autowired
+  private MongoRepositoryProperties mongoRepositoryProperties;
 
   @Bean
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "in-file")
@@ -32,5 +39,23 @@ public class ApplicationConfiguration {
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "in-file")
   public FileHelper getFileHelper() {
     return new FileHelper(inFileDatabaseProperties.getDatabaseFilePath());
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
+  public MongoClient mongoClient() {
+    return new MongoClient(mongoRepositoryProperties.getHost(), mongoRepositoryProperties.getPort());
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
+  public MongoDbFactory getMongoDbFactory(MongoClient mongoClient){
+    return new SimpleMongoDbFactory(mongoClient, mongoRepositoryProperties.getRepositoryName());
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
+  public MongoTemplate getMmongoTemplate(MongoDbFactory mongoDbFactory){
+    return new MongoTemplate(mongoDbFactory);
   }
 }
