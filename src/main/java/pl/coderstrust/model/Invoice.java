@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,8 +30,10 @@ public class Invoice {
 
   InvoiceType type;
 
+  @ApiModelProperty(value = "Issue date of invoice", example = "2019-01-01")
   LocalDate issueDate;
 
+  @ApiModelProperty(value = "Due date of invoice", example = "2019-01-01")
   LocalDate dueDate;
 
   @ManyToOne(cascade = CascadeType.ALL)
