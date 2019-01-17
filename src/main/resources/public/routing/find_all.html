@@ -7,14 +7,14 @@
 
 <body>
   <div ng-controller="FindAll" ng-model="empty">
-    <div class="alert alert-warning" role="alert" id="allerts_default" ng-if="empty == undefined">
+    <div class="alert alert-warning" role="alert" id="allerts_default" ng-if="empty == 0">
       There was no invoices in database.
     </div>
-    <div class="alert alert-info" role="alert" id="allerts_default" ng-if="empty != undefined">
+    <div class="alert alert-info" role="alert" id="allerts_default" ng-if="empty > 0">
       Found: {{InvoiceDatabase.length}} invoices.
     </div>
     <div>
-      <table class="table table-hover" id="records" ng-if="empty != undefined">
+      <table class="table table-hover" id="records" ng-if="empty > 0">
         <thead>
           <tr>
             <th scope="col">Id <span style="color:red">(to remove)</span></th>
@@ -36,9 +36,11 @@
             <td>{{x.issueDate}}</td>
             <td>{{x.dueDate}}</td>
             <td>{{x.comments}}</td>
-            <td style="text-align:center"><button type="button" class="btn btn-primary btn-sm" style="margin-right: 20px">Update</button>
-              <button type="button" class="btn btn-danger btn-sm" style="margin-right: 20px">Remove</button>
-              <button type="button" class="btn btn-info btn-sm">Details</button></td>
+            <td style="text-align:center">
+              <button type="button" class="btn btn-primary btn-sm" style="margin-right: 20px">Update</button>
+              <button type="button" class="btn btn-danger btn-sm" style="margin-right: 20px" ng-click="remove(x.id)">Remove</button>
+              <button type="button" class="btn btn-info btn-sm">Details</button>
+            </td>
           </tr>
         </tbody>
       </table>

@@ -6,6 +6,17 @@ app.controller('FindAll', function ($scope, $http) {
             $scope.InvoiceDatabase = response.data;
             $scope.empty = $scope.InvoiceDatabase.length;
         });
+    $scope.remove = function (id) {
+        $http.delete(returnValidAddres(id))
+            .then(
+                function () {
+                    $http.get('http://127.0.0.1:8080/invoices').
+                        then(function (response) {
+                            $scope.InvoiceDatabase = response.data;
+                            $scope.empty = $scope.InvoiceDatabase.length;
+                        });
+                })
+    };
 });
 
 app.controller('FindById', function ($scope, $http) {
