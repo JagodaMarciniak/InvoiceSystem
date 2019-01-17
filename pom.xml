@@ -270,6 +270,7 @@
                                         <exclude>pl.coderstrust.configuration.ApplicationConfiguration</exclude>
                                         <exclude>pl.coderstrust.configuration.InFileDatabaseProperties</exclude>
                                         <exclude>pl.coderstrust.configuration.YamlPropertySourceFactory</exclude>
+                                        <exclude>pl.coderstrust.configuration.SwaggerConfig</exclude>
                                     </excludes>
                                 </rule>
                             </rules>
