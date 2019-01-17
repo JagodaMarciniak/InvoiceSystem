@@ -57,7 +57,7 @@ public class InvoiceController {
     try {
       invoiceService.addInvoice(invoice);
       HttpHeaders responseHeaders = new HttpHeaders();
-      responseHeaders.setLocation(URI.create(String.format("/%s", invoice.getId())));
+      responseHeaders.setLocation(URI.create(String.format("/invoices/%s", invoice.getId())));
       return new ResponseEntity<>(invoice, responseHeaders, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(new ResponseMessage("Internal server error while saving specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);

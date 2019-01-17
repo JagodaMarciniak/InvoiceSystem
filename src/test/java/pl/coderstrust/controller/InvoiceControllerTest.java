@@ -167,7 +167,6 @@ class InvoiceControllerTest {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.addInvoice(expectedInvoice)).thenReturn(expectedInvoice);
-
     String invoiceAsJson = mapper.writeValueAsString(expectedInvoice);
 
     //when
@@ -186,6 +185,9 @@ class InvoiceControllerTest {
     assertEquals(HttpStatus.CREATED.value(), httpStatus);
     assertNotNull(actualInvoice);
     assertEquals(expectedInvoice, actualInvoice);
+    String expectedLocationHeader = String.format("/invoices/%s",expectedInvoice.getId());
+    String actualLocationHeader = result.getResponse().getHeader("location");
+    assertEquals(expectedLocationHeader, actualLocationHeader);
     verify(invoiceService).addInvoice(expectedInvoice);
   }
 
