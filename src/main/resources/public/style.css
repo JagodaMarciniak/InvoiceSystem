@@ -1,0 +1,80 @@
+#menu_button, #btnGroupDrop1 {
+    margin-right: 0.5%;
+    background-color: rgb(169, 203, 228);
+    color: black;
+    font-weight: 900;
+    letter-spacing: 2px;
+    border-color: #122864;
+}
+
+#menu_button:hover, #btnGroupDrop1:hover {
+    background-color: #f5fbf6;
+}
+
+#menu_button:focus, #btnGroupDrop1:focus {
+    border-color: none;
+    box-shadow: none;
+}
+
+#menu_bar {
+    background-image: url('resources/samuel-scrimshaw-166751-unsplash.jpg');
+    margin-bottom:2px; 
+    padding: 7px; 
+    opacity: 0.8;
+}
+
+#action_box {
+    margin-left: auto;
+    margin-right: auto;
+    width: 98%;
+    font-size: 90%;
+}
+
+#background_buttons:hover {
+    background-color: #a7e4f3;
+    cursor: pointer;
+}
+
+#allerts_default {
+    margin: 10px;
+    font-weight: 900;
+    font-size: 17px;
+}
+
+#allerts_success {
+    margin: 10px;
+    font-weight: 900;
+    font-size: 17px;
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    z-index: 1;
+}
+
+#allerts_error {
+    margin: 10px;
+    font-weight: 900;
+    font-size: 17px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    z-index: 1;
+}
+
+#records {
+    background-color: rgba(229, 240, 234, 0.815);
+}
+
+#title {
+    color: rgb(180, 199, 211);
+    animation-delay: 0.3s;
+}
+
+#sentence {
+    color: rgb(243, 234, 113);
+    letter-spacing: 3px;
+    animation-delay: 1.3s;
+    width: 300px;
+    margin-left: 42%;
+    font-weight: 600;
+}
