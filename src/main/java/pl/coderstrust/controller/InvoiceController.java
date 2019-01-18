@@ -88,10 +88,11 @@ public class InvoiceController {
       @ApiResponse(code = 500, message = "Internal server error.", response = ResponseMessage.class)})
   public ResponseEntity<?> add(@ApiParam(value = "Invoice need to be added to database.", required = true) @RequestBody Invoice invoice) {
     try {
-      invoiceService.addInvoice(invoice);
+      invoice.setId(null);
+      Invoice addedInvoice = invoiceService.addInvoice(invoice);
       HttpHeaders responseHeaders = new HttpHeaders();
-      responseHeaders.setLocation(URI.create(String.format("/invoices/%s", invoice.getId())));
-      return new ResponseEntity<>(invoice, responseHeaders, HttpStatus.CREATED);
+      responseHeaders.setLocation(URI.create(String.format("/invoices/%s", addedInvoice.getId())));
+      return new ResponseEntity<>(addedInvoice, responseHeaders, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(new ResponseMessage("Internal server error while saving specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
     }

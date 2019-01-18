@@ -50,7 +50,7 @@ public class InFileInvoiceDatabase implements InvoiceDatabase {
   @Override
   @Synchronized
   public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
-    if (existsById(invoice.getId())) {
+    if (invoice.getId() != null && existsById(invoice.getId())) {
       deleteById(invoice.getId());
     } else {
       invoice.setId(String.valueOf(getNextInvoiceId()));

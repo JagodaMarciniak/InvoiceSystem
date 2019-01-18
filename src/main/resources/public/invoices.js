@@ -71,7 +71,6 @@ function getBaseApiAddress() {
 
 function getSampleNewInvoice() {
     var invoice = {
-        "id": 1,
         "type": "STANDARD",
         "issueDate": "2018-12-04",
         "dueDate": "2019-01-01",
