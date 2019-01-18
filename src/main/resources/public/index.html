@@ -29,18 +29,26 @@
             or update</button>
         <button type="button" class="btn btn-success btn-sm" id="menu_button" ng-click="template='routing/find_by_id.html'">Find
             by id</button>
-        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             Change background
-          </button>
-          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
             <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1498354136128-58f790194fa7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)'}">Default</a>
-            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1508717272800-9fff97da7e8f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1351&q=80)'}">Pink and white flowers on white surface</a>
-            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1485805559477-464c82e07132?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1347&q=80)'}">Brown brick wall</a>
-            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1498429089284-41f8cf3ffd39?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)'}">Photo of valley</a>
-            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1526376043067-5af36c35cd6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1339&q=80)'}">White concrete brick wall</a>
-            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1474533883693-59a44dbb964e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)'}">White sand</a>
-            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1481966115753-963394378f23?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1387&q=80)'}">Time-lapsed photo of white and red light</a>
-            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1431512284068-4c4002298068?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1352&q=80)'}">Bird's-eye view of mountain rang</a>
+            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1508717272800-9fff97da7e8f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1351&q=80)'}">Pink
+                and white flowers on white surface</a>
+            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1485805559477-464c82e07132?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1347&q=80)'}">Brown
+                brick wall</a>
+            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1498429089284-41f8cf3ffd39?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)'}">Photo
+                of valley</a>
+            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1526376043067-5af36c35cd6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1339&q=80)'}">White
+                concrete brick wall</a>
+            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1474533883693-59a44dbb964e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)'}">White
+                sand</a>
+            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1481966115753-963394378f23?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1387&q=80)'}">Time-lapsed
+                photo of white and red light</a>
+            <a class="dropdown-item" id="background_buttons" ng-click="backround_style={'background-image':'url(https://images.unsplash.com/photo-1431512284068-4c4002298068?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1352&q=80)'}">Bird's-eye
+                view of mountain rang</a>
         </div>
     </div>
     <div ng-include="template" id="action_box">
