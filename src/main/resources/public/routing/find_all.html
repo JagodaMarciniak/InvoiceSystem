@@ -17,7 +17,7 @@
       <table class="table table-hover" id="records" ng-if="empty > 0">
         <thead>
           <tr>
-            <th scope="col">Id <span style="color:red">(to remove)</span></th>
+            <th scope="col">Id</th>
             <th scope="col">Type</th>
             <th scope="col">Buyer name</th>
             <th scope="col">Seller name</th>
@@ -37,9 +37,7 @@
             <td>{{x.dueDate}}</td>
             <td>{{x.comments}}</td>
             <td style="text-align:center">
-              <button type="button" class="btn btn-primary btn-sm" style="margin-right: 20px">Update</button>
-              <button type="button" class="btn btn-danger btn-sm" style="margin-right: 20px" ng-click="remove(x.id)">Remove</button>
-              <button type="button" class="btn btn-info btn-sm">Details</button>
+              <button type="button" class="btn btn-danger btn-sm" ng-click="remove(x.id)">Remove</button>
             </td>
           </tr>
         </tbody>

@@ -65,27 +65,6 @@ app.controller('AddOrUpdate', function ($scope, $http) {
     }
 });
 
-app.controller('RemoveById', function ($scope, $http) {
-    $scope.submit = function () {
-        if ($scope.invoice_id) {
-            $scope.formData = {};
-            $http.delete(returnValidAddres($scope.invoice_id))
-                .then(
-                    function (response) {
-                        $scope.formData.answer = 200;
-                        console.log(response.data.message);
-                    },
-                    function (response) {
-                        $scope.formData.answer = 400;
-                        console.log(response);
-                    })
-                .catch(function onError(response) {
-                    console.log(response);
-                });
-        }
-    }
-});
-
 function returnValidAddres(invoiceId) {
     return 'http://127.0.0.1:8080/invoices/' + invoiceId;
 }
