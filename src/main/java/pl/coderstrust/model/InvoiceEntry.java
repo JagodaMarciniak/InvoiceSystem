@@ -38,10 +38,10 @@ public class InvoiceEntry {
   @ApiModelProperty(value = "Tax amount.", example = "VAT_23")
   Vat vatRate;
 
-  @ApiModelProperty(value = "Value of the item, without tax.", example = "100")
+  @ApiModelProperty(value = "Net value of the item..", example = "100")
   BigDecimal netValue;
 
-  @ApiModelProperty(value = "Value of the item, with tax.", example = "123")
+  @ApiModelProperty(value = "Value of the item with tax.", example = "123")
   BigDecimal grossValue;
 
   public InvoiceEntry(String item, Long quantity, UnitType unit,

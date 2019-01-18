@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,10 +31,10 @@ public class Invoice {
   @ApiModelProperty(value = "Type of the invoice.", example = "STANDARD")
   InvoiceType type;
 
-  @ApiModelProperty(value = "Issue date of invoice", example = "2019-01-01")
+  @ApiModelProperty(value = "Issue date of invoice.", example = "2019-01-01")
   LocalDate issueDate;
 
-  @ApiModelProperty(value = "Due date of invoice", example = "2019-01-01")
+  @ApiModelProperty(value = "Due date of invoice.", example = "2019-01-01")
   LocalDate dueDate;
 
   @ManyToOne(cascade = CascadeType.ALL)
@@ -44,14 +43,14 @@ public class Invoice {
   @ManyToOne(cascade = CascadeType.ALL)
   Company buyer;
 
-  @ElementCollection
+  @ApiModelProperty(value = "List of purchased products.")
   @OneToMany(cascade = CascadeType.ALL)
   List<InvoiceEntry> entries;
 
-  @ApiModelProperty(value = "Total net value, without tax.", example = "100")
+  @ApiModelProperty(value = "Total net value of the invoice.", example = "100")
   BigDecimal totalNetValue;
 
-  @ApiModelProperty(value = "Total value, with tax.", example = "123")
+  @ApiModelProperty(value = "Total value with tax of the invoice.", example = "123")
   BigDecimal totalGrossValue;
 
   @ApiModelProperty(value = "Comments fot the invoice.", example = "Some informations")
