@@ -7,7 +7,7 @@ app.controller('FindAll', function ($scope, $http) {
             $scope.empty = $scope.InvoiceDatabase.length;
         });
     $scope.remove = function (id) {
-        $http.delete(returnValidAddres(id))
+        $http.delete(getBaseApiAddress() + id)
             .then(
                 function () {
                     $http.get('http://127.0.0.1:8080/invoices').
@@ -23,7 +23,7 @@ app.controller('FindById', function ($scope, $http) {
     $scope.submit = function () {
         $scope.formData = {};
         if ($scope.invoice_id) {
-            $http.get(returnValidAddres($scope.invoice_id))
+            $http.get(getBaseApiAddress() + $scope.invoice_id)
                 .then(
                     function (response) {
                         $scope.InvoiceDatabase = response.data;
@@ -45,7 +45,7 @@ app.controller('AddOrUpdate', function ($scope, $http) {
     $scope.submit = function () {
         if ($scope.content) {
             $scope.formData = {};
-            $http.post('http://127.0.0.1:8080/invoices', $scope.content)
+            $http.post(getBaseApiAddress(), $scope.content)
                 .then(
                     function (response) {
                         $scope.formData.answer = 200;
@@ -61,16 +61,16 @@ app.controller('AddOrUpdate', function ($scope, $http) {
         }
     }
     $scope.getJson = function () {
-        $scope.content = returnValidJSON();
+        $scope.content = getSampleNewInvoice();
     }
 });
 
-function returnValidAddres(invoiceId) {
-    return 'http://127.0.0.1:8080/invoices/' + invoiceId;
+function getBaseApiAddress() {
+    return 'http://127.0.0.1:8080/invoices/';
 }
 
-function returnValidJSON() {
-    var jsonToString = {
+function getSampleNewInvoice() {
+    var invoice = {
         "id": 1,
         "type": "STANDARD",
         "issueDate": "2018-12-04",
@@ -148,5 +148,5 @@ function returnValidJSON() {
         "totalGrossValue": 0,
         "comments": "Some comments"
     };
-    return JSON.stringify(jsonToString, null, "\t");
+    return JSON.stringify(invoice, null, "\t");
 }

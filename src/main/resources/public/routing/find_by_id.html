@@ -15,8 +15,8 @@
                 Invoice not found.
             </div>
             <div class="input-group mb-3" style="margin-top:15px">
-                <input type="number" class="form-control" ng-model="invoice_id" placeholder="Type id here" aria-label="Type id here"
-                    aria-describedby="basic-addon2">
+                <input type="text" class="form-control" ng-model="invoice_id" placeholder="Type id here" aria-label="Type id here"
+                    aria-describedby="basic-addon2" required>
                 <button type="submit" id="submit" class="btn btn-primary">Search</button>
             </div>
             <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
