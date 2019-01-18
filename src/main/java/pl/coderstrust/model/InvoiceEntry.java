@@ -1,5 +1,6 @@
 package pl.coderstrust.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,20 +20,28 @@ public class InvoiceEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  @ApiModelProperty(value = "The id of entries.")
   String id;
 
+  @ApiModelProperty(value = "Name of the item.", example = "Flashlight")
   String item;
 
+  @ApiModelProperty(value = "Total quantity of items.", example = "15")
   Long quantity;
 
+  @ApiModelProperty(value = "Unit type.", example = "HOUR")
   UnitType unit;
 
+  @ApiModelProperty(value = "Price for one unit of item.", example = "100")
   BigDecimal price;
 
+  @ApiModelProperty(value = "Tax amount.", example = "VAT_23")
   Vat vatRate;
 
+  @ApiModelProperty(value = "Value of the item, without tax.", example = "100")
   BigDecimal netValue;
 
+  @ApiModelProperty(value = "Value of the item, with tax.", example = "123")
   BigDecimal grossValue;
 
   public InvoiceEntry(String item, Long quantity, UnitType unit,

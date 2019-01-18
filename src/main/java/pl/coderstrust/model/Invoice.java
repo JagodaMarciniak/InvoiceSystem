@@ -1,5 +1,6 @@
 package pl.coderstrust.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,8 +26,10 @@ public class Invoice {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  @ApiModelProperty(value = "The id of invoice.")
   String id;
 
+  @ApiModelProperty(value = "Type of the invoice.", example = "STANDARD")
   InvoiceType type;
 
   @ApiModelProperty(value = "Issue date of invoice", example = "2019-01-01")
@@ -46,10 +48,13 @@ public class Invoice {
   @OneToMany(cascade = CascadeType.ALL)
   List<InvoiceEntry> entries;
 
+  @ApiModelProperty(value = "Total net value, without tax.", example = "100")
   BigDecimal totalNetValue;
 
+  @ApiModelProperty(value = "Total value, with tax.", example = "123")
   BigDecimal totalGrossValue;
 
+  @ApiModelProperty(value = "Comments fot the invoice.", example = "Some informations")
   String comments;
 
   public Invoice(InvoiceType type, LocalDate issueDate, LocalDate dueDate,

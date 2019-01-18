@@ -1,5 +1,6 @@
 package pl.coderstrust.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,12 +21,16 @@ public class ContactDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  @ApiModelProperty(value = "The id of contact details.")
   String id;
 
+  @ApiModelProperty(value = "Email address.", example = "polstal@gmail.com")
   String email;
 
+  @ApiModelProperty(value = "Contact phone number.", example = "775-956-888")
   String phoneNumber;
 
+  @ApiModelProperty(value = "Company website.", example = "www.polstal.com.pl")
   String website;
 
   @OneToOne(cascade = CascadeType.ALL)

@@ -19,7 +19,9 @@ public class SwaggerConfig {
   ApiInfo apiInfo() {
     return new ApiInfoBuilder()
         .title("Invoices API")
-        .description("Choose from multiple databases, in which you want to save your invoices")
+        .description("This panel allow you to test all of possibilities in Invoice API."
+            + "\nIncluding: \n- Find all invoices in database \n- Add new invoices to database"
+            + "\n- Update existing invoice, \n- Remove invoice from database.")
         .version("1.0.0")
         .contact(new Contact("Group 7, team C", "http://teamc.com", "teamc@gmail.com"))
         .build();
