@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.EmbeddedDataSourceConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +19,7 @@ import pl.coderstrust.helpers.FileHelper;
 
 @Configuration
 @EnableConfigurationProperties({InFileDatabaseProperties.class, MongoRepositoryProperties.class})
-@PropertySource(factory = YamlPropertySourceFactory.class, value = {"classpath:in-file-repository.yml", "classpath:mongo-repository.yml"})
+@PropertySource(factory = YamlPropertySourceFactory.class, value = {"classpath:in-file-database.yml", "classpath:mongo-repository.yml"})
 public class ApplicationConfiguration {
 
   @Autowired
