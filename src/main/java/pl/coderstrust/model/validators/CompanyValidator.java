@@ -1,6 +1,7 @@
 package pl.coderstrust.model.validators;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import pl.coderstrust.model.AccountNumber;
 import pl.coderstrust.model.Company;
@@ -10,11 +11,19 @@ import pl.coderstrust.model.ContactDetails;
 public class CompanyValidator {
 
   public static List<String> validateCompany(Company company) {
+    if (company == null) {
+      return Collections.singletonList("Company cannot be null");
+    }
+
     List<String> result = new ArrayList();
-    ValidationResultAdder.addResultOfValidation(result, validateName(company.getName()));
-    ValidationResultAdder.addResultOfValidation(result, validateTaxIdentificationNumber(company.getTaxIdentificationNumber()));
-    ValidationResultAdder.addResultOfValidation(result, validateAccountNumber(company.getAccountNumber()));
-    ValidationResultAdder.addResultOfValidation(result, validateContactDetails(company.getContactDetails()));
+    String resultOfNameValidation = validateName(company.getName());
+    ValidationResultAdder.addResultOfValidation(result, resultOfNameValidation);
+    String resultOfTaxIdentificationNumberValidation = validateTaxIdentificationNumber(company.getTaxIdentificationNumber());
+    ValidationResultAdder.addResultOfValidation(result, resultOfTaxIdentificationNumberValidation);
+    List<String> resultOfAccountNumberValidation = validateAccountNumber(company.getAccountNumber());
+    ValidationResultAdder.addResultOfValidation(result, resultOfAccountNumberValidation);
+    List<String> resultOfContactDetailsValidation = validateContactDetails(company.getContactDetails());
+    ValidationResultAdder.addResultOfValidation(result, resultOfContactDetailsValidation);
     return result;
   }
 
@@ -25,7 +34,7 @@ public class CompanyValidator {
     if (name ==  "") {
       return "Name cannot be empty";
     }
-    return "";
+    return null;
   }
 
   private static String validateTaxIdentificationNumber(String taxId) {
@@ -35,7 +44,7 @@ public class CompanyValidator {
     if (taxId == "") {
       return "Tax identification number cannot be null";
     }
-    return "";
+    return null;
   }
 
   private static List<String> validateAccountNumber(AccountNumber accountNumber) {

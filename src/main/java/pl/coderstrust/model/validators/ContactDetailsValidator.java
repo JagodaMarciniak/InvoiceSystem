@@ -1,17 +1,26 @@
 package pl.coderstrust.model.validators;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import pl.coderstrust.model.Address;
 import pl.coderstrust.model.ContactDetails;
 
 public class ContactDetailsValidator {
   public static List<String> validateContactDetails(ContactDetails contactDetails) {
+    if (contactDetails == null) {
+      return Collections.singletonList("Contact details cannot be null");
+    }
+
     List<String> result = new ArrayList<>();
-    ValidationResultAdder.addResultOfValidation(result, validateEmail(contactDetails.getEmail()));
-    ValidationResultAdder.addResultOfValidation(result, validatePhoneNumber(contactDetails.getPhoneNumber()));
-    ValidationResultAdder.addResultOfValidation(result, validateWebsite(contactDetails.getWebsite()));
-    ValidationResultAdder.addResultOfValidation(result, validateAdress(contactDetails.getAddress()));
+    String resultOfEmailValidation = validateEmail(contactDetails.getEmail());
+    ValidationResultAdder.addResultOfValidation(result, resultOfEmailValidation);
+    String resultOfPhoneNumberValidation = validatePhoneNumber(contactDetails.getPhoneNumber());
+    ValidationResultAdder.addResultOfValidation(result, resultOfPhoneNumberValidation);
+    String resultOfWebsiteValidation = validateWebsite(contactDetails.getWebsite());
+    ValidationResultAdder.addResultOfValidation(result, resultOfWebsiteValidation);
+    List<String> resultOfAddressValidation = validateAddress(contactDetails.getAddress());
+    ValidationResultAdder.addResultOfValidation(result, resultOfAddressValidation);
     return result;
   }
 
@@ -25,7 +34,7 @@ public class ContactDetailsValidator {
     if (!email.matches("^(.+)@(.+)$")) {
       return "Email is not valid";
     }
-    return "";
+    return null;
   }
 
   private static String validatePhoneNumber(String phoneNumber) {
@@ -38,7 +47,7 @@ public class ContactDetailsValidator {
     if (!phoneNumber.matches("^[0-9]")){
       return "Phone number can only be numbers";
     }
-    return "";
+    return null;
   }
 
   private static String validateWebsite(String website) {
@@ -51,11 +60,10 @@ public class ContactDetailsValidator {
     if (!website.matches("@(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/[^\\s]*)?$@iS")){
       return "Website has invalid format";
     }
-    return "";
+    return null;
   }
 
-  private static List<String> validateAdress(Address address) {
-    return AdressValidator.validateAddress(address);
+  private static List<String> validateAddress(Address address) {
+    return AddressValidator.validateAddress(address);
   }
-
 }

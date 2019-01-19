@@ -10,8 +10,7 @@ public final class CompanyGenerator {
   public static Company getSampleCompany() {
     String name = "Oracle Sp. z o. o.";
     String taxId = "12345678990";
-    AccountNumber accountNumber = new AccountNumber(
-        "PL83620519463926400000847295");
+    AccountNumber accountNumber = AccountNumberGenerator.getSampleAccountNumber();
     ContactDetails contactDetails = new ContactDetails("contact@oracle.com",
         "+1234567890", "www.oracle.com", new Address("Wyroczni", "13A", "34-760", "Gdynia", "Polska"
     ));
@@ -21,8 +20,7 @@ public final class CompanyGenerator {
   public static Company getSampleCompany(String companyName) {
     String name = companyName;
     String taxId = "12345678990";
-    AccountNumber accountNumber = new AccountNumber(
-        "PL83620519463926400000847295");
+    AccountNumber accountNumber = AccountNumberGenerator.getSampleAccountNumber();
     ContactDetails contactDetails = new ContactDetails("contact@oracle.com",
         "+1234567890", "www.oracle.com", new Address("Wyroczni", "13A", "34-760", "Gdynia", "Polska"
     ));

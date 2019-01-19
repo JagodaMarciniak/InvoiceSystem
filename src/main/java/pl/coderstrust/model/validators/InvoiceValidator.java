@@ -3,6 +3,7 @@ package pl.coderstrust.model.validators;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import pl.coderstrust.model.Company;
@@ -12,15 +13,27 @@ import pl.coderstrust.model.InvoiceEntry;
 public class InvoiceValidator {
 
   public static List<String> validateInvoice(Invoice invoice) {
+    if (invoice == null) {
+      return Collections.singletonList("Invoice cannot be null");
+    }
+
     List<String> result = new ArrayList<>();
-    ValidationResultAdder.addResultOfValidation(result, validateId(invoice.getId()));
-    ValidationResultAdder.addResultOfValidation(result, validateBuyer(invoice.getBuyer()));
-    ValidationResultAdder.addResultOfValidation(result, validateSeller(invoice.getSeller()));
-    ValidationResultAdder.addResultOfValidation(result, validateEntries(invoice.getEntries()));
-    ValidationResultAdder.addResultOfValidation(result, validateDates(invoice.getIssueDate(), invoice.getDueDate()));
-    ValidationResultAdder.addResultOfValidation(result, validateTotalNetValue(invoice.getTotalNetValue()));
-    ValidationResultAdder.addResultOfValidation(result, validateTotalGrossValue(invoice.getTotalGrossValue()));
-    ValidationResultAdder.addResultOfValidation(result, validateComments(invoice.getComments()));
+    String resultOfIdValidation = validateId(invoice.getId());
+    ValidationResultAdder.addResultOfValidation(result, resultOfIdValidation);
+    List<String> resultOfBuyerValidation = validateBuyer(invoice.getBuyer());
+    ValidationResultAdder.addResultOfValidation(result, resultOfBuyerValidation);
+    List<String> resultOfSellerValidation = validateSeller(invoice.getSeller());
+    ValidationResultAdder.addResultOfValidation(result, resultOfSellerValidation);
+    List<String> resultOfEntriesValidation = validateEntries(invoice.getEntries());
+    ValidationResultAdder.addResultOfValidation(result, resultOfEntriesValidation);
+    String resultOfDatesValidation = validateDates(invoice.getIssueDate(), invoice.getDueDate());
+    ValidationResultAdder.addResultOfValidation(result, resultOfDatesValidation);
+    String resultOfTotalNetValueValidation = validateTotalNetValue(invoice.getTotalNetValue());
+    ValidationResultAdder.addResultOfValidation(result, resultOfTotalNetValueValidation);
+    String resultOfTotalGrossValueValidation = validateTotalGrossValue(invoice.getTotalGrossValue());
+    ValidationResultAdder.addResultOfValidation(result, resultOfTotalGrossValueValidation);
+    String resultOfCommentsValidation = validateComments(invoice.getComments());
+    ValidationResultAdder.addResultOfValidation(result, resultOfCommentsValidation);
     return result;
   }
 

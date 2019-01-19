@@ -2,24 +2,40 @@ package pl.coderstrust.model.validators;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import pl.coderstrust.model.InvoiceEntry;
 
 public class InvoiceEntryValidator {
+
   public static List<String> validateEntries(List<InvoiceEntry> invoiceEntries) {
+    if (invoiceEntries == null) {
+      return Collections.singletonList("Invoice entries cannot be null");
+    }
+
     List<String> result = new ArrayList<>();
-    invoiceEntries
-        .forEach(invoiceEntry -> ValidationResultAdder.addResultOfValidation(result, validateSingleEntry(invoiceEntry)));
+    invoiceEntries.forEach(invoiceEntry -> {
+          ValidationResultAdder.addResultOfValidation(result, validateSingleEntry(invoiceEntry));
+        });
     return result;
   }
 
   public static List<String> validateSingleEntry(InvoiceEntry invoiceEntry){
+    if (invoiceEntry == null) {
+      return Collections.singletonList("Invoice entry cannot be null");
+    }
+
     List<String> result = new ArrayList<>();
-    ValidationResultAdder.addResultOfValidation(result, validateItem(invoiceEntry.getItem()));
-    ValidationResultAdder.addResultOfValidation(result, validateGrossValue(invoiceEntry.getGrossValue()));
-    ValidationResultAdder.addResultOfValidation(result, validateNetValue(invoiceEntry.getNetValue()));
-    ValidationResultAdder.addResultOfValidation(result, validatePrice(invoiceEntry.getPrice()));
-    ValidationResultAdder.addResultOfValidation(result, validateQuantity(invoiceEntry.getQuantity()));
+    String resultOfItemValidation = validateItem(invoiceEntry.getItem());
+    ValidationResultAdder.addResultOfValidation(result, resultOfItemValidation);
+    String resultOfGrossValueValidation = validateGrossValue(invoiceEntry.getGrossValue());
+    ValidationResultAdder.addResultOfValidation(result, resultOfGrossValueValidation);
+    String resultOfNetValueValidation = validateNetValue(invoiceEntry.getNetValue());
+    ValidationResultAdder.addResultOfValidation(result, resultOfNetValueValidation);
+    String resultOfPriceValidation = validatePrice(invoiceEntry.getPrice());
+    ValidationResultAdder.addResultOfValidation(result, resultOfPriceValidation);
+    String resultOfQuantityValidation = validateQuantity(invoiceEntry.getQuantity());
+    ValidationResultAdder.addResultOfValidation(result, resultOfQuantityValidation);
     return result;
   }
 
@@ -30,7 +46,7 @@ public class InvoiceEntryValidator {
     if (item ==  "") {
       return "Item cannot be empty";
     }
-    return "";
+    return null;
   }
 
   private static String validateQuantity(Long quantity) {
@@ -40,7 +56,7 @@ public class InvoiceEntryValidator {
     if (quantity ==  0) {
       return "Quantity cannot be zero";
     }
-    return "";
+    return null;
   }
 
   private static String validatePrice(BigDecimal price) {
@@ -50,26 +66,26 @@ public class InvoiceEntryValidator {
     if (price.signum() < 0) {
       return "Price has to be larger than 0";
     }
-    return "";
+    return null;
   }
 
   private static String validateNetValue(BigDecimal netValue) {
     if (netValue == null) {
       return "Net value cannot be null";
     }
-    if (netValue.doubleValue() < 0 ) {
+    if (netValue.doubleValue() < 0) {
       return "Net value cannot be lower than 0";
     }
-    return "";
+    return null;
   }
 
   private static String validateGrossValue(BigDecimal grossValue) {
     if (grossValue == null) {
       return "Gross Value cannot be null";
     }
-    if (grossValue.doubleValue() < 0 ) {
+    if (grossValue.doubleValue() < 0) {
       return "Gross Value cannot be lower than 0";
     }
-    return "";
+    return null;
   }
 }
