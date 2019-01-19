@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
-import pl.coderstrust.configuration.MongoRepositoryProperties;
+import pl.coderstrust.configuration.MongoDatabaseProperties;
 import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
 
@@ -14,11 +14,11 @@ import pl.coderstrust.model.Invoice;
 @Repository
 public class MongoInvoicesDatabase implements InvoiceDatabase {
 
-  private final MongoRepositoryProperties properties;
+  private final MongoDatabaseProperties properties;
   private MongoTemplate mongoTemplate;
 
   @Autowired
-  public MongoInvoicesDatabase(@NonNull MongoTemplate mongoTemplate, @NonNull MongoRepositoryProperties properties) {
+  public MongoInvoicesDatabase(@NonNull MongoTemplate mongoTemplate, @NonNull MongoDatabaseProperties properties) {
     this.mongoTemplate = mongoTemplate;
     this.properties = properties;
   }

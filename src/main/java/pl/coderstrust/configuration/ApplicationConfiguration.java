@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.EmbeddedDataSourceConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +16,7 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import pl.coderstrust.helpers.FileHelper;
 
 @Configuration
-@EnableConfigurationProperties({InFileDatabaseProperties.class, MongoRepositoryProperties.class})
+@EnableConfigurationProperties({InFileDatabaseProperties.class, MongoDatabaseProperties.class})
 @PropertySource(factory = YamlPropertySourceFactory.class, value = {"classpath:in-file-database.yml", "classpath:mongo-repository.yml"})
 public class ApplicationConfiguration {
 
@@ -26,7 +24,7 @@ public class ApplicationConfiguration {
   private InFileDatabaseProperties inFileDatabaseProperties;
 
   @Autowired
-  private MongoRepositoryProperties mongoRepositoryProperties;
+  private MongoDatabaseProperties mongoDatabaseProperties;
 
   @Bean
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "in-file")
@@ -46,13 +44,13 @@ public class ApplicationConfiguration {
   @Bean
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
   public MongoClient mongoClient() {
-    return new MongoClient(mongoRepositoryProperties.getHost(), mongoRepositoryProperties.getPort());
+    return new MongoClient(mongoDatabaseProperties.getHost(), mongoDatabaseProperties.getPort());
   }
 
   @Bean
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
   public MongoDbFactory getMongoDbFactory(MongoClient mongoClient){
-    return new SimpleMongoDbFactory(mongoClient, mongoRepositoryProperties.getRepositoryName());
+    return new SimpleMongoDbFactory(mongoClient, mongoDatabaseProperties.getRepositoryName());
   }
 
   @Bean
