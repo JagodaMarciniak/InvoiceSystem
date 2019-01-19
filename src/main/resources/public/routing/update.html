@@ -7,24 +7,35 @@
 
 <body>
     <div ng-controller="Update">
-        <form ng-submit="submit()" ng-model="formData.answer">
-            <div class="alert alert-warning alert-dismissible fade show" id="allerts_error" role="alert" ng-if="formData.answer != 200 && formData.answer != undefined">
+        <form ng-model="formData.find_invoice" ng-model="formData.response_when_updating">
+            <div class="alert alert-warning alert-dismissible fade show" id="allerts_error" role="alert" ng-if="formData.find_invoice != 200 && formData.find_invoice != undefined">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 Invoice not found.
             </div>
+            <div class="alert alert-warning alert-dismissible fade show" id="allerts_error" role="alert" ng-if="formData.response_when_updating != 200 && formData.response_when_updating != undefined">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                Error when trying to update invoice.
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show" id="allerts_success" role="alert" ng-if="formData.response_when_updating == 200 && formData.response_when_updating != undefined">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                Invoice updated!
+            </div>
             <div class="input-group mb-3" style="margin-top:15px">
                 <input type="text" class="form-control" ng-model="invoice_id" placeholder="Type id here" aria-label="Type id here"
                     aria-describedby="basic-addon2" required>
-                <button type="submit" id="submit" class="btn btn-primary">Search</button>
+                <button type="submit" id="submit" class="btn btn-primary" ng-click="submit()">Search</button>
             </div>
-        </form>
-        <form ng-submit="update_invoice()" ng-if="formData.answer == 200">
             <div class="form-group">
-                <textarea class="form-control" ng-model="content" type="JSON" rows="10" name="test_json"></textarea>
+                <textarea class="form-control" ng-model="invoiceToUpdate" type="JSON" rows="10" name="test_json"></textarea>
             </div>
-            <button type="submit" id="update_invoice" class="btn btn-primary btn-lg" style="float:left; width: auto; margin-right: 0.5%">Submit</button>
+            <button type="submit" id="update_invoice" class="btn btn-primary btn-lg" style="float:left; width: auto; margin-right: 0.5%"
+                ng-click="update_invoice()">Submit</button>
         </form>
     </div>
 </body>

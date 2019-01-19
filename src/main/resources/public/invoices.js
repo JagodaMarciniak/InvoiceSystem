@@ -48,12 +48,12 @@ app.controller('Update', function ($scope, $http) {
             $http.get(getBaseApiAddress() + $scope.invoice_id)
                 .then(
                     function (response) {
-                        $scope.content = JSON.stringify(response.data, null, "\t");
-                        $scope.formData.answer = 200;
+                        $scope.invoiceToUpdate = JSON.stringify(response.data, null, "\t");
+                        $scope.formData.find_invoice = 200;
                         console.log(response.data.message);
                     },
                     function (response) {
-                        $scope.formData.answer = 400;
+                        $scope.formData.find_invoice = 400;
                         console.log(response);
                     })
                 .catch(function onError(response) {
@@ -63,14 +63,14 @@ app.controller('Update', function ($scope, $http) {
     }
     $scope.update_invoice = function () {
         $scope.formData = {};
-        $http.put(getBaseApiAddress() + $scope.invoice_id, $scope.content)
+        $http.put(getBaseApiAddress() + $scope.invoice_id, $scope.invoiceToUpdate)
             .then(
                 function (response) {
-                    $scope.formData.answer = 200;
+                    $scope.formData.response_when_updating = 200;
                     console.log(response.data.message);
                 },
                 function (response) {
-                    $scope.formData.answer = 400;
+                    $scope.formData.response_when_updating = 400;
                     console.log(response);
                 })
             .catch(function onError(response) {
