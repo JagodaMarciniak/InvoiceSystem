@@ -13,10 +13,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import pl.coderstrust.database.invoice.InvoiceDatabase;
+import pl.coderstrust.database.invoice.MongoInvoicesDatabase;
 import pl.coderstrust.helpers.FileHelper;
 
 @Configuration
-@EnableConfigurationProperties({InFileDatabaseProperties.class, MongoDatabaseProperties.class})
+@EnableConfigurationProperties( {InFileDatabaseProperties.class, MongoDatabaseProperties.class})
 @PropertySource(factory = YamlPropertySourceFactory.class, value = {"classpath:in-file-database.yml", "classpath:mongo-repository.yml"})
 public class ApplicationConfiguration {
 
@@ -49,13 +51,13 @@ public class ApplicationConfiguration {
 
   @Bean
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
-  public MongoDbFactory getMongoDbFactory(MongoClient mongoClient){
+  public MongoDbFactory getMongoDbFactory(MongoClient mongoClient) {
     return new SimpleMongoDbFactory(mongoClient, mongoDatabaseProperties.getRepositoryName());
   }
 
   @Bean
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
-  public MongoTemplate getMmongoTemplate(MongoDbFactory mongoDbFactory){
+  public MongoTemplate getMmongoTemplate(MongoDbFactory mongoDbFactory) {
     return new MongoTemplate(mongoDbFactory);
   }
 }
