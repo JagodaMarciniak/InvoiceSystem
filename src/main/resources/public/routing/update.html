@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div ng-controller="Update">
+        <form ng-submit="submit()" ng-model="formData.answer">
+            <div class="alert alert-warning alert-dismissible fade show" id="allerts_error" role="alert" ng-if="formData.answer != 200 && formData.answer != undefined">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                Invoice not found.
+            </div>
+            <div class="input-group mb-3" style="margin-top:15px">
+                <input type="text" class="form-control" ng-model="invoice_id" placeholder="Type id here" aria-label="Type id here"
+                    aria-describedby="basic-addon2" required>
+                <button type="submit" id="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+        <form ng-submit="update_invoice()" ng-if="formData.answer == 200">
+            <div class="form-group">
+                <textarea class="form-control" ng-model="content" type="JSON" rows="10" name="test_json"></textarea>
+            </div>
+            <button type="submit" id="update_invoice" class="btn btn-primary btn-lg" style="float:left; width: auto; margin-right: 0.5%">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>

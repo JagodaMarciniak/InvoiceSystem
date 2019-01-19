@@ -10,7 +10,7 @@
     <div class="alert alert-warning" id="allerts_default">
         <strong>This field can only save valid JSON</strong>
     </div>
-    <div ng-controller="AddOrUpdate">
+    <div ng-controller="AddInvoice">
         <form ng-submit="submit()" ng-model="formData.answer">
             <div class="alert alert-warning alert-dismissible fade show" id="allerts_error" role="alert" ng-if="formData.answer != 200 && formData.answer != undefined">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">

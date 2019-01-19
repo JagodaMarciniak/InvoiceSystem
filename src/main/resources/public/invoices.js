@@ -41,7 +41,45 @@ app.controller('FindById', function ($scope, $http) {
     }
 });
 
-app.controller('AddOrUpdate', function ($scope, $http) {
+app.controller('Update', function ($scope, $http) {
+    $scope.submit = function () {
+        $scope.formData = {};
+        if ($scope.invoice_id) {
+            $http.get(getBaseApiAddress() + $scope.invoice_id)
+                .then(
+                    function (response) {
+                        $scope.content = JSON.stringify(response.data, null, "\t");
+                        $scope.formData.answer = 200;
+                        console.log(response.data.message);
+                    },
+                    function (response) {
+                        $scope.formData.answer = 400;
+                        console.log(response);
+                    })
+                .catch(function onError(response) {
+                    console.log(response);
+                });
+        }
+    }
+    $scope.update_invoice = function () {
+        $scope.formData = {};
+        $http.put(getBaseApiAddress() + $scope.invoice_id, $scope.content)
+            .then(
+                function (response) {
+                    $scope.formData.answer = 200;
+                    console.log(response.data.message);
+                },
+                function (response) {
+                    $scope.formData.answer = 400;
+                    console.log(response);
+                })
+            .catch(function onError(response) {
+                console.log(response);
+            });
+    }
+});
+
+app.controller('AddInvoice', function ($scope, $http) {
     $scope.submit = function () {
         if ($scope.content) {
             $scope.formData = {};
