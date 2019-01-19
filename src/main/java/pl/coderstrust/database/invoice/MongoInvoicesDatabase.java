@@ -1,5 +1,6 @@
 package pl.coderstrust.database.invoice;
 
+import com.mongodb.MongoException;
 import java.util.Optional;
 import lombok.NonNull;
 import org.bson.Document;
@@ -27,55 +28,84 @@ public class MongoInvoicesDatabase implements InvoiceDatabase {
   }
 
   @Override
-  public Iterable<Invoice> findAllBySellerName(String sellerName) throws DatabaseOperationException {
-    return mongoTemplate.find(Query.query(Criteria.where("sellerName").is(sellerName)), Invoice.class, properties.getCollectionName());
+  public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
+    try {
+      mongoTemplate.save(invoice, properties.getCollectionName());
+      return invoice;
+    } catch (Exception e) {
+      throw new DatabaseOperationException(String.format("Encountered problems saving invoice: %s", invoice), e);
+    }
   }
 
   @Override
-  public Iterable<Invoice> findAllByBuyerName(String buyerName) throws DatabaseOperationException {
-    return mongoTemplate.find(Query.query(Criteria.where("buyerName").is(buyerName)), Invoice.class, properties.getCollectionName());
+  public Optional<Invoice> findById(@NonNull String id) throws DatabaseOperationException {
+    try {
+      return Optional.ofNullable(mongoTemplate.findById(id, Invoice.class, properties.getCollectionName()));
+    } catch (Exception e) {
+      throw new DatabaseOperationException(String.format("Encountered problems while searching for invoice:, %s", id), e);
+    }
   }
 
   @Override
-  public Invoice save(@NonNull Invoice invoice) {
-    System.out.println("\n\nMongodb query findById\n");
-    mongoTemplate.save(invoice, properties.getCollectionName());
-    return invoice;
-  }
-
-  @Override
-  public Optional<Invoice> findById(String id) throws DatabaseOperationException {
-    System.out.println("\n\nMongodb query findById\n");
-    return Optional.ofNullable(mongoTemplate.findById(id, Invoice.class, properties.getCollectionName()));
-  }
-
-  @Override
-  public boolean existsById(String id) throws DatabaseOperationException {
-    System.out.println("\n\nMongodb query existsById\n");
-    return mongoTemplate.exists(Query.query(Criteria.where("_id").is(id)), Invoice.class, properties.getCollectionName());
+  public boolean existsById(@NonNull String id) throws DatabaseOperationException {
+    try {
+      return mongoTemplate.exists(Query.query(Criteria.where("_id").is(id)), Invoice.class, properties.getCollectionName());
+    } catch (Exception e) {
+      throw new DatabaseOperationException(String.format("Encountered problems while searching for invoice: %s", id), e);
+    }
   }
 
   @Override
   public Iterable<Invoice> findAll() throws DatabaseOperationException {
-    System.out.println("\n\nMongodb query findAll\n");
-    return mongoTemplate.findAll(Invoice.class, properties.getCollectionName());
+    try {
+      return mongoTemplate.findAll(Invoice.class, properties.getCollectionName());
+    } catch (Exception e) {
+      throw new DatabaseOperationException("Encountered problems while searching for invoices.", e);
+    }
   }
 
   @Override
   public long count() throws DatabaseOperationException {
-    System.out.println("\n\nMongodb query count\n");
-    return mongoTemplate.getCollection(properties.getCollectionName()).count();
+    try {
+      return mongoTemplate.getCollection(properties.getCollectionName()).count();
+    } catch (Exception e) {
+      throw new DatabaseOperationException("Encountered problems while counting invoices.", e);
+    }
   }
 
   @Override
-  public void deleteById(String id) throws DatabaseOperationException {
-    System.out.println("\n\nMongodb query deleteById\n");
-    mongoTemplate.findAndRemove(Query.query(Criteria.where("_id").is(id)), Invoice.class, properties.getCollectionName());
+  public void deleteById(@NonNull String id) throws DatabaseOperationException {
+    try {
+      mongoTemplate.findAndRemove(Query.query(Criteria.where("_id").is(id)), Invoice.class, properties.getCollectionName());
+    } catch (Exception e) {
+      throw new DatabaseOperationException(String.format("Encountered problems while deleting invoice: %s", id), e);
+    }
   }
 
   @Override
   public void deleteAll() throws DatabaseOperationException {
-    System.out.println("\n\nMongodb query deleteAll\n");
-    mongoTemplate.getCollection(properties.getCollectionName()).deleteMany(new Document());
+    try {
+      mongoTemplate.getCollection(properties.getCollectionName()).deleteMany(new Document());
+    } catch (Exception e) {
+      throw new DatabaseOperationException("Encountered problem while deleting invoices.", e);
+    }
+  }
+
+  @Override
+  public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) throws DatabaseOperationException {
+    try {
+      return mongoTemplate.find(Query.query(Criteria.where("sellerName").is(sellerName)), Invoice.class, properties.getCollectionName());
+    } catch (Exception e) {
+      throw new DatabaseOperationException(String.format("Encountered problems while searching for invoices with seller name: %s", sellerName), e);
+    }
+  }
+
+  @Override
+  public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) throws DatabaseOperationException {
+    try {
+      return mongoTemplate.find(Query.query(Criteria.where("buyerName").is(buyerName)), Invoice.class, properties.getCollectionName());
+    } catch (Exception e) {
+      throw new DatabaseOperationException(String.format("Encountered problems while searching for invoices with buyer name: %s", buyerName), e);
+    }
   }
 }
