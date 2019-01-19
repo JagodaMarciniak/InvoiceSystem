@@ -13,12 +13,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import pl.coderstrust.database.invoice.InvoiceDatabase;
-import pl.coderstrust.database.invoice.MongoInvoicesDatabase;
 import pl.coderstrust.helpers.FileHelper;
 
 @Configuration
-@EnableConfigurationProperties( {InFileDatabaseProperties.class, MongoDatabaseProperties.class})
+@EnableConfigurationProperties({InFileDatabaseProperties.class, MongoDatabaseProperties.class})
 @PropertySource(factory = YamlPropertySourceFactory.class, value = {"classpath:in-file-database.yml", "classpath:mongo-repository.yml"})
 public class ApplicationConfiguration {
 

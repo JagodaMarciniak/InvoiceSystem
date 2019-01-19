@@ -9,9 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("mongo-repository")
 public class MongoDatabaseProperties {
 
-    private String repositoryName;
-    private String collectionName;
-    private String host;
-    private int port;
-
+  private String repositoryName;
+  private String collectionName;
+  private String host;
+  private int port;
 }

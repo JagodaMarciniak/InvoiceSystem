@@ -1,6 +1,5 @@
 package pl.coderstrust.database.invoice;
 
-import com.mongodb.MongoException;
 import java.util.Optional;
 import lombok.NonNull;
 import org.bson.Document;
@@ -16,13 +15,13 @@ import pl.coderstrust.model.Invoice;
 
 @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
 @Repository
-public class MongoInvoicesDatabase implements InvoiceDatabase {
+public class MongoInvoiceDatabase implements InvoiceDatabase {
 
   private final MongoDatabaseProperties properties;
   private MongoTemplate mongoTemplate;
 
   @Autowired
-  public MongoInvoicesDatabase(@NonNull MongoTemplate mongoTemplate, @NonNull MongoDatabaseProperties properties) {
+  public MongoInvoiceDatabase(@NonNull MongoTemplate mongoTemplate, @NonNull MongoDatabaseProperties properties) {
     this.mongoTemplate = mongoTemplate;
     this.properties = properties;
   }

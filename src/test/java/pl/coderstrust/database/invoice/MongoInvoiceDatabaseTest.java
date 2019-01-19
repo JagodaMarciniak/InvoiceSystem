@@ -44,8 +44,8 @@ class MongoInvoiceDatabaseTest {
   private DeleteResult deleteResult;
 
   @BeforeEach
-  public void setUp() {
-    mongoInvoiceDatabase = new MongoInvoicesDatabase(mongoTemplate, properties);
+  void setUp() {
+    mongoInvoiceDatabase = new MongoInvoiceDatabase(mongoTemplate, properties);
   }
 
   @Test
@@ -235,7 +235,7 @@ class MongoInvoiceDatabaseTest {
   }
 
   @Test
-  void countMethodShouldThrowExceptionWhenErrorOccursDuringExecution() throws DatabaseOperationException {
+  void countMethodShouldThrowExceptionWhenErrorOccursDuringExecution() {
     //given
     when(mongoTemplate.getCollection(properties.getCollectionName())).thenReturn(mongoCollection);
     doThrow(MongoException.class).when(mongoCollection).count();
