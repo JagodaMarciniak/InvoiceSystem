@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.coderstrust.configuration.ApplicationConfiguration;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
+import pl.coderstrust.service.InvoicePdfService;
 import pl.coderstrust.service.InvoiceService;
 import pl.coderstrust.service.InvoiceServiceOperationException;
 
@@ -42,6 +43,9 @@ class InvoiceControllerTest {
 
   @MockBean
   private InvoiceService invoiceService;
+
+  @MockBean
+  private InvoicePdfService invoicePdfService;
 
   @Test
   void shouldReturnAllInvoices() throws Exception {
