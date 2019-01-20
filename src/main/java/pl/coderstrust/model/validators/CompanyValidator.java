@@ -8,7 +8,7 @@ import pl.coderstrust.model.Company;
 import pl.coderstrust.model.ContactDetails;
 
 
-public class CompanyValidator {
+public class CompanyValidator extends Validator {
 
   public static List<String> validateCompany(Company company) {
     if (company == null) {
@@ -17,13 +17,13 @@ public class CompanyValidator {
 
     List<String> result = new ArrayList();
     String resultOfNameValidation = validateName(company.getName());
-    ValidationResultAdder.addResultOfValidation(result, resultOfNameValidation);
+    addResultOfValidation(result, resultOfNameValidation);
     String resultOfTaxIdentificationNumberValidation = validateTaxIdentificationNumber(company.getTaxIdentificationNumber());
-    ValidationResultAdder.addResultOfValidation(result, resultOfTaxIdentificationNumberValidation);
+    addResultOfValidation(result, resultOfTaxIdentificationNumberValidation);
     List<String> resultOfAccountNumberValidation = validateAccountNumber(company.getAccountNumber());
-    ValidationResultAdder.addResultOfValidation(result, resultOfAccountNumberValidation);
+    addResultOfValidation(result, resultOfAccountNumberValidation);
     List<String> resultOfContactDetailsValidation = validateContactDetails(company.getContactDetails());
-    ValidationResultAdder.addResultOfValidation(result, resultOfContactDetailsValidation);
+    addResultOfValidation(result, resultOfContactDetailsValidation);
     return result;
   }
 
@@ -31,7 +31,7 @@ public class CompanyValidator {
     if (name == null) {
       return "Name cannot be null";
     }
-    if (name ==  "") {
+    if (name.trim().isEmpty()) {
       return "Name cannot be empty";
     }
     return null;
@@ -41,8 +41,8 @@ public class CompanyValidator {
     if (taxId == null) {
       return "Tax identification number cannot be null";
     }
-    if (taxId == "") {
-      return "Tax identification number cannot be null";
+    if (taxId.trim().isEmpty()) {
+      return "Tax identification number cannot be empty";
     }
     return null;
   }

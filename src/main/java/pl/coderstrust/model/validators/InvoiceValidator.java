@@ -24,21 +24,19 @@ public class InvoiceValidator {
       resultOfIdValidation = validateNotExpectedId(invoice.getId());
     }
 
-    ValidationResultAdder.addResultOfValidation(result, resultOfIdValidation);
+    Validator.addResultOfValidation(result, resultOfIdValidation);
     List<String> resultOfBuyerValidation = validateBuyer(invoice.getBuyer());
-    ValidationResultAdder.addResultOfValidation(result, resultOfBuyerValidation);
+    Validator.addResultOfValidation(result, resultOfBuyerValidation);
     List<String> resultOfSellerValidation = validateSeller(invoice.getSeller());
-    ValidationResultAdder.addResultOfValidation(result, resultOfSellerValidation);
+    Validator.addResultOfValidation(result, resultOfSellerValidation);
     List<String> resultOfEntriesValidation = validateEntries(invoice.getEntries());
-    ValidationResultAdder.addResultOfValidation(result, resultOfEntriesValidation);
+    Validator.addResultOfValidation(result, resultOfEntriesValidation);
     String resultOfDatesValidation = validateDates(invoice.getIssueDate(), invoice.getDueDate());
-    ValidationResultAdder.addResultOfValidation(result, resultOfDatesValidation);
+    Validator.addResultOfValidation(result, resultOfDatesValidation);
     String resultOfTotalNetValueValidation = validateTotalNetValue(invoice.getTotalNetValue());
-    ValidationResultAdder.addResultOfValidation(result, resultOfTotalNetValueValidation);
+    Validator.addResultOfValidation(result, resultOfTotalNetValueValidation);
     String resultOfTotalGrossValueValidation = validateTotalGrossValue(invoice.getTotalGrossValue());
-    ValidationResultAdder.addResultOfValidation(result, resultOfTotalGrossValueValidation);
-    String resultOfCommentsValidation = validateComments(invoice.getComments());
-    ValidationResultAdder.addResultOfValidation(result, resultOfCommentsValidation);
+    Validator.addResultOfValidation(result, resultOfTotalGrossValueValidation);
     return result;
   }
 
@@ -89,7 +87,10 @@ public class InvoiceValidator {
 
   private static String validateTotalNetValue(BigDecimal totalNetValue) {
     if (totalNetValue == null) {
-      return "Net Value cannot be null";
+      return "Net value cannot be null";
+    }
+    if (totalNetValue.doubleValue() < 0) {
+      return "Net value cannot be lower than zero";
     }
     return null;
   }
@@ -98,12 +99,8 @@ public class InvoiceValidator {
     if (totalGrossValue == null) {
       return "Gross value cannot be null";
     }
-    return null;
-  }
-
-  private static String validateComments(String comments) {
-    if (comments == null) {
-      return "Comments cannot be null";
+    if (totalGrossValue.doubleValue() < 0) {
+      return "Gross value cannot be lower than zero";
     }
     return null;
   }

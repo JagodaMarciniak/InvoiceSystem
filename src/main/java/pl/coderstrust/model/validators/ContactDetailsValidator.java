@@ -6,7 +6,7 @@ import java.util.List;
 import pl.coderstrust.model.Address;
 import pl.coderstrust.model.ContactDetails;
 
-public class ContactDetailsValidator {
+public class ContactDetailsValidator extends Validator {
   public static List<String> validateContactDetails(ContactDetails contactDetails) {
     if (contactDetails == null) {
       return Collections.singletonList("Contact details cannot be null");
@@ -14,13 +14,13 @@ public class ContactDetailsValidator {
 
     List<String> result = new ArrayList<>();
     String resultOfEmailValidation = validateEmail(contactDetails.getEmail());
-    ValidationResultAdder.addResultOfValidation(result, resultOfEmailValidation);
+    addResultOfValidation(result, resultOfEmailValidation);
     String resultOfPhoneNumberValidation = validatePhoneNumber(contactDetails.getPhoneNumber());
-    ValidationResultAdder.addResultOfValidation(result, resultOfPhoneNumberValidation);
+    addResultOfValidation(result, resultOfPhoneNumberValidation);
     String resultOfWebsiteValidation = validateWebsite(contactDetails.getWebsite());
-    ValidationResultAdder.addResultOfValidation(result, resultOfWebsiteValidation);
+    addResultOfValidation(result, resultOfWebsiteValidation);
     List<String> resultOfAddressValidation = validateAddress(contactDetails.getAddress());
-    ValidationResultAdder.addResultOfValidation(result, resultOfAddressValidation);
+    addResultOfValidation(result, resultOfAddressValidation);
     return result;
   }
 
@@ -28,7 +28,7 @@ public class ContactDetailsValidator {
     if (email == null) {
       return "Email cannot be null";
     }
-    if (email == "") {
+    if (email.trim().isEmpty()) {
       return "Email cannot be empty";
     }
     if (!email.matches("^(.+)@(.+)$")) {
@@ -41,7 +41,7 @@ public class ContactDetailsValidator {
     if (phoneNumber == null) {
       return "Phone number cannot be null";
     }
-    if (phoneNumber == "") {
+    if (phoneNumber.trim().isEmpty()) {
       return "Phone number cannot be empty";
     }
     if (!phoneNumber.matches("[0-9]+")){
@@ -54,7 +54,7 @@ public class ContactDetailsValidator {
     if (website == null) {
       return "Website cannot be null";
     }
-    if (website == "") {
+    if (website.trim().isEmpty()) {
       return "Website cannot be empty";
     }
     if (!website.matches("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")){

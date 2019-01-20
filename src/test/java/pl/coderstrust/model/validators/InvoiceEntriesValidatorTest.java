@@ -2,6 +2,7 @@ package pl.coderstrust.model.validators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -35,7 +36,7 @@ class InvoiceEntriesValidatorTest {
 
   @ParameterizedTest
   @MethodSource(value = "argumentsForQuantitiesInEntriesValidationTest")
-  void validateEntries(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+  void validateQuantities(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
     assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
   }
 
@@ -49,6 +50,66 @@ class InvoiceEntriesValidatorTest {
     return Stream.of(
         Arguments.of(invoiceEntriesWithQuantityNull, Collections.singletonList("Quantity cannot be null")),
         Arguments.of(invoiceEntriesWithQuantity0, Collections.singletonList("Quantity cannot be zero")),
+        Arguments.of(validInvoiceEntries, Collections.emptyList())
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForPricesInEntriesValidationTest")
+  void validatePrices(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
+  }
+
+  private static Stream<Arguments> argumentsForPricesInEntriesValidationTest() {
+    List<InvoiceEntry> invoiceEntriesWithPriceNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithPriceNull.get(0).setPrice(null);
+    List<InvoiceEntry> invoiceEntriesWithPriceNegative = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithPriceNegative.get(0).setPrice(new BigDecimal(-3));
+    List<InvoiceEntry> validInvoiceEntries = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+
+    return Stream.of(
+        Arguments.of(invoiceEntriesWithPriceNull, Collections.singletonList("Price cannot be null")),
+        Arguments.of(invoiceEntriesWithPriceNegative, Collections.singletonList("Price cannot be lower than zero")),
+        Arguments.of(validInvoiceEntries, Collections.emptyList())
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForNetValuesInEntriesValidationTest")
+  void validateNetValues(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
+  }
+
+  private static Stream<Arguments> argumentsForNetValuesInEntriesValidationTest() {
+    List<InvoiceEntry> invoiceEntriesWithPriceNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithPriceNull.get(0).setPrice(null);
+    List<InvoiceEntry> invoiceEntriesWithPriceNegative = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithPriceNegative.get(0).setPrice(new BigDecimal(-3));
+    List<InvoiceEntry> validInvoiceEntries = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+
+    return Stream.of(
+        Arguments.of(invoiceEntriesWithPriceNull, Collections.singletonList("Price cannot be null")),
+        Arguments.of(invoiceEntriesWithPriceNegative, Collections.singletonList("Price cannot be lower than zero")),
+        Arguments.of(validInvoiceEntries, Collections.emptyList())
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForNetValuesInEntriesValidationTest")
+  void validateNetValues(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
+  }
+
+  private static Stream<Arguments> argumentsForNetValuesInEntriesValidationTest() {
+    List<InvoiceEntry> invoiceEntriesWithPriceNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithPriceNull.get(0).setPrice(null);
+    List<InvoiceEntry> invoiceEntriesWithPriceNegative = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithPriceNegative.get(0).setPrice(new BigDecimal(-3));
+    List<InvoiceEntry> validInvoiceEntries = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+
+    return Stream.of(
+        Arguments.of(invoiceEntriesWithPriceNull, Collections.singletonList("Price cannot be null")),
+        Arguments.of(invoiceEntriesWithPriceNegative, Collections.singletonList("Price cannot be lower than zero")),
         Arguments.of(validInvoiceEntries, Collections.emptyList())
     );
   }

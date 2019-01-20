@@ -200,6 +200,38 @@ class InvoiceControllerTest {
   }
 
   @Test
+  void shouldReturnValidationReportWhenAddingInvoiceWithId() throws Exception {
+    //given
+    Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
+    Invoice expectedInvoice = InvoiceGenerator.copyInvoice(invoiceToAdd);
+    when(invoiceService.addInvoice(invoiceToAdd)).thenReturn(expectedInvoice);
+    String invoiceAsJson = mapper.writeValueAsString(invoiceToAdd);
+
+    //when
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(String.format(urlAddressTemplate, ""))
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .accept(MediaType.APPLICATION_JSON_UTF8)
+            .content(invoiceAsJson))
+        .andReturn();
+
+    "Id must be null"
+
+    int httpStatus = result.getResponse().getStatus();
+    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+
+    //then
+    assertEquals(HttpStatus.CREATED.value(), httpStatus);
+    assertNotNull(actualInvoice);
+    assertEquals(expectedInvoice, actualInvoice);
+    String expectedLocationHeader = String.format("/invoices/%s", expectedInvoice.getId());
+    String actualLocationHeader = result.getResponse().getHeader("location");
+    assertEquals(expectedLocationHeader, actualLocationHeader);
+    verify(invoiceService).addInvoice(invoiceToAdd);
+  }
+
+  @Test
   void shouldReturnInternalServiceErrorDuringAddingInvoiceWhenSomethingWentWrongOnServer() throws Exception {
     //given
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();

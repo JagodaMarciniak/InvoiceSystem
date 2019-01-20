@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import pl.coderstrust.model.Address;
 
-public class AddressValidator {
+public class AddressValidator extends Validator {
 
   public static List<String> validateAddress(Address address) {
     if (address == null) {
@@ -14,15 +14,15 @@ public class AddressValidator {
 
     List<String> result = new ArrayList<>();
     String resultOfStreetValidation = validateStreet(address.getStreet());
-    ValidationResultAdder.addResultOfValidation(result, resultOfStreetValidation);
+    addResultOfValidation(result, resultOfStreetValidation);
     String resultOfNumberValidation = validateNumber(address.getNumber());
-    ValidationResultAdder.addResultOfValidation(result, resultOfNumberValidation);
+    addResultOfValidation(result, resultOfNumberValidation);
     String resultOfCityValidation = validateCity(address.getCity());
-    ValidationResultAdder.addResultOfValidation(result, resultOfCityValidation);
+    addResultOfValidation(result, resultOfCityValidation);
     String resultOfPostalCodeValidation = validatePostalCode(address.getPostalCode());
-    ValidationResultAdder.addResultOfValidation(result, resultOfPostalCodeValidation);
+    addResultOfValidation(result, resultOfPostalCodeValidation);
     String resultOfCountryValidation = validateCountry(address.getCountry());
-    ValidationResultAdder.addResultOfValidation(result, resultOfCountryValidation);
+    addResultOfValidation(result, resultOfCountryValidation);
     return result;
   }
 
@@ -30,7 +30,7 @@ public class AddressValidator {
     if (street == null) {
       return "Street cannot be null";
     }
-    if (street == "") {
+    if (street.trim().isEmpty()) {
       return "Street cannot be empty";
     }
     return null;
@@ -40,11 +40,8 @@ public class AddressValidator {
     if (number == null) {
       return "Number cannot be null";
     }
-    if (number == "") {
+    if (number.trim().isEmpty()) {
       return "Number cannot be empty";
-    }
-    if (!number.matches(".*[0-9].*")) {
-      return "Number has to contain only digits";
     }
     return null;
   }
@@ -53,12 +50,12 @@ public class AddressValidator {
     if (postalCode == null) {
       return "Postal code cannot be null";
     }
-    if (postalCode == "") {
+    if (postalCode.trim().isEmpty()) {
       return "Postal code cannot be empty";
     }
     if (!postalCode.matches("^([0-9]{2}[0-9]{3})")){
       return "Postal code has to contain only numbers";
-    };
+    }
     return null;
   }
 
@@ -66,17 +63,17 @@ public class AddressValidator {
     if (city == null) {
       return "City cannot be null";
     }
-    if (city == "") {
+    if (city.trim().isEmpty()) {
       return "City cannot be empty";
     }
     return null;
   }
 
-  private static String validateCountry(String Country) {
-    if (Country == null) {
+  private static String validateCountry(String country) {
+    if (country == null) {
       return "Country cannot be null";
     }
-    if (Country == "") {
+    if (country.trim().isEmpty()) {
       return "Country cannot be empty";
     }
     return null;
