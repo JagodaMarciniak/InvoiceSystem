@@ -12,14 +12,18 @@ import pl.coderstrust.model.InvoiceEntry;
 
 public class InvoiceValidator {
 
-  public static List<String> validateInvoice(Invoice invoice) {
+  public static List<String> validateInvoice(Invoice invoice, boolean isIdExpected) {
     if (invoice == null) {
       return Collections.singletonList("Invoice cannot be null");
     }
 
     List<String> result = new ArrayList<>();
-    String resultOfIdValidation = validateId(invoice.getId());
-    ValidationResultAdder.addResultOfValidation(result, resultOfIdValidation);
+    if (isIdExpected) {
+      String resultOfIdValidation = validateExpectedId(invoice.getId());
+      ValidationResultAdder.addResultOfValidation(result, resultOfIdValidation);
+    } else {
+
+    }
     List<String> resultOfBuyerValidation = validateBuyer(invoice.getBuyer());
     ValidationResultAdder.addResultOfValidation(result, resultOfBuyerValidation);
     List<String> resultOfSellerValidation = validateSeller(invoice.getSeller());
@@ -37,11 +41,18 @@ public class InvoiceValidator {
     return result;
   }
 
-  private static String validateId(@NonNull int id) {
+  private static String validateExpectedId(@NonNull int id) {
     if (id <= 0) {
       return "Id cannot be equal or lower than 0";
     }
-    return "";
+    return null;
+  }
+
+  private static String validateNotExpectedId(@NonNull int id) {
+    if (id <= 0) {
+      return "Id cannot be equal or lower than 0";
+    }
+    return null;
   }
 
   private static String validateDates(LocalDate issueDate, LocalDate dueDate) {
@@ -51,7 +62,7 @@ public class InvoiceValidator {
     if (issueDate.isAfter(dueDate)) {
       return "The due date cannot be before issue date";
     }
-    return "";
+    return null;
   }
 
   private static List<String> validateSeller(Company seller) {
@@ -63,27 +74,27 @@ public class InvoiceValidator {
   }
 
   private static List<String> validateEntries(List<InvoiceEntry> entries) {
-    return InvoiceEntryValidator.validateEntries(entries);
+    return InvoiceEntriesValidator.validateEntries(entries);
   }
 
   private static String validateTotalNetValue(BigDecimal totalNetValue) {
     if (totalNetValue == null) {
       return "Net Value cannot be null";
     }
-    return "";
+    return null;
   }
 
   private static String validateTotalGrossValue(BigDecimal totalGrossValue) {
     if (totalGrossValue == null) {
       return "Gross value cannot be null";
     }
-    return "";
+    return null;
   }
 
   private static String validateComments(String comments) {
     if (comments == null) {
       return "Comments cannot be null";
     }
-    return "";
+    return null;
   }
 }

@@ -44,7 +44,7 @@ public class AddressValidator {
       return "Number cannot be empty";
     }
     if (!number.matches(".*[0-9].*")) {
-      return "Number has to contain at least one digit";
+      return "Number has to contain only digits";
     }
     return null;
   }
@@ -56,7 +56,9 @@ public class AddressValidator {
     if (postalCode == "") {
       return "Postal code cannot be empty";
     }
-    if (!postalCode.matches("^([0-9]{2}[0-9]{3})"));
+    if (!postalCode.matches("^([0-9]{2}[0-9]{3})")){
+      return "Postal code has to contain only numbers";
+    };
     return null;
   }
 

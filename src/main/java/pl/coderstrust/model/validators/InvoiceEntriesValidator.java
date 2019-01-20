@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import pl.coderstrust.model.InvoiceEntry;
 
-public class InvoiceEntryValidator {
+public class InvoiceEntriesValidator {
 
   public static List<String> validateEntries(List<InvoiceEntry> invoiceEntries) {
     if (invoiceEntries == null) {
@@ -20,7 +20,7 @@ public class InvoiceEntryValidator {
     return result;
   }
 
-  public static List<String> validateSingleEntry(InvoiceEntry invoiceEntry){
+  private static List<String> validateSingleEntry(InvoiceEntry invoiceEntry){
     if (invoiceEntry == null) {
       return Collections.singletonList("Invoice entry cannot be null");
     }

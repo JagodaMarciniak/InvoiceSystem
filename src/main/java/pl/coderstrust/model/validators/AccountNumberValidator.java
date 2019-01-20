@@ -51,7 +51,7 @@ public class AccountNumberValidator {
   }
 
   private static String compareNumbers(String ibanNumber, String localNumber) {
-    if (ibanNumber.substring(2) != localNumber){
+    if (!ibanNumber.substring(2).equals(localNumber)){
       return "Iban number and local number do not fit";
     }
     return null;

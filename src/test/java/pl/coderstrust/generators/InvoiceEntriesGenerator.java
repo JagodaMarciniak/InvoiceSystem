@@ -20,4 +20,9 @@ public final class InvoiceEntriesGenerator {
         new BigDecimal(100), VAT_23, new BigDecimal(100), new BigDecimal(123)));
     return entries;
   }
+
+  public static InvoiceEntry getSampleSingleInvoiceEntry() {
+    return new InvoiceEntry("Flashlight BX24", 2L, PIECE,
+        new BigDecimal(50), VAT_23, new BigDecimal(100), new BigDecimal(123));
+  }
 }
