@@ -136,7 +136,7 @@ class HibernateInvoiceDatabaseTest {
     Iterable<Invoice> result = database.findAll();
     Iterator<Invoice> iterator = result.iterator();
 
-
+    //then
     assertEquals(invoice1, iterator.next());
     assertEquals(invoice2, iterator.next());
     assertEquals(invoice3, iterator.next());
@@ -155,7 +155,7 @@ class HibernateInvoiceDatabaseTest {
     Iterable<Invoice> result = database.findAllBySellerName("SampleSeller");
     Iterator<Invoice> expectedInvoice = result.iterator();
 
-    //
+    //then
     assertEquals(invoice1, expectedInvoice.next());
     assertEquals(invoice3, expectedInvoice.next());
     verify(hibernateInvoiceRepository).findAll();
@@ -173,7 +173,7 @@ class HibernateInvoiceDatabaseTest {
     Iterable<Invoice> result = database.findAllByBuyerName("SampleBuyer");
     Iterator<Invoice> expectedInvoice = result.iterator();
 
-    //
+    //then
     assertEquals(invoice1, expectedInvoice.next());
     assertEquals(invoice3, expectedInvoice.next());
     verify(hibernateInvoiceRepository).findAll();

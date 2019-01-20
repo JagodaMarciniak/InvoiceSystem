@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static pl.coderstrust.generators.InvoiceGenerator.copyInvoice;
 
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
@@ -52,12 +53,15 @@ class MongoInvoiceDatabaseTest {
   void shouldSaveInvoiceToDatabase() throws DatabaseOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoiceWithNoId();
+    Invoice invoiceWithId = copyInvoice(invoice);
+    invoiceWithId.setId("2");
+    when(mongoTemplate.save(invoice, properties.getCollectionName())).thenReturn(invoiceWithId);
 
     //when
     Invoice actual = mongoInvoiceDatabase.save(invoice);
 
     //then
-    assertEquals(invoice, actual);
+    assertEquals(invoiceWithId, actual);
     verify(mongoTemplate).save(invoice, properties.getCollectionName());
   }
 

@@ -2,6 +2,7 @@ package pl.coderstrust.database.invoice;
 
 import java.util.Optional;
 import lombok.NonNull;
+import lombok.Synchronized;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,16 +27,17 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
     this.properties = properties;
   }
 
+  @Synchronized
   @Override
   public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
     try {
-      mongoTemplate.save(invoice, properties.getCollectionName());
-      return invoice;
+      return mongoTemplate.save(invoice, properties.getCollectionName());
     } catch (Exception e) {
       throw new DatabaseOperationException(String.format("Encountered problems saving invoice: %s", invoice), e);
     }
   }
 
+  @Synchronized
   @Override
   public Optional<Invoice> findById(@NonNull String id) throws DatabaseOperationException {
     try {
@@ -45,6 +47,7 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public boolean existsById(@NonNull String id) throws DatabaseOperationException {
     try {
@@ -54,6 +57,7 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public Iterable<Invoice> findAll() throws DatabaseOperationException {
     try {
@@ -63,6 +67,7 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public long count() throws DatabaseOperationException {
     try {
@@ -72,6 +77,7 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public void deleteById(@NonNull String id) throws DatabaseOperationException {
     try {
@@ -84,6 +90,7 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public void deleteAll() throws DatabaseOperationException {
     try {
@@ -93,6 +100,7 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) throws DatabaseOperationException {
     try {
@@ -102,6 +110,7 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) throws DatabaseOperationException {
     try {

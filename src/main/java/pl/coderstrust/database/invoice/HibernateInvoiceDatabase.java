@@ -4,15 +4,11 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NonNull;
+import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.EmbeddedDataSourceConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.NonTransientDataAccessException;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory;
 import org.springframework.stereotype.Repository;
 import pl.coderstrust.database.DatabaseOperationException;
 import pl.coderstrust.model.Invoice;
@@ -28,6 +24,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     this.hibernateInvoiceRepository = hibernateInvoiceRepository;
   }
 
+  @Synchronized
   @Override
   public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
     try {
@@ -37,6 +34,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public Optional<Invoice> findById(@NonNull String id) throws DatabaseOperationException {
     try {
@@ -46,6 +44,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public boolean existsById(@NonNull String id) throws DatabaseOperationException {
     try {
@@ -55,6 +54,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public Iterable<Invoice> findAll() throws DatabaseOperationException {
     try {
@@ -64,6 +64,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public long count() throws DatabaseOperationException {
     try {
@@ -73,6 +74,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public void deleteById(@NonNull String id) throws DatabaseOperationException {
     try {
@@ -82,6 +84,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public void deleteAll() throws DatabaseOperationException {
     try {
@@ -91,6 +94,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public Iterable<Invoice> findAllBySellerName(@NonNull String sellerName) throws DatabaseOperationException {
     try {
@@ -103,6 +107,7 @@ public class HibernateInvoiceDatabase implements InvoiceDatabase {
     }
   }
 
+  @Synchronized
   @Override
   public Iterable<Invoice> findAllByBuyerName(@NonNull String buyerName) throws DatabaseOperationException {
     try {
