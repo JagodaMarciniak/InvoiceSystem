@@ -168,14 +168,13 @@ public class InvoiceController {
     try {
       Optional<Invoice> optionalInvoice = invoiceService.getInvoice(invoiceId);
       if (!optionalInvoice.isPresent()) {
-
         return new ResponseEntity<>(new ResponseMessage("Invoice not found."), HttpStatus.NOT_FOUND);
       }
       HttpHeaders responseHeaders = new HttpHeaders();
       responseHeaders.setContentType(MediaType.APPLICATION_PDF);
       return new ResponseEntity<>(invoicePdfService.createPdf(optionalInvoice.get()), responseHeaders, HttpStatus.OK);
     } catch (Exception e) {
-      return new ResponseEntity<>(new ResponseMessage("Internal server error while deleting specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(new ResponseMessage("Internal server error while trying to get PDF of invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

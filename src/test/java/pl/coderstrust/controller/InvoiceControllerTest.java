@@ -2,6 +2,7 @@ package pl.coderstrust.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
@@ -37,6 +38,7 @@ class InvoiceControllerTest {
 
   private ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String urlAddressTemplate = "/invoices/%s";
+  private final String urlAddressTemplatePdf = "/invoices/pdf/%s";
 
   @Autowired
   private MockMvc mockMvc;
@@ -431,5 +433,79 @@ class InvoiceControllerTest {
     assertNotNull(actualInvoiceResponse);
     assertEquals(expectedResponseMessage, actualInvoiceResponse);
     verify(invoiceService).getInvoice(expectedInvoice.getId());
+  }
+
+  @Test
+  void shouldReturnSpecificPdf() throws Exception {
+    //given
+    byte[] expectedArray = new byte[10];
+    Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
+    when(invoiceService.getInvoice(invoiceToPdf.getId())).thenReturn(Optional.of(invoiceToPdf));
+    when(invoicePdfService.createPdf(invoiceToPdf)).thenReturn(expectedArray);
+
+    //when
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(String.format(urlAddressTemplatePdf, invoiceToPdf.getId()))
+            .accept(MediaType.APPLICATION_PDF_VALUE))
+        .andReturn();
+
+    int httpStatus = result.getResponse().getStatus();
+    byte[] actualArray = result.getResponse().getContentAsByteArray();
+
+    //then
+    assertEquals(HttpStatus.OK.value(), httpStatus);
+    assertNotNull(actualArray);
+    assertArrayEquals(expectedArray, actualArray);
+    verify(invoiceService).getInvoice(invoiceToPdf.getId());
+    verify(invoicePdfService).createPdf(invoiceToPdf);
+  }
+
+  @Test
+  void shouldThrowNotFoundExceptionWhenTryingToGetPdfWithInvalidInvoiceId() throws Exception {
+    //given
+    Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
+    when(invoiceService.getInvoice(invoiceToPdf.getId())).thenReturn(Optional.ofNullable(null));
+    ResponseMessage expectedResponseMessage = new ResponseMessage("Invoice not found.");
+
+    //when
+    invoicePdfService.createPdf(invoiceToPdf);
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(String.format(urlAddressTemplatePdf, invoiceToPdf.getId())))
+        .andReturn();
+
+    int httpStatus = result.getResponse().getStatus();
+    ResponseMessage actualInvoiceResponse = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+
+    //then
+    assertEquals(HttpStatus.NOT_FOUND.value(), httpStatus);
+    assertNotNull(actualInvoiceResponse);
+    assertEquals(expectedResponseMessage, actualInvoiceResponse);
+    verify(invoiceService).getInvoice(invoiceToPdf.getId());
+    verify(invoicePdfService).createPdf(invoiceToPdf);
+  }
+
+  @Test
+  void shouldThrowInternalServerErrorWhenTryingToGetPdfAndSomethingGoesWrongOnServer() throws Exception {
+    //given
+    Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
+    when(invoiceService.getInvoice(invoiceToPdf.getId())).thenReturn(Optional.of(invoiceToPdf));
+    when(invoicePdfService.createPdf(invoiceToPdf)).thenThrow(new InvoiceServiceOperationException());
+    ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while trying to get PDF of invoice.");
+
+    //when
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(String.format(urlAddressTemplatePdf, invoiceToPdf.getId())))
+        .andReturn();
+
+    int httpStatus = result.getResponse().getStatus();
+    ResponseMessage actualInvoiceResponse = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+
+    //then
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
+    assertNotNull(actualInvoiceResponse);
+    assertEquals(expectedResponseMessage, actualInvoiceResponse);
+    verify(invoiceService).getInvoice(invoiceToPdf.getId());
+    verify(invoicePdfService).createPdf(invoiceToPdf);
   }
 }
