@@ -75,7 +75,10 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
   @Override
   public void deleteById(@NonNull String id) throws DatabaseOperationException {
     try {
-      mongoTemplate.findAndRemove(Query.query(Criteria.where("_id").is(id)), Invoice.class, properties.getCollectionName());
+      Invoice removedInvoice = mongoTemplate.findAndRemove(Query.query(Criteria.where("_id").is(id)), Invoice.class, properties.getCollectionName());
+      if (removedInvoice == null) {
+        throw new DatabaseOperationException(String.format("There is no invoice with id: %s present in database. Nothing was removed.", id));
+      }
     } catch (Exception e) {
       throw new DatabaseOperationException(String.format("Encountered problems while deleting invoice: %s", id), e);
     }

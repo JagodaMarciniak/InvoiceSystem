@@ -1,4 +1,4 @@
-package pl.coderstrust.integrationtests.repository;
+package pl.coderstrust.integrationtests.database;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -302,7 +302,7 @@ public class InFileInvoiceDatabaseIT {
   }
 
   @Test
-  @DisplayName("Should return empty list when findAllByBuyerName is called and repository file contains invalid data.")
+  @DisplayName("Should return empty list when findAllByBuyerName is called and database file contains invalid data.")
   void findAllByBuyerNameShouldReturnEmptyListWhenDatabaseFileContainsInvalidData() throws DatabaseOperationException, IOException {
     //given
     FileUtils.writeLines(databaseFile, Collections.singletonList("xyz"), null);

@@ -259,6 +259,17 @@ class MongoInvoiceDatabaseTest {
   }
 
   @Test
+  void deleteByIdMethodShouldThrowExceptionWhenInvoiceInDatabaseIsNotPresent() {
+    //given
+    String id = "-1";
+    when(mongoTemplate.findAndRemove(Query.query(Criteria.where("_id").is(id)), Invoice.class, properties.getCollectionName())).thenReturn(null);
+
+    //then
+    assertThrows(DatabaseOperationException.class, () -> mongoInvoiceDatabase.deleteById(id));
+    verify(mongoTemplate).findAndRemove(Query.query(Criteria.where("_id").is(id)), Invoice.class, properties.getCollectionName());
+  }
+
+  @Test
   void deleteAllMethodShouldThrowExceptionWhenErrorOccursDuringExecution() {
     //given
     when(mongoTemplate.getCollection(properties.getCollectionName())).thenReturn(mongoCollection);

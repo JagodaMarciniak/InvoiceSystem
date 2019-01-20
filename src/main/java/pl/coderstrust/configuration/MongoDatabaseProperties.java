@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties("mongo-repository")
+@ConfigurationProperties("mongo-database")
 public class MongoDatabaseProperties {
 
-  private String repositoryName;
+  private String databaseName;
   private String collectionName;
   private String host;
   private int port;

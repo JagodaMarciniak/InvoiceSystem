@@ -1,0 +1,5 @@
+mongo-database:
+  database-name: invoices
+  collection-name: invoices
+  host: localhost
+  port: 27017

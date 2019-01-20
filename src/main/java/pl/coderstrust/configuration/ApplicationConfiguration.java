@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mongodb.MongoClient;
+import com.mongodb.WriteConcern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,7 +18,7 @@ import pl.coderstrust.helpers.FileHelper;
 
 @Configuration
 @EnableConfigurationProperties({InFileDatabaseProperties.class, MongoDatabaseProperties.class})
-@PropertySource(factory = YamlPropertySourceFactory.class, value = {"classpath:in-file-database.yml", "classpath:mongo-repository.yml"})
+@PropertySource(factory = YamlPropertySourceFactory.class, value = {"classpath:in-file-database.yml", "classpath:mongo-database.yml"})
 public class ApplicationConfiguration {
 
   @Autowired
@@ -50,12 +51,14 @@ public class ApplicationConfiguration {
   @Bean
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
   public MongoDbFactory getMongoDbFactory(MongoClient mongoClient) {
-    return new SimpleMongoDbFactory(mongoClient, mongoDatabaseProperties.getRepositoryName());
+    return new SimpleMongoDbFactory(mongoClient, mongoDatabaseProperties.getDatabaseName());
   }
 
   @Bean
   @ConditionalOnProperty(name = "pl.coderstrust.database", havingValue = "mongodb")
   public MongoTemplate getMmongoTemplate(MongoDbFactory mongoDbFactory) {
-    return new MongoTemplate(mongoDbFactory);
+    MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory);
+    mongoTemplate.setWriteConcern(new WriteConcern(1));
+    return mongoTemplate;
   }
 }
