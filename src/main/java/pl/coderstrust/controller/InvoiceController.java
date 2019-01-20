@@ -1,5 +1,6 @@
 package pl.coderstrust.controller;
 
+import com.itextpdf.text.pdf.PdfBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -11,6 +12,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.coderstrust.model.Invoice;
+import pl.coderstrust.service.InvoicePdfService;
 import pl.coderstrust.service.InvoiceService;
 
 @RestController
@@ -33,9 +36,12 @@ public class InvoiceController {
 
   private final InvoiceService invoiceService;
 
+  private final InvoicePdfService invoicePdfService;
+
   @Autowired
-  public InvoiceController(@NonNull InvoiceService invoiceService) {
+  public InvoiceController(@NonNull InvoiceService invoiceService, @NonNull InvoicePdfService invoicePdfService) {
     this.invoiceService = invoiceService;
+    this.invoicePdfService = invoicePdfService;
   }
 
   @GetMapping
@@ -144,6 +150,28 @@ public class InvoiceController {
       }
       invoiceService.deleteInvoice(invoiceId);
       return new ResponseEntity<>(optionalInvoice.get(), HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(new ResponseMessage("Internal server error while deleting specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @GetMapping("/pdf/{invoiceId}")
+  @ApiOperation(
+      value = "Get pdf.",
+      notes = "Get pdf of selected invoice.",
+      response = PdfBody.class)
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "OK", response = Invoice.class),
+      @ApiResponse(code = 404, message = "Invoice not found.", response = ResponseMessage.class),
+      @ApiResponse(code = 500, message = "Internal server error.", response = ResponseMessage.class)})
+  public ResponseEntity<?> getPdf(@PathVariable("invoiceId") String invoiceId) throws Exception {
+    try {
+      if (!invoiceService.invoiceExists(invoiceId)) {
+        return new ResponseEntity<>(new ResponseMessage("Invoice not found."), HttpStatus.NOT_FOUND);
+      }
+      HttpHeaders responseHeaders = new HttpHeaders();
+      responseHeaders.setContentType(MediaType.APPLICATION_PDF);
+      return new ResponseEntity<>(invoicePdfService.createPdf(invoiceId), responseHeaders, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(new ResponseMessage("Internal server error while deleting specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -17,6 +17,9 @@ app.controller('FindAll', function ($scope, $http) {
                         });
                 })
     };
+    $scope.pdf = function (id) {
+            $window.open('http://127.0.0.1:8080/invoices/pdf/' + id, '_blank');
+    };
 });
 
 app.controller('FindById', function ($scope, $http) {
