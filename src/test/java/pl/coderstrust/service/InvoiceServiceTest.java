@@ -39,7 +39,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldReturnTrueIfInvoiceExists() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldReturnTrueIfInvoiceExists() throws DatabaseOperationException, ServiceOperationException {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(database.existsById(expectedInvoice.getId())).thenReturn(true);
@@ -59,7 +59,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldReturnFalseIfInvoiceNotExisting() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldReturnFalseIfInvoiceNotExisting() throws DatabaseOperationException, ServiceOperationException {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(database.existsById(expectedInvoice.getId())).thenReturn(false);
@@ -79,11 +79,11 @@ class InvoiceServiceTest {
     doThrow(DatabaseOperationException.class).when(database).existsById(anyString());
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.invoiceExists("1"));
+    assertThrows(ServiceOperationException.class, () -> invoiceService.invoiceExists("1"));
   }
 
   @Test
-  void shouldReturnAllInvoices() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldReturnAllInvoices() throws DatabaseOperationException, ServiceOperationException {
     //given
     List<Invoice> invoices = InvoiceGenerator.getRandomInvoices();
     when(database.findAll()).thenReturn(invoices);
@@ -97,7 +97,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldReturnEmptyListWhenDatabaseIsEmpty() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldReturnEmptyListWhenDatabaseIsEmpty() throws DatabaseOperationException, ServiceOperationException {
     //given
     when(database.findAll()).thenReturn(new ArrayList<>());
 
@@ -110,7 +110,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldReturnAllInvoicesInGivenDateRange() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldReturnAllInvoicesInGivenDateRange() throws DatabaseOperationException, ServiceOperationException {
     //given
     LocalDate startDate = LocalDate.of(2018, 12, 3);
     LocalDate endDate = LocalDate.of(2018, 12, 5);
@@ -132,7 +132,7 @@ class InvoiceServiceTest {
 
   @Test
   void shouldReturnEmptyListWhenGetAllInvoicesInGivenDateRangeIsInvokedAndDatabaseIsEmpty() throws DatabaseOperationException,
-      InvoiceServiceOperationException {
+      ServiceOperationException {
     //given
     LocalDate startDate = LocalDate.of(2018, 12, 3);
     LocalDate endDate = LocalDate.of(2018, 12, 5);
@@ -148,7 +148,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldAddInvoice() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldAddInvoice() throws DatabaseOperationException, ServiceOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
     when(database.save(invoice)).thenReturn(invoice);
@@ -162,7 +162,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldDeleteInvoice() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldDeleteInvoice() throws DatabaseOperationException, ServiceOperationException {
     //given
     String id = "3448";
     doNothing().when(database).deleteById(id);
@@ -175,7 +175,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldDeleteAllInvoices() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldDeleteAllInvoices() throws DatabaseOperationException, ServiceOperationException {
     //given
     doNothing().when(database).deleteAll();
 
@@ -187,7 +187,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldReturnInvoice() throws InvoiceServiceOperationException, DatabaseOperationException {
+  void shouldReturnInvoice() throws ServiceOperationException, DatabaseOperationException {
     //given
     Optional<Invoice> invoice = Optional.of(InvoiceGenerator.getRandomInvoice());
     String id = invoice.get().getId();
@@ -202,7 +202,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldUpdateInvoice() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldUpdateInvoice() throws DatabaseOperationException, ServiceOperationException {
     //given
     Invoice invoice = InvoiceGenerator.getRandomInvoice();
     String id = invoice.getId();
@@ -223,7 +223,7 @@ class InvoiceServiceTest {
     doThrow(DatabaseOperationException.class).when(database).findAll();
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getAllInvoices());
+    assertThrows(ServiceOperationException.class, () -> invoiceService.getAllInvoices());
     verify(database).findAll();
   }
 
@@ -233,7 +233,7 @@ class InvoiceServiceTest {
   }
 
   @Test
-  void shouldReturnEmptyOptionalIfInvoiceDoesNotExistInDatabase() throws DatabaseOperationException, InvoiceServiceOperationException {
+  void shouldReturnEmptyOptionalIfInvoiceDoesNotExistInDatabase() throws DatabaseOperationException, ServiceOperationException {
     //given
     String id = "-1";
     when(database.findById(id)).thenReturn(Optional.empty());
@@ -253,7 +253,7 @@ class InvoiceServiceTest {
     doThrow(DatabaseOperationException.class).when(database).findById(id);
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getInvoice(id));
+    assertThrows(ServiceOperationException.class, () -> invoiceService.getInvoice(id));
     verify(database).findById(id);
   }
 
@@ -269,7 +269,7 @@ class InvoiceServiceTest {
     doThrow(DatabaseOperationException.class).when(database).save(invoice);
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.addInvoice(invoice));
+    assertThrows(ServiceOperationException.class, () -> invoiceService.addInvoice(invoice));
     verify(database).save(invoice);
   }
 
@@ -287,7 +287,7 @@ class InvoiceServiceTest {
     doThrow(DatabaseOperationException.class).when(database).save(invoice);
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.updateInvoice(invoice));
+    assertThrows(ServiceOperationException.class, () -> invoiceService.updateInvoice(invoice));
     verify(database).existsById(id);
     verify(database).save(invoice);
   }
@@ -300,7 +300,7 @@ class InvoiceServiceTest {
     when(database.existsById(id)).thenReturn(false);
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.updateInvoice(invoice));
+    assertThrows(ServiceOperationException.class, () -> invoiceService.updateInvoice(invoice));
     verify(database).existsById(id);
   }
 
@@ -316,7 +316,7 @@ class InvoiceServiceTest {
     doThrow(DatabaseOperationException.class).when(database).deleteById(id);
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.deleteInvoice(id));
+    assertThrows(ServiceOperationException.class, () -> invoiceService.deleteInvoice(id));
     verify(database).deleteById(id);
   }
 
@@ -326,7 +326,7 @@ class InvoiceServiceTest {
     doThrow(DatabaseOperationException.class).when(database).deleteAll();
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.deleteAllInvoices());
+    assertThrows(ServiceOperationException.class, () -> invoiceService.deleteAllInvoices());
     verify(database).deleteAll();
   }
 
@@ -349,7 +349,7 @@ class InvoiceServiceTest {
     doThrow(DatabaseOperationException.class).when(database).findAll();
 
     //then
-    assertThrows(InvoiceServiceOperationException.class, () -> invoiceService.getAllInvoicesIssuedInGivenDateRange(startDate, endDate));
+    assertThrows(ServiceOperationException.class, () -> invoiceService.getAllInvoicesIssuedInGivenDateRange(startDate, endDate));
     verify(database).findAll();
   }
 

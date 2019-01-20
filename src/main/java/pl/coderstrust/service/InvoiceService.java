@@ -23,73 +23,73 @@ public class InvoiceService {
     this.invoiceDatabase = invoiceDatabase;
   }
 
-  public List<Invoice> getAllInvoices() throws InvoiceServiceOperationException {
+  public List<Invoice> getAllInvoices() throws ServiceOperationException {
     try {
       List<Invoice> result = new ArrayList<>();
       invoiceDatabase.findAll().forEach(result::add);
       return result;
     } catch (DatabaseOperationException e) {
-      throw new InvoiceServiceOperationException("An error occurred during getting all invoices", e);
+      throw new ServiceOperationException("An error occurred during getting all invoices", e);
     }
   }
 
-  public Optional<Invoice> getInvoice(@NonNull String invoiceId) throws InvoiceServiceOperationException {
+  public Optional<Invoice> getInvoice(@NonNull String invoiceId) throws ServiceOperationException {
     try {
       return invoiceDatabase.findById(invoiceId);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceServiceOperationException(String.format("An error occurred during getting single invoice by id. Invoice id: %s",
+      throw new ServiceOperationException(String.format("An error occurred during getting single invoice by id. Invoice id: %s",
           invoiceId), e);
     }
   }
 
-  public boolean invoiceExists(@NonNull String invoiceId) throws InvoiceServiceOperationException {
+  public boolean invoiceExists(@NonNull String invoiceId) throws ServiceOperationException {
     try {
       return invoiceDatabase.existsById(invoiceId);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceServiceOperationException(String.format("An error occurred during checking if invoice exists. Invoice id: %s",
+      throw new ServiceOperationException(String.format("An error occurred during checking if invoice exists. Invoice id: %s",
           invoiceId), e);
     }
   }
 
-  public Invoice addInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
+  public Invoice addInvoice(@NonNull Invoice invoice) throws ServiceOperationException {
     try {
       return invoiceDatabase.save(invoice);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceServiceOperationException(String.format("An error occurred during adding new invoice. Invoice: %s", invoice), e);
+      throw new ServiceOperationException(String.format("An error occurred during adding new invoice. Invoice: %s", invoice), e);
     }
   }
 
-  public void updateInvoice(@NonNull Invoice invoice) throws InvoiceServiceOperationException {
+  public void updateInvoice(@NonNull Invoice invoice) throws ServiceOperationException {
     try {
       String id = invoice.getId();
       if (invoiceDatabase.existsById(id)) {
         invoiceDatabase.save(invoice);
       } else {
-        throw new InvoiceServiceOperationException(String.format("Invoice with id %s does not exist", id));
+        throw new ServiceOperationException(String.format("Invoice with id %s does not exist", id));
       }
     } catch (DatabaseOperationException e) {
-      throw new InvoiceServiceOperationException(String.format("An error occurred during updating invoice. Invoice: %s", invoice), e);
+      throw new ServiceOperationException(String.format("An error occurred during updating invoice. Invoice: %s", invoice), e);
     }
   }
 
-  public void deleteInvoice(@NonNull String invoiceId) throws InvoiceServiceOperationException {
+  public void deleteInvoice(@NonNull String invoiceId) throws ServiceOperationException {
     try {
       invoiceDatabase.deleteById(invoiceId);
     } catch (DatabaseOperationException e) {
-      throw new InvoiceServiceOperationException(String.format("An error occurred during deleting invoice. Invoice: %s", invoiceId), e);
+      throw new ServiceOperationException(String.format("An error occurred during deleting invoice. Invoice: %s", invoiceId), e);
     }
   }
 
-  public void deleteAllInvoices() throws InvoiceServiceOperationException {
+  public void deleteAllInvoices() throws ServiceOperationException {
     try {
       invoiceDatabase.deleteAll();
     } catch (DatabaseOperationException e) {
-      throw new InvoiceServiceOperationException(("An error occurred during deleting all invoices"), e);
+      throw new ServiceOperationException(("An error occurred during deleting all invoices"), e);
     }
   }
 
   public List<Invoice> getAllInvoicesIssuedInGivenDateRange(@NonNull LocalDate startDate, @NonNull LocalDate endDate) throws
-      InvoiceServiceOperationException {
+      ServiceOperationException {
     if (startDate.until(endDate, ChronoUnit.DAYS) < 0) {
       throw new IllegalArgumentException("The end date must be newer or equal to start date");
     }

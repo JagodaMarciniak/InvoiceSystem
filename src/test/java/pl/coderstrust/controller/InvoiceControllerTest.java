@@ -30,7 +30,7 @@ import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.service.InvoicePdfService;
 import pl.coderstrust.service.InvoiceService;
-import pl.coderstrust.service.InvoiceServiceOperationException;
+import pl.coderstrust.service.ServiceOperationException;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(InvoiceController.class)
@@ -76,7 +76,7 @@ class InvoiceControllerTest {
   @Test
   void shouldReturnInternalServerErrorDuringGettingAllInvoicesWhenSomethingWentWrongOnServer() throws Exception {
     //given
-    when(invoiceService.getAllInvoices()).thenThrow(new InvoiceServiceOperationException());
+    when(invoiceService.getAllInvoices()).thenThrow(new ServiceOperationException());
     ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while getting invoices.");
 
     //when
@@ -147,7 +147,7 @@ class InvoiceControllerTest {
   void shouldReturnInternalServiceErrorDuringGettingSpecificInvoiceWhenSomethingWentWrongOnServer() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
-    when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new InvoiceServiceOperationException());
+    when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
     ResponseMessage expectedResponseMessage = new ResponseMessage(String.format("Internal server error while getting invoice by id: %s",
         expectedInvoice.getId()));
 
@@ -204,7 +204,7 @@ class InvoiceControllerTest {
     //given
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
     invoiceToAdd.setId(null);
-    when(invoiceService.addInvoice(invoiceToAdd)).thenThrow(new InvoiceServiceOperationException());
+    when(invoiceService.addInvoice(invoiceToAdd)).thenThrow(new ServiceOperationException());
     ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while saving specified invoice.");
 
     String invoiceAsJson = mapper.writeValueAsString(invoiceToAdd);
@@ -342,7 +342,7 @@ class InvoiceControllerTest {
   void shouldThrowInternalServerErrorDuringUpdatingWhenSomethingWentWrongWithServer() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
-    when(invoiceService.invoiceExists(expectedInvoice.getId())).thenThrow(new InvoiceServiceOperationException());
+    when(invoiceService.invoiceExists(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
     ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while updating specified invoice.");
 
     String invoiceAsJson = mapper.writeValueAsString(expectedInvoice);
@@ -417,7 +417,7 @@ class InvoiceControllerTest {
   void shouldThrowInternalServerErrorDuringDeletingWhenSomethingWentWrongOnServer() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
-    when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new InvoiceServiceOperationException());
+    when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
     ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while deleting specified invoice.");
 
     //when
@@ -490,7 +490,7 @@ class InvoiceControllerTest {
     //given
     Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(invoiceToPdf.getId())).thenReturn(Optional.of(invoiceToPdf));
-    when(invoicePdfService.createPdf(invoiceToPdf)).thenThrow(new InvoiceServiceOperationException());
+    when(invoicePdfService.createPdf(invoiceToPdf)).thenThrow(new ServiceOperationException());
     ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while trying to get PDF of invoice.");
 
     //when

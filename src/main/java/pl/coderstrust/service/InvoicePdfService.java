@@ -20,35 +20,40 @@ import pl.coderstrust.model.InvoiceEntry;
 @Service
 public class InvoicePdfService {
 
-  public byte[] createPdf(@NonNull Invoice invoice) throws Exception {
+  public byte[] createPdf(@NonNull Invoice invoice) throws ServiceOperationException {
 
-    ByteArrayOutputStream array = new ByteArrayOutputStream();
+    try {
+      ByteArrayOutputStream array = new ByteArrayOutputStream();
 
-    Document document = new Document();
-    PdfWriter.getInstance(document, array);
+      Document document = new Document();
+      PdfWriter.getInstance(document, array);
 
-    document.open();
+      document.open();
 
-    document.add(getHeader("Invoice details", false));
-    document.add(getInvoiceTable(invoice));
-    document.add(getHeader("Seller details", true));
-    document.add(getCompanyTable(invoice.getSeller()));
-    document.add(getHeader("Contact details", false));
-    document.add(getContactDetailsTable(invoice.getSeller().getContactDetails()));
-    document.add(getHeader("Address details", false));
-    document.add(getAddressDetailsTable(invoice.getSeller().getContactDetails().getAddress()));
-    document.add(getHeader("Buyer details", true));
-    document.add(getCompanyTable(invoice.getBuyer()));
-    document.add(getHeader("Contact details", false));
-    document.add(getContactDetailsTable(invoice.getBuyer().getContactDetails()));
-    document.add(getHeader("Address details", false));
-    document.add(getAddressDetailsTable(invoice.getBuyer().getContactDetails().getAddress()));
-    document.add(getHeader("Invoice entries", true));
-    document.add(getEntriesTable(invoice.getEntries()));
-    document.addTitle(String.format("Invoice_%s", invoice.getId()));
+      document.add(getHeader("Invoice details", false));
+      document.add(getInvoiceTable(invoice));
+      document.add(getHeader("Seller details", true));
+      document.add(getCompanyTable(invoice.getSeller()));
+      document.add(getHeader("Contact details", false));
+      document.add(getContactDetailsTable(invoice.getSeller().getContactDetails()));
+      document.add(getHeader("Address details", false));
+      document.add(getAddressDetailsTable(invoice.getSeller().getContactDetails().getAddress()));
+      document.add(getHeader("Buyer details", true));
+      document.add(getCompanyTable(invoice.getBuyer()));
+      document.add(getHeader("Contact details", false));
+      document.add(getContactDetailsTable(invoice.getBuyer().getContactDetails()));
+      document.add(getHeader("Address details", false));
+      document.add(getAddressDetailsTable(invoice.getBuyer().getContactDetails().getAddress()));
+      document.add(getHeader("Invoice entries", true));
+      document.add(getEntriesTable(invoice.getEntries()));
+      document.addTitle(String.format("Invoice_%s", invoice.getId()));
 
-    document.close();
-    return array.toByteArray();
+      document.close();
+      return array.toByteArray();
+    } catch (Exception e) {
+      throw new ServiceOperationException(String.format("An error occurred during creating pdf for invoice. Invoice id: %s",
+          invoice.getId()), e);
+    }
   }
 
   private PdfPTable getHeader(String headerName, boolean spacing) {
