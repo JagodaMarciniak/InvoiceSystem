@@ -1,6 +1,6 @@
 var app = angular.module('Invoices', []);
 
-app.controller('FindAll', function ($scope, $http) {
+app.controller('FindAll', function ($scope, $http, $window) {
     $http.get('http://127.0.0.1:8080/invoices').
         then(function (response) {
             $scope.InvoiceDatabase = response.data;
