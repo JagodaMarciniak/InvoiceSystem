@@ -29,12 +29,11 @@ public class InMemoryInvoiceDatabase implements InvoiceDatabase {
 
   @Override
   public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
-    if (invoice.getId() != null && existsById(invoice.getId())) {
-      updateInvoice(invoice);
-    } else {
-      addInvoice(invoice);
+    Invoice invoiceToAddOrUpdate = new Invoice(invoice);
+    if (invoiceToAddOrUpdate.getId() != null && existsById(invoiceToAddOrUpdate.getId())) {
+      return updateInvoice(invoiceToAddOrUpdate);
     }
-    return invoice;
+    return addInvoice(invoiceToAddOrUpdate);
   }
 
   @Override

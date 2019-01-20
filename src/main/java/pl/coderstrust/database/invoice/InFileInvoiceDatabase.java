@@ -50,17 +50,18 @@ public class InFileInvoiceDatabase implements InvoiceDatabase {
   @Override
   @Synchronized
   public Invoice save(@NonNull Invoice invoice) throws DatabaseOperationException {
-    if (invoice.getId() != null && existsById(invoice.getId())) {
-      deleteById(invoice.getId());
+    Invoice invoiceToAddOrUpdate = new Invoice(invoice);
+    if (invoiceToAddOrUpdate.getId() != null && existsById(invoiceToAddOrUpdate.getId())) {
+      deleteById(invoiceToAddOrUpdate.getId());
     } else {
-      invoice.setId(String.valueOf(getNextInvoiceId()));
+      invoiceToAddOrUpdate.setId(String.valueOf(getNextInvoiceId()));
     }
     try {
-      fileHelper.writeLine(mapper.writeValueAsString(invoice));
+      fileHelper.writeLine(mapper.writeValueAsString(invoiceToAddOrUpdate));
     } catch (IOException e) {
-      throw new DatabaseOperationException(String.format("Encountered problems saving invoice: %s", invoice), e);
+      throw new DatabaseOperationException(String.format("Encountered problems saving invoice: %s", invoiceToAddOrUpdate), e);
     }
-    return invoice;
+    return invoiceToAddOrUpdate;
   }
 
   @Synchronized
