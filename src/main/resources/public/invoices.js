@@ -1,7 +1,7 @@
 var app = angular.module('Invoices', []);
 
 app.controller('FindAll', function ($scope, $http, $window) {
-    $http.get('http://127.0.0.1:8080/invoices').
+    $http.get(getBaseApiAddress()).
         then(function (response) {
             $scope.InvoiceDatabase = response.data;
             $scope.empty = $scope.InvoiceDatabase.length;
@@ -10,7 +10,7 @@ app.controller('FindAll', function ($scope, $http, $window) {
         $http.delete(getBaseApiAddress() + id)
             .then(
                 function () {
-                    $http.get('http://127.0.0.1:8080/invoices').
+                    $http.get(getBaseApiAddress()).
                         then(function (response) {
                             $scope.InvoiceDatabase = response.data;
                             $scope.empty = $scope.InvoiceDatabase.length;
@@ -18,7 +18,7 @@ app.controller('FindAll', function ($scope, $http, $window) {
                 })
     };
     $scope.pdf = function (id) {
-            $window.open('http://127.0.0.1:8080/invoices/pdf/' + id, '_blank');
+            $window.open(getBaseApiAddress() + 'pdf/' + id, '_blank');
     };
 });
 

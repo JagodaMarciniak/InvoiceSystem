@@ -166,12 +166,14 @@ public class InvoiceController {
       @ApiResponse(code = 500, message = "Internal server error.", response = ResponseMessage.class)})
   public ResponseEntity<?> getPdf(@PathVariable("invoiceId") String invoiceId) throws Exception {
     try {
-      if (!invoiceService.invoiceExists(invoiceId)) {
+      Optional<Invoice> optionalInvoice = invoiceService.getInvoice(invoiceId);
+      if (!optionalInvoice.isPresent()) {
+
         return new ResponseEntity<>(new ResponseMessage("Invoice not found."), HttpStatus.NOT_FOUND);
       }
       HttpHeaders responseHeaders = new HttpHeaders();
       responseHeaders.setContentType(MediaType.APPLICATION_PDF);
-      return new ResponseEntity<>(invoicePdfService.createPdf(invoiceId), responseHeaders, HttpStatus.OK);
+      return new ResponseEntity<>(invoicePdfService.createPdf(optionalInvoice.get()), responseHeaders, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(new ResponseMessage("Internal server error while deleting specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
