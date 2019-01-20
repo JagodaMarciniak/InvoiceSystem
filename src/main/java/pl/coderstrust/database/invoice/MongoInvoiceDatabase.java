@@ -71,7 +71,7 @@ public class MongoInvoiceDatabase implements InvoiceDatabase {
   @Override
   public long count() throws DatabaseOperationException {
     try {
-      return mongoTemplate.getCollection(properties.getCollectionName()).count();
+      return mongoTemplate.getCollection(properties.getCollectionName()).countDocuments();
     } catch (Exception e) {
       throw new DatabaseOperationException("Encountered problems while counting invoices.", e);
     }

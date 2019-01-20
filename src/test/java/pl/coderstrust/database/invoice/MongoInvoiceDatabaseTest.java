@@ -111,7 +111,7 @@ class MongoInvoiceDatabaseTest {
   void shouldCountInvoicesInDatabase() throws DatabaseOperationException {
     //given
     when(mongoTemplate.getCollection(properties.getCollectionName())).thenReturn(mongoCollection);
-    when(mongoCollection.count()).thenReturn(5L);
+    when(mongoCollection.countDocuments()).thenReturn(5L);
 
     //when
     long actualNumberOfInvoices = mongoInvoiceDatabase.count();
@@ -119,7 +119,7 @@ class MongoInvoiceDatabaseTest {
     //then
     assertEquals(5L, actualNumberOfInvoices);
     verify(mongoTemplate).getCollection(properties.getCollectionName());
-    verify(mongoCollection).count();
+    verify(mongoCollection).countDocuments();
   }
 
   @Test
@@ -242,12 +242,12 @@ class MongoInvoiceDatabaseTest {
   void countMethodShouldThrowExceptionWhenErrorOccursDuringExecution() {
     //given
     when(mongoTemplate.getCollection(properties.getCollectionName())).thenReturn(mongoCollection);
-    doThrow(MongoException.class).when(mongoCollection).count();
+    doThrow(MongoException.class).when(mongoCollection).countDocuments();
 
     //then
     assertThrows(DatabaseOperationException.class, () -> mongoInvoiceDatabase.count());
     verify(mongoTemplate).getCollection(properties.getCollectionName());
-    verify(mongoCollection).count();
+    verify(mongoCollection).countDocuments();
   }
 
   @Test
