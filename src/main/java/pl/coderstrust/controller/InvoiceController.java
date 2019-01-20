@@ -114,7 +114,7 @@ public class InvoiceController {
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "OK", response = Invoice.class),
       @ApiResponse(code = 400, message = "Passed data is invalid.", response = ResponseMessage.class),
-      @ApiResponse(code = 404, message = "Invoice not found.", response = ResponseMessage.class),
+      @ApiResponse(code = 404, message = "Invoice not found for passed id.", response = ResponseMessage.class),
       @ApiResponse(code = 500, message = "Internal server error.", response = ResponseMessage.class)})
   public ResponseEntity<?> update(
       @ApiParam(value = "Id of invoice to be updated.", required = true) @PathVariable String invoiceId,
@@ -140,7 +140,7 @@ public class InvoiceController {
       response = Invoice.class)
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "OK", response = Invoice.class),
-      @ApiResponse(code = 404, message = "Invoice not found.", response = ResponseMessage.class),
+      @ApiResponse(code = 404, message = "Invoice not found for passed id.", response = ResponseMessage.class),
       @ApiResponse(code = 500, message = "Internal server error.", response = ResponseMessage.class)})
   public ResponseEntity<?> delete(@ApiParam(value = "Id of invoice to be deleted.", required = true) @PathVariable("invoiceId") String invoiceId) {
     try {
@@ -161,8 +161,8 @@ public class InvoiceController {
       notes = "Get pdf of selected invoice.",
       response = PdfBody.class)
   @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "OK", response = Invoice.class),
-      @ApiResponse(code = 404, message = "Invoice not found.", response = ResponseMessage.class),
+      @ApiResponse(code = 200, message = "OK", response = byte[].class),
+      @ApiResponse(code = 404, message = "Invoice not found for passed id.", response = ResponseMessage.class),
       @ApiResponse(code = 500, message = "Internal server error.", response = ResponseMessage.class)})
   public ResponseEntity<?> getPdf(@PathVariable("invoiceId") String invoiceId) throws Exception {
     try {

@@ -52,13 +52,13 @@ public class InvoicePdfService {
   }
 
   private PdfPTable getHeader(String headerName, boolean spacing) {
-    String[] header = new String[] {headerName};
     PdfPTable tableHeader = new PdfPTable(1);
     if (spacing) {
       tableHeader.setSpacingBefore(10f);
     }
     tableHeader.setWidthPercentage(110f);
     tableHeader.deleteBodyRows();
+    String[] header = new String[] {headerName};
     addTableHeader(tableHeader, header);
     return tableHeader;
   }

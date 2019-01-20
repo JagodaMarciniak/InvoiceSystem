@@ -193,7 +193,7 @@ class InvoiceControllerTest {
     assertEquals(HttpStatus.CREATED.value(), httpStatus);
     assertNotNull(actualInvoice);
     assertEquals(expectedInvoice, actualInvoice);
-    String expectedLocationHeader = String.format("/invoices/%s",expectedInvoice.getId());
+    String expectedLocationHeader = String.format("/invoices/%s", expectedInvoice.getId());
     String actualLocationHeader = result.getResponse().getHeader("location");
     assertEquals(expectedLocationHeader, actualLocationHeader);
     verify(invoiceService).addInvoice(invoiceToAdd);
@@ -466,7 +466,7 @@ class InvoiceControllerTest {
     //given
     Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(invoiceToPdf.getId())).thenReturn(Optional.ofNullable(null));
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Invoice not found.");
+    final ResponseMessage expectedResponseMessage = new ResponseMessage("Invoice not found.");
 
     //when
     invoicePdfService.createPdf(invoiceToPdf);
