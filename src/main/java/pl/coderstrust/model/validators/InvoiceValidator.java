@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lombok.NonNull;
 import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.model.InvoiceEntry;
@@ -18,12 +17,14 @@ public class InvoiceValidator {
     }
 
     List<String> result = new ArrayList<>();
+    String resultOfIdValidation;
     if (isIdExpected) {
-      String resultOfIdValidation = validateExpectedId(invoice.getId());
-      ValidationResultAdder.addResultOfValidation(result, resultOfIdValidation);
+      resultOfIdValidation = validateExpectedId(invoice.getId());
     } else {
-
+      resultOfIdValidation = validateNotExpectedId(invoice.getId());
     }
+
+    ValidationResultAdder.addResultOfValidation(result, resultOfIdValidation);
     List<String> resultOfBuyerValidation = validateBuyer(invoice.getBuyer());
     ValidationResultAdder.addResultOfValidation(result, resultOfBuyerValidation);
     List<String> resultOfSellerValidation = validateSeller(invoice.getSeller());
@@ -41,23 +42,32 @@ public class InvoiceValidator {
     return result;
   }
 
-  private static String validateExpectedId(@NonNull int id) {
-    if (id <= 0) {
-      return "Id cannot be equal or lower than 0";
+  private static String validateExpectedId(String id) {
+    if (id == null) {
+      return "Id cannot be null";
+    }
+    if (id.isEmpty()) {
+      return "Id cannot be empty";
     }
     return null;
   }
 
-  private static String validateNotExpectedId(@NonNull int id) {
-    if (id <= 0) {
-      return "Id cannot be equal or lower than 0";
+  private static String validateNotExpectedId(String id) {
+    if (id != null) {
+      return "Id must be null";
+    }
+    if (!id.isEmpty()) {
+      return "Id must be empty or null";
     }
     return null;
   }
 
   private static String validateDates(LocalDate issueDate, LocalDate dueDate) {
-    if (issueDate == null || dueDate == null) {
-      return "The Date cannot be null";
+    if (issueDate == null) {
+      return "Issue date cannot be null";
+    }
+    if (dueDate == null) {
+      return "Due date cannot be null";
     }
     if (issueDate.isAfter(dueDate)) {
       return "The due date cannot be before issue date";
