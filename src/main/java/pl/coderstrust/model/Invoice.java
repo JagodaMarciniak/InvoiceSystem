@@ -26,7 +26,7 @@ public class Invoice {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
-  @ApiModelProperty(value = "The id of invoice.")
+  @ApiModelProperty(value = "The id of invoice.", example = "'1'")
   String id;
 
   @ApiModelProperty(value = "Type of the invoice.", example = "STANDARD")

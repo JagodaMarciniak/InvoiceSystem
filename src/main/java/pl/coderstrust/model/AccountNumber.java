@@ -27,7 +27,7 @@ public class AccountNumber {
 
   @ApiModelProperty(
       value = "26 digit account number.",
-      example = "83620519463926400000847295")
+      example = "'83620519463926400000847295'")
   private String localNumber;
 
   public AccountNumber(String ibanNumber, String localNumber) {
