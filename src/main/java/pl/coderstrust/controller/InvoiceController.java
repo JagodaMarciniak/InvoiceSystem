@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ import pl.coderstrust.model.validators.InvoiceValidator;
 import pl.coderstrust.service.InvoicePdfService;
 import pl.coderstrust.service.InvoiceService;
 
+@Slf4j
 @RestController
 @Api(value = "Invoices", description = "Available operations for invoice application", tags = {"Invoices"})
 @RequestMapping("/invoices")
@@ -96,6 +98,8 @@ public class InvoiceController {
       @ApiResponse(code = 500, message = "Internal server error.", response = ErrorMessage.class)})
   public ResponseEntity<?> add(@ApiParam(value = "Invoice need to be added to database.", required = true) @RequestBody Invoice invoice) {
     try {
+      log.info("Adding new invoice");
+      log.debug("Adding new invoice: %s", invoice);
       List<String> resultOfValidation = InvoiceValidator.validateInvoice(invoice, false);
       if (resultOfValidation.size() > 0) {
         return new ResponseEntity<>(new ErrorMessage("Passed invoice is invalid.", resultOfValidation), HttpStatus.BAD_REQUEST);
@@ -105,7 +109,9 @@ public class InvoiceController {
       responseHeaders.setLocation(URI.create(String.format("/invoices/%s", addedInvoice.getId())));
       return new ResponseEntity<>(addedInvoice, responseHeaders, HttpStatus.CREATED);
     } catch (Exception e) {
-      return new ResponseEntity<>(new ErrorMessage("Internal server error while saving specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
+      String message = "Internal server error while saving specified invoice.";
+      log.error("%s Invoice: %s", message, invoice);
+      return new ResponseEntity<>(new ErrorMessage(message), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
