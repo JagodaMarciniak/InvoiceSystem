@@ -3,18 +3,14 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Welcome!</title>
-
 </head>
-<body>
+<body style="background-image:url('https://images.pexels.com/photos/850796/pexels-photo-850796.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'); position: absolute; background-size: cover;">
 <div th:if="${param.error}">
-    Invalid username and password.
-</div>
-<div th:if="${param.logout}">
-    You have been logged out.
+    <span style="color:rgb(0, 0, 0)">Invalid username and password.</span>
 </div>
 <form th:action="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
+    <div><label><input type="text" name="username" placeholder="username"/> </label></div>
+    <div><label><input type="password" name="password" placeholder="password"/> </label></div>
     <div><input type="submit" value="Sign In"/></div>
 </form>
 </body>
