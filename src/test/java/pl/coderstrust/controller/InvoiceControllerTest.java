@@ -11,22 +11,24 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import pl.coderstrust.configuration.ApplicationConfiguration;
 import pl.coderstrust.generators.InvoiceGenerator;
 import pl.coderstrust.model.Invoice;
@@ -35,12 +37,17 @@ import pl.coderstrust.service.InvoiceService;
 import pl.coderstrust.service.ServiceOperationException;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(InvoiceController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+@TestInstance(Lifecycle.PER_CLASS)
 class InvoiceControllerTest {
 
   private ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String urlAddressTemplate = "/invoices/%s";
   private final String urlAddressTemplatePdf = "/invoices/pdf/%s";
+
+  @Autowired
+  private WebApplicationContext context;
 
   @Autowired
   private MockMvc mockMvc;
@@ -51,7 +58,16 @@ class InvoiceControllerTest {
   @MockBean
   private InvoicePdfService invoicePdfService;
 
+  @Before
+  public void setup() {
+    mockMvc = MockMvcBuilders
+        .webAppContextSetup(context)
+        .apply(springSecurity())
+        .build();
+  }
+
   @Test
+  @WithMockUser()
   void shouldReturnAllInvoices() throws Exception {
     //given
     List<Invoice> expectedInvoiceList = Arrays.asList(InvoiceGenerator.getRandomInvoice(), InvoiceGenerator.getRandomInvoice());
@@ -76,6 +92,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnInternalServerErrorDuringGettingAllInvoicesWhenSomethingWentWrongOnServer() throws Exception {
     //given
     when(invoiceService.getAllInvoices()).thenThrow(new ServiceOperationException());
@@ -99,6 +116,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnSpecificInvoice() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -122,6 +140,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnNotFoundStatusWhenInvoiceNotExisting() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -146,6 +165,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnInternalServiceErrorDuringGettingSpecificInvoiceWhenSomethingWentWrongOnServer() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -171,6 +191,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldAddInvoice() throws Exception {
     //given
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
@@ -202,6 +223,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnInternalServiceErrorDuringAddingInvoiceWhenSomethingWentWrongOnServer() throws Exception {
     //given
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
@@ -231,6 +253,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnBadRequestDuringAddingInvoiceWhenInvoiceContainsId() throws Exception {
     //given
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
@@ -294,6 +317,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldUpdateInvoice() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -321,6 +345,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnBadRequestDuringUpdatingInvoiceWithWrongId() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -349,6 +374,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnNotFoundDuringUpdatingNonExistingInvoice() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -412,6 +438,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldThrowInternalServerErrorDuringUpdatingWhenSomethingWentWrongWithServer() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -440,6 +467,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldDeleteInvoice() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -464,6 +492,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnNotFoundDuringDeletingNonExistingInvoice() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -487,7 +516,7 @@ class InvoiceControllerTest {
   }
 
   @Test
-  void shouldThrowInternalServerErrorDuringDeletingWhenSomethingWentWrongOnServer() throws Exception {
+  @WithMockUser()  void shouldThrowInternalServerErrorDuringDeletingWhenSomethingWentWrongOnServer() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
