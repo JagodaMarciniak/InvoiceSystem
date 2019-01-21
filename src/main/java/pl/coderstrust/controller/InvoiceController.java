@@ -59,8 +59,12 @@ public class InvoiceController {
       @ApiResponse(code = 500, message = "Internal server error.", response = ErrorMessage.class)})
   public ResponseEntity<?> getAll() {
     try {
+      log.info("Getting all invoices");
+      log.debug(String.format("Getting all invoices"));
+
       return new ResponseEntity<>(invoiceService.getAllInvoices(), HttpStatus.OK);
     } catch (Exception e) {
+      log.error(String.format("Internal server error while getting invoices."));
       return new ResponseEntity<>(new ErrorMessage("Internal server error while getting invoices."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -76,12 +80,18 @@ public class InvoiceController {
       @ApiResponse(code = 500, message = "Internal server error.", response = ErrorMessage.class)})
   public ResponseEntity<?> getById(@ApiParam(value = "ID of Invoice that need to be found.", required = true) @PathVariable("invoiceId") String invoiceId) {
     try {
+      log.info("Getting invoice");
       Optional<Invoice> optionalInvoice = invoiceService.getInvoice(invoiceId);
+
       if (optionalInvoice.isPresent()) {
+        log.debug(String.format("Getting invoice with id: %s", invoiceId));
         return new ResponseEntity<>(optionalInvoice.get(), HttpStatus.OK);
       }
+
+      log.debug(String.format("Invoice not found for passed id: %s", invoiceId));
       return new ResponseEntity<>(new ErrorMessage("Invoice not found for passed id."), HttpStatus.NOT_FOUND);
     } catch (Exception e) {
+      log.error(String.format("Internal server error while getting invoice by id: %s", invoiceId));
       return new ResponseEntity<>(new ErrorMessage(String.format("Internal server error while getting invoice by id: %s", invoiceId)),
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -99,19 +109,23 @@ public class InvoiceController {
   public ResponseEntity<?> add(@ApiParam(value = "Invoice need to be added to database.", required = true) @RequestBody Invoice invoice) {
     try {
       log.info("Adding new invoice");
-      log.debug("Adding new invoice: %s", invoice);
+      log.debug(String.format("Adding new invoice: %s", invoice));
       List<String> resultOfValidation = InvoiceValidator.validateInvoice(invoice, false);
+
       if (resultOfValidation.size() > 0) {
+        log.debug(String.format("Invoice validation failed: %s", resultOfValidation));
         return new ResponseEntity<>(new ErrorMessage("Passed invoice is invalid.", resultOfValidation), HttpStatus.BAD_REQUEST);
       }
+
       Invoice addedInvoice = invoiceService.addInvoice(invoice);
       HttpHeaders responseHeaders = new HttpHeaders();
       responseHeaders.setLocation(URI.create(String.format("/invoices/%s", addedInvoice.getId())));
+
+      log.debug(String.format("Invoice successfully added: %s", invoice));
       return new ResponseEntity<>(addedInvoice, responseHeaders, HttpStatus.CREATED);
     } catch (Exception e) {
-      String message = "Internal server error while saving specified invoice.";
-      log.error("%s Invoice: %s", message, invoice);
-      return new ResponseEntity<>(new ErrorMessage(message), HttpStatus.INTERNAL_SERVER_ERROR);
+      log.error(String.format("Internal server error while saving specified invoice. Invoice: %s", invoice));
+      return new ResponseEntity<>(new ErrorMessage("Internal server error while saving specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -129,19 +143,30 @@ public class InvoiceController {
       @ApiParam(value = "Id of invoice to be updated.", required = true) @PathVariable String invoiceId,
       @ApiParam(value = "Invoice to be updated.", required = true) @RequestBody Invoice invoice) {
     try {
+      log.info("Updating new invoice");
+      log.debug(String.format("Updating new invoice: %s", invoice));
       List<String> resultOfValidation = InvoiceValidator.validateInvoice(invoice, true);
+
       if (resultOfValidation.size() > 0) {
+        log.debug(String.format("Invoice validation failed: %s", resultOfValidation));
         return new ResponseEntity<>(new ErrorMessage("Passed invoice is invalid.", resultOfValidation), HttpStatus.BAD_REQUEST);
       }
+
       if (!invoiceId.equals(invoice.getId())) {
+        log.debug("Passed data is invalid. Please verify invoice id.");
         return new ResponseEntity<>(new ErrorMessage("Passed data is invalid. Please verify invoice id."), HttpStatus.BAD_REQUEST);
       }
+
       if (!invoiceService.invoiceExists(invoiceId)) {
+        log.debug("Invoice not found.");
         return new ResponseEntity<>(new ErrorMessage("Invoice not found."), HttpStatus.NOT_FOUND);
       }
+
+      log.debug(String.format("Invoice successfully updated: %s", invoice));
       invoiceService.updateInvoice(invoice);
       return new ResponseEntity<>(invoice, HttpStatus.OK);
     } catch (Exception e) {
+      log.error(String.format("Internal server error while updating specified invoice. Invoice: %s", invoice));
       return new ResponseEntity<>(new ErrorMessage("Internal server error while updating specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -157,13 +182,19 @@ public class InvoiceController {
       @ApiResponse(code = 500, message = "Internal server error.", response = ErrorMessage.class)})
   public ResponseEntity<?> delete(@ApiParam(value = "Id of invoice to be deleted.", required = true) @PathVariable("invoiceId") String invoiceId) {
     try {
+      log.info("Deleting invoice");
       Optional<Invoice> optionalInvoice = invoiceService.getInvoice(invoiceId);
+
       if (!optionalInvoice.isPresent()) {
+        log.debug("Invoice not found.");
         return new ResponseEntity<>(new ErrorMessage("Invoice not found."), HttpStatus.NOT_FOUND);
       }
+
+      log.debug(String.format("Deleting invoice with id: %s", invoiceId));
       invoiceService.deleteInvoice(invoiceId);
       return new ResponseEntity<>(optionalInvoice.get(), HttpStatus.OK);
     } catch (Exception e) {
+      log.error(String.format("Internal server error while deleting specified invoice."));
       return new ResponseEntity<>(new ErrorMessage("Internal server error while deleting specified invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -179,14 +210,21 @@ public class InvoiceController {
       @ApiResponse(code = 500, message = "Internal server error.", response = ErrorMessage.class)})
   public ResponseEntity<?> getPdf(@PathVariable("invoiceId") String invoiceId) throws Exception {
     try {
+      log.info("Generating invoice pdf");
       Optional<Invoice> optionalInvoice = invoiceService.getInvoice(invoiceId);
+
       if (!optionalInvoice.isPresent()) {
+        log.debug("Invoice not found.");
         return new ResponseEntity<>(new ErrorMessage("Invoice not found."), HttpStatus.NOT_FOUND);
       }
+
       HttpHeaders responseHeaders = new HttpHeaders();
       responseHeaders.setContentType(MediaType.APPLICATION_PDF);
+
+      log.debug(String.format("Generating pdf of invoice : %s", optionalInvoice.get()));
       return new ResponseEntity<>(invoicePdfService.createPdf(optionalInvoice.get()), responseHeaders, HttpStatus.OK);
     } catch (Exception e) {
+      log.error(String.format("Internal server error while trying to get PDF of invoice."));
       return new ResponseEntity<>(new ErrorMessage("Internal server error while trying to get PDF of invoice."), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
