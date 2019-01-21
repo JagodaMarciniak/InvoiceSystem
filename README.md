@@ -4,8 +4,6 @@ Accounting system featuring basic CRUD operations on invoices via AJAX-style fro
 
 custom in-memory database, custom in-file database, h2 in-memory database and mongoDB database.
 
-Accounting system with possibility to add invoices, calculate taxes, generate PDFs and send emails. There are multiple implementations of databases provided to exercise various concepts: sql, no-sql, custom file database.
-
 The Project contains over 340 test cases with over 90% test coverage.
 
 
