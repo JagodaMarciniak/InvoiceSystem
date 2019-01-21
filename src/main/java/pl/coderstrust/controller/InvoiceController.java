@@ -123,7 +123,7 @@ public class InvoiceController {
       @ApiParam(value = "Id of invoice to be updated.", required = true) @PathVariable String invoiceId,
       @ApiParam(value = "Invoice to be updated.", required = true) @RequestBody Invoice invoice) {
     try {
-      List<String> resultOfValidation = InvoiceValidator.validateInvoice(invoice, false);
+      List<String> resultOfValidation = InvoiceValidator.validateInvoice(invoice, true);
       if (resultOfValidation.size() > 0) {
         return new ResponseEntity<>(new ResponseMessage("Passed invoice is invalid.", resultOfValidation), HttpStatus.BAD_REQUEST);
       }

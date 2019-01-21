@@ -44,14 +44,14 @@ public class AccountNumberValidator extends Validator {
     if (localNumber.trim().isEmpty()) {
       return "Local number cannot be empty";
     }
-    if (!localNumber.matches("[0-9]{26}")) {
+    if (!localNumber.matches("^([0-9]{26})")) {
       return "Local number is invalid";
     }
     return null;
   }
 
   private static String compareNumbers(String ibanNumber, String localNumber) {
-    if (!ibanNumber.substring(2).equals(localNumber)){
+    if (!(ibanNumber.substring(2).equals(localNumber))){
       return "Iban number and local number do not fit";
     }
     return null;

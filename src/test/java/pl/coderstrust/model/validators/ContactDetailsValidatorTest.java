@@ -75,7 +75,7 @@ class ContactDetailsValidatorTest {
   private static Stream<Arguments> argumentsForAddressValidationTest() {
     return Stream.of(
         Arguments.of(new ContactDetails(validEmail , validPhoneNumber, validWebsite, null ), Collections.singletonList("Address cannot be null")),
-        Arguments.of(new ContactDetails(validEmail , validPhoneNumber, validWebsite, new Address("av", "1a", "2aa", "2", "a")), Collections.emptyList())
+        Arguments.of(new ContactDetails(validEmail , validPhoneNumber, validWebsite, new Address("av", "1a", "21425", "2", "a")), Collections.emptyList())
     );
   }
 

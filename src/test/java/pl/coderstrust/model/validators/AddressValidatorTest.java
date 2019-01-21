@@ -50,7 +50,7 @@ class AddressValidatorTest {
     return Stream.of(
         Arguments.of(new Address(validStreet, null,validPostalCode, validCity, validCountry), Collections.singletonList("Number cannot be null")),
         Arguments.of(new Address(validStreet,"",validPostalCode, validCity, validCountry), Collections.singletonList("Number cannot be empty")),
-        Arguments.of(new Address(validStreet,"a",validPostalCode, validCity, validCountry), Collections.singletonList("Number has to contain only digits")),
+        Arguments.of(new Address(validStreet,"a",validPostalCode, validCity, validCountry), Collections.emptyList()),
         Arguments.of(new Address(validStreet, validNumber, validPostalCode, validCity, validCountry), Collections.emptyList())
     );
   }

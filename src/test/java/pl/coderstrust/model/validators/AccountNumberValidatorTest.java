@@ -44,7 +44,7 @@ class AccountNumberValidatorTest {
   }
 
   @Test
-  void validateComparisonOfIbanAndLocalNumber(){
+  void validateWhenIbanAndLocalNumberDoNotFit(){
     // Given
     List<String> expectedResult = Collections.singletonList("Iban number and local number do not fit");
     AccountNumber accountNumber = new AccountNumber(validIbanNumber, validLocalNumber.replace("1","3"));

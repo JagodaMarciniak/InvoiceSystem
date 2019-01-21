@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import pl.coderstrust.model.InvoiceEntry;
 
-public class InvoiceEntriesValidator {
+public class InvoiceEntriesValidator extends Validator{
 
   public static List<String> validateEntries(List<InvoiceEntry> invoiceEntries) {
     if (invoiceEntries == null) {
@@ -15,7 +15,7 @@ public class InvoiceEntriesValidator {
 
     List<String> result = new ArrayList<>();
     invoiceEntries.forEach(invoiceEntry -> {
-          Validator.addResultOfValidation(result, validateEntry(invoiceEntry));
+          addResultOfValidation(result, validateEntry(invoiceEntry));
         });
     return result;
   }
@@ -27,15 +27,15 @@ public class InvoiceEntriesValidator {
 
     List<String> result = new ArrayList<>();
     String resultOfItemValidation = validateItem(invoiceEntry.getItem());
-    Validator.addResultOfValidation(result, resultOfItemValidation);
+    addResultOfValidation(result, resultOfItemValidation);
     String resultOfGrossValueValidation = validateGrossValue(invoiceEntry.getGrossValue());
-    Validator.addResultOfValidation(result, resultOfGrossValueValidation);
+    addResultOfValidation(result, resultOfGrossValueValidation);
     String resultOfNetValueValidation = validateNetValue(invoiceEntry.getNetValue());
-    Validator.addResultOfValidation(result, resultOfNetValueValidation);
+    addResultOfValidation(result, resultOfNetValueValidation);
     String resultOfPriceValidation = validatePrice(invoiceEntry.getPrice());
-    Validator.addResultOfValidation(result, resultOfPriceValidation);
+    addResultOfValidation(result, resultOfPriceValidation);
     String resultOfQuantityValidation = validateQuantity(invoiceEntry.getQuantity());
-    Validator.addResultOfValidation(result, resultOfQuantityValidation);
+    addResultOfValidation(result, resultOfQuantityValidation);
     return result;
   }
 

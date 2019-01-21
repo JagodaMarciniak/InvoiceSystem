@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -49,7 +50,7 @@ class InvoiceEntriesValidatorTest {
 
     return Stream.of(
         Arguments.of(invoiceEntriesWithQuantityNull, Collections.singletonList("Quantity cannot be null")),
-        Arguments.of(invoiceEntriesWithQuantity0, Collections.singletonList("Quantity cannot be zero")),
+        Arguments.of(invoiceEntriesWithQuantity0, Collections.singletonList("Quantity cannot be lower or equal to zero")),
         Arguments.of(validInvoiceEntries, Collections.emptyList())
     );
   }
@@ -81,36 +82,45 @@ class InvoiceEntriesValidatorTest {
   }
 
   private static Stream<Arguments> argumentsForNetValuesInEntriesValidationTest() {
-    List<InvoiceEntry> invoiceEntriesWithPriceNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
-    invoiceEntriesWithPriceNull.get(0).setPrice(null);
-    List<InvoiceEntry> invoiceEntriesWithPriceNegative = InvoiceEntriesGenerator.getSampleInvoiceEntries();
-    invoiceEntriesWithPriceNegative.get(0).setPrice(new BigDecimal(-3));
+    List<InvoiceEntry> invoiceEntriesWithNetValueNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithNetValueNull.get(0).setNetValue(null);
+    List<InvoiceEntry> invoiceEntriesWithNetValueNegative = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithNetValueNegative.get(0).setNetValue(new BigDecimal(-3));
     List<InvoiceEntry> validInvoiceEntries = InvoiceEntriesGenerator.getSampleInvoiceEntries();
 
     return Stream.of(
-        Arguments.of(invoiceEntriesWithPriceNull, Collections.singletonList("Price cannot be null")),
-        Arguments.of(invoiceEntriesWithPriceNegative, Collections.singletonList("Price cannot be lower than zero")),
+        Arguments.of(invoiceEntriesWithNetValueNull, Collections.singletonList("Net value cannot be null")),
+        Arguments.of(invoiceEntriesWithNetValueNegative, Collections.singletonList("Net value cannot be lower than zero")),
         Arguments.of(validInvoiceEntries, Collections.emptyList())
     );
   }
 
   @ParameterizedTest
-  @MethodSource(value = "argumentsForNetValuesInEntriesValidationTest")
-  void validateNetValues(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+  @MethodSource(value = "argumentsForGrossValuesInEntriesValidationTest")
+  void validateGrossValues(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
     assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
   }
 
-  private static Stream<Arguments> argumentsForNetValuesInEntriesValidationTest() {
-    List<InvoiceEntry> invoiceEntriesWithPriceNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
-    invoiceEntriesWithPriceNull.get(0).setPrice(null);
-    List<InvoiceEntry> invoiceEntriesWithPriceNegative = InvoiceEntriesGenerator.getSampleInvoiceEntries();
-    invoiceEntriesWithPriceNegative.get(0).setPrice(new BigDecimal(-3));
+  private static Stream<Arguments> argumentsForGrossValuesInEntriesValidationTest() {
+    List<InvoiceEntry> invoiceEntriesWithGrossValueNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithGrossValueNull.get(0).setGrossValue(null);
+    List<InvoiceEntry> invoiceEntriesWithGrossValueNegative = InvoiceEntriesGenerator.getSampleInvoiceEntries();
+    invoiceEntriesWithGrossValueNegative.get(0).setGrossValue(new BigDecimal(-3));
     List<InvoiceEntry> validInvoiceEntries = InvoiceEntriesGenerator.getSampleInvoiceEntries();
 
     return Stream.of(
-        Arguments.of(invoiceEntriesWithPriceNull, Collections.singletonList("Price cannot be null")),
-        Arguments.of(invoiceEntriesWithPriceNegative, Collections.singletonList("Price cannot be lower than zero")),
+        Arguments.of(invoiceEntriesWithGrossValueNull, Collections.singletonList("Gross value cannot be null")),
+        Arguments.of(invoiceEntriesWithGrossValueNegative, Collections.singletonList("Gross value cannot be lower than zero")),
         Arguments.of(validInvoiceEntries, Collections.emptyList())
     );
+  }
+
+  @Test
+  void testToValidateIfInvoiceEntriesIsNull() {
+    //given
+    List<String> expectedResult = Collections.singletonList("Invoice entries cannot be null");
+
+    //then
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(null));
   }
 }

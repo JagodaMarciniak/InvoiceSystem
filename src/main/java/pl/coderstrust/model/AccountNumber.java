@@ -30,8 +30,13 @@ public class AccountNumber {
       example = "83620519463926400000847295")
   private String localNumber;
 
-  public AccountNumber(String ibanNumber, String localNumber) {
+  public AccountNumber(String ibanNumber) {
     this.ibanNumber = ibanNumber;
     this.localNumber = ibanNumber.substring(2);
+  }
+
+  public AccountNumber(String ibanNumber, String localNumber) {
+    this.ibanNumber = ibanNumber;
+    this.localNumber = localNumber;
   }
 }

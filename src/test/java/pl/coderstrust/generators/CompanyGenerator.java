@@ -12,7 +12,7 @@ public final class CompanyGenerator {
     String taxId = "12345678990";
     AccountNumber accountNumber = AccountNumberGenerator.getSampleAccountNumber();
     ContactDetails contactDetails = new ContactDetails("contact@oracle.com",
-        "+1234567890", "www.oracle.com", new Address("Wyroczni", "13A", "34-760", "Gdynia", "Polska"
+        "1234567890", "http://www.oracle.com", new Address("Wyroczni", "13A", "34760", "Gdynia", "Polska"
     ));
     return new Company(name, taxId, accountNumber, contactDetails);
   }
@@ -22,7 +22,7 @@ public final class CompanyGenerator {
     String taxId = "12345678990";
     AccountNumber accountNumber = AccountNumberGenerator.getSampleAccountNumber();
     ContactDetails contactDetails = new ContactDetails("contact@oracle.com",
-        "+1234567890", "www.oracle.com", new Address("Wyroczni", "13A", "34-760", "Gdynia", "Polska"
+        "1234567890", "http://www.oracle.com", new Address("Wyroczni", "13A", "34760", "Gdynia", "Polska"
     ));
     return new Company(name, taxId, accountNumber, contactDetails);
   }

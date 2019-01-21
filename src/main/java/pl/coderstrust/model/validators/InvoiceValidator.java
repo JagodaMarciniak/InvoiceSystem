@@ -9,7 +9,7 @@ import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.model.InvoiceEntry;
 
-public class InvoiceValidator {
+public class InvoiceValidator extends Validator{
 
   public static List<String> validateInvoice(Invoice invoice, boolean isIdExpected) {
     if (invoice == null) {
@@ -24,19 +24,19 @@ public class InvoiceValidator {
       resultOfIdValidation = validateNotExpectedId(invoice.getId());
     }
 
-    Validator.addResultOfValidation(result, resultOfIdValidation);
+    addResultOfValidation(result, resultOfIdValidation);
     List<String> resultOfBuyerValidation = validateBuyer(invoice.getBuyer());
-    Validator.addResultOfValidation(result, resultOfBuyerValidation);
+    addResultOfValidation(result, resultOfBuyerValidation);
     List<String> resultOfSellerValidation = validateSeller(invoice.getSeller());
-    Validator.addResultOfValidation(result, resultOfSellerValidation);
+    addResultOfValidation(result, resultOfSellerValidation);
     List<String> resultOfEntriesValidation = validateEntries(invoice.getEntries());
-    Validator.addResultOfValidation(result, resultOfEntriesValidation);
+    addResultOfValidation(result, resultOfEntriesValidation);
     String resultOfDatesValidation = validateDates(invoice.getIssueDate(), invoice.getDueDate());
-    Validator.addResultOfValidation(result, resultOfDatesValidation);
+    addResultOfValidation(result, resultOfDatesValidation);
     String resultOfTotalNetValueValidation = validateTotalNetValue(invoice.getTotalNetValue());
-    Validator.addResultOfValidation(result, resultOfTotalNetValueValidation);
+    addResultOfValidation(result, resultOfTotalNetValueValidation);
     String resultOfTotalGrossValueValidation = validateTotalGrossValue(invoice.getTotalGrossValue());
-    Validator.addResultOfValidation(result, resultOfTotalGrossValueValidation);
+    addResultOfValidation(result, resultOfTotalGrossValueValidation);
     return result;
   }
 
@@ -44,7 +44,7 @@ public class InvoiceValidator {
     if (id == null) {
       return "Id cannot be null";
     }
-    if (id.isEmpty()) {
+    if (id.trim().isEmpty()) {
       return "Id cannot be empty";
     }
     return null;
@@ -54,7 +54,7 @@ public class InvoiceValidator {
     if (id != null) {
       return "Id must be null";
     }
-    if (!id.isEmpty()) {
+    if (id != null && !id.trim().isEmpty()) {
       return "Id must be empty or null";
     }
     return null;
@@ -68,7 +68,7 @@ public class InvoiceValidator {
       return "Due date cannot be null";
     }
     if (issueDate.isAfter(dueDate)) {
-      return "The due date cannot be before issue date";
+      return "Due date cannot be before issue date";
     }
     return null;
   }
@@ -87,20 +87,20 @@ public class InvoiceValidator {
 
   private static String validateTotalNetValue(BigDecimal totalNetValue) {
     if (totalNetValue == null) {
-      return "Net value cannot be null";
+      return "Total net value cannot be null";
     }
     if (totalNetValue.doubleValue() < 0) {
-      return "Net value cannot be lower than zero";
+      return "Total net value cannot be lower than zero";
     }
     return null;
   }
 
   private static String validateTotalGrossValue(BigDecimal totalGrossValue) {
     if (totalGrossValue == null) {
-      return "Gross value cannot be null";
+      return "Total gross value cannot be null";
     }
     if (totalGrossValue.doubleValue() < 0) {
-      return "Gross value cannot be lower than zero";
+      return "Total gross value cannot be lower than zero";
     }
     return null;
   }

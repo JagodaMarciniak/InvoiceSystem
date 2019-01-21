@@ -43,7 +43,7 @@ class CompanyValidatorTest {
   private static Stream<Arguments> argumentsForTaxIdentificationNumberValidationTest() {
     return Stream.of(
         Arguments.of(new Company(validName, null , validAccountNumber, validContactDetails), Collections.singletonList("Tax identification number cannot be null")),
-        Arguments.of(new Company(validName, "", validAccountNumber, validContactDetails), Collections.singletonList("Tax identification number cannot be null")),
+        Arguments.of(new Company(validName, "", validAccountNumber, validContactDetails), Collections.singletonList("Tax identification number cannot be empty")),
         Arguments.of(new Company(validName, validTaxIdentificationNumber, validAccountNumber, validContactDetails), Collections.emptyList())
     );
   }
