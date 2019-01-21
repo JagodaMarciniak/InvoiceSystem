@@ -27,10 +27,10 @@ public class ContactDetails {
   @ApiModelProperty(value = "Email address.", example = "polstal@gmail.com")
   String email;
 
-  @ApiModelProperty(value = "Contact phone number.", example = "775-956-888")
+  @ApiModelProperty(value = "Contact phone number.", example = "775956888")
   String phoneNumber;
 
-  @ApiModelProperty(value = "Company website.", example = "www.polstal.com.pl")
+  @ApiModelProperty(value = "Company website.", example = "http://www.polstal.com.pl")
   String website;
 
   @OneToOne(cascade = CascadeType.ALL)

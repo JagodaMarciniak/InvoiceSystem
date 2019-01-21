@@ -28,7 +28,7 @@ public class Address {
   @ApiModelProperty(value = "The home number.", example = "5/27")
   String number;
 
-  @ApiModelProperty(value = "The postal code.", example = "54-765")
+  @ApiModelProperty(value = "The postal code.", example = "54765")
   String postalCode;
 
   @ApiModelProperty(value = "The city name.", example = "Ciechocinek")
