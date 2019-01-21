@@ -15,6 +15,12 @@ class AccountNumberValidatorTest {
   private static String validIbanNumber = "FR11111122233334455667777789";
   private static String validLocalNumber = validIbanNumber.substring(2);
 
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForIbanNumberValidationTest")
+  void validateIbanNumber(AccountNumber accountNumber, List<String> expectedResult) {
+    assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));
+  }
+
   private static Stream<Arguments> argumentsForIbanNumberValidationTest() {
     return Stream.of(
         Arguments.of(new AccountNumber(null, validLocalNumber), Collections.singletonList("Iban number cannot be null")),
@@ -23,24 +29,18 @@ class AccountNumberValidatorTest {
     );
   }
 
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForLocalNumberValidationTest")
+  void validateLocalNumber(AccountNumber accountNumber, List<String> expectedResult) {
+    assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));
+  }
+
   private static Stream<Arguments> argumentsForLocalNumberValidationTest() {
     return Stream.of(
         Arguments.of(new AccountNumber(validIbanNumber, null), Collections.singletonList("Local number cannot be null")),
         Arguments.of(new AccountNumber(validIbanNumber, ""), Collections.singletonList("Local number cannot be empty")),
         Arguments.of(new AccountNumber(validIbanNumber, "ABC123"), Collections.singletonList("Local number is invalid"))
     );
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForIbanNumberValidationTest")
-  void validateIbanNumber(AccountNumber accountNumber, List<String> expectedResult) {
-    assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForLocalNumberValidationTest")
-  void validateLocalNumber(AccountNumber accountNumber, List<String> expectedResult) {
-    assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));
   }
 
   @Test

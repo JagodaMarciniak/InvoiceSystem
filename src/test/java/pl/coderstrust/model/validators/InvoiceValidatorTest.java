@@ -18,6 +18,21 @@ class InvoiceValidatorTest {
 
   private static final Invoice validInvoice = InvoiceGenerator.getRandomInvoice();
 
+  @Test
+  void shouldValidateIfInvoiceIsNull() {
+    //given
+    List<String> expectedResult = Collections.singletonList("Invoice cannot be null");
+
+    //then
+    assertEquals(expectedResult, InvoiceValidator.validateInvoice(null, true));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForInvoiceIdValidationWhenIdExpected")
+  void validateIdWhenExpected(Invoice invoice, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
+  }
+
   private static Stream<Arguments> argumentsForInvoiceIdValidationWhenIdExpected() {
     Invoice invoiceWithNullId = InvoiceGenerator.getRandomInvoice();
     invoiceWithNullId.setId(null);
@@ -30,6 +45,12 @@ class InvoiceValidatorTest {
         Arguments.of(invoiceWithEmptyId, Collections.singletonList("Id cannot be empty")),
         Arguments.of(validInvoice, Collections.emptyList())
     );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForInvoiceIdValidationWhenIdNotExpected")
+  void validateIdWhenNotExpected(Invoice invoice, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, false));
   }
 
   private static Stream<Arguments> argumentsForInvoiceIdValidationWhenIdNotExpected() {
@@ -45,6 +66,12 @@ class InvoiceValidatorTest {
         Arguments.of(invoiceWithEmptyId, Collections.singletonList("Id must be null")),
         Arguments.of(validInvoice, Collections.emptyList())
     );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForDatesValidationWhenIdExpected")
+  void validateDatesWhenIdExpected(Invoice invoice, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
   }
 
   private static Stream<Arguments> argumentsForDatesValidationWhenIdExpected() {
@@ -65,6 +92,12 @@ class InvoiceValidatorTest {
     );
   }
 
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForInvoiceTotalNetValueValidationWhenIdExpected")
+  void validateInvoiceTotalNetValueWhenIdExpected(Invoice invoice, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
+  }
+
   private static Stream<Arguments> argumentsForInvoiceTotalNetValueValidationWhenIdExpected() {
     Invoice invoiceWithNullTotalNetValue = InvoiceGenerator.getRandomInvoice();
     invoiceWithNullTotalNetValue.setTotalNetValue(null);
@@ -79,6 +112,12 @@ class InvoiceValidatorTest {
     );
   }
 
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForInvoiceTotalGrossValueValidationWhenIdExpected")
+  void validateTotalGrossValueWhenIdExpected(Invoice invoice, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
+  }
+
   private static Stream<Arguments> argumentsForInvoiceTotalGrossValueValidationWhenIdExpected() {
     Invoice invoiceWithNullTotalGrossValue = InvoiceGenerator.getRandomInvoice();
     invoiceWithNullTotalGrossValue.setTotalGrossValue(null);
@@ -91,6 +130,12 @@ class InvoiceValidatorTest {
         Arguments.of(invoiceWithNegativeTotalGrossValue, Collections.singletonList("Total gross value cannot be lower than zero")),
         Arguments.of(validInvoice, Collections.emptyList())
     );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForBuyerSellerEntriesValidationWhenIdExpected")
+  void validateBuyerSellerAndEntriesWhenIdExpected(Invoice invoice, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
   }
 
   private static Stream<Arguments> argumentsForBuyerSellerEntriesValidationWhenIdExpected() {
@@ -108,50 +153,5 @@ class InvoiceValidatorTest {
         Arguments.of(invoiceWithNullEntries, Collections.singletonList("Invoice entries cannot be null")),
         Arguments.of(validInvoice, Collections.emptyList())
     );
-  }
-
-  @Test
-  void shouldValidateIfInvoiceIsNull() {
-    //given
-    List<String> expectedResult = Collections.singletonList("Invoice cannot be null");
-
-    //then
-    assertEquals(expectedResult, InvoiceValidator.validateInvoice(null, true));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForInvoiceIdValidationWhenIdExpected")
-  void validateIdWhenExpected(Invoice invoice, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForInvoiceIdValidationWhenIdNotExpected")
-  void validateIdWhenNotExpected(Invoice invoice, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, false));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForDatesValidationWhenIdExpected")
-  void validateDatesWhenIdExpected(Invoice invoice, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForInvoiceTotalNetValueValidationWhenIdExpected")
-  void validateInvoiceTotalNetValueWhenIdExpected(Invoice invoice, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForInvoiceTotalGrossValueValidationWhenIdExpected")
-  void validateTotalGrossValueWhenIdExpected(Invoice invoice, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForBuyerSellerEntriesValidationWhenIdExpected")
-  void validateBuyerSellerAndEntriesWhenIdExpected(Invoice invoice, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
   }
 }

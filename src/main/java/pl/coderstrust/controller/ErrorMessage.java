@@ -8,14 +8,14 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class ResponseMessage {
+public class ErrorMessage {
   @NonNull
   private final String message;
 
   @NonNull
   private final List<String> details;
 
-  public ResponseMessage(String message) {
+  public ErrorMessage(String message) {
     this.message = message;
     details = new ArrayList<>();
   }

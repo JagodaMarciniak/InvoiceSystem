@@ -20,12 +20,25 @@ class ContactDetailsValidatorTest {
   private static String validWebsite = "http://www.abc.pl";
   private static Address validAddress = AddressGenerator.getSampleAddress();
 
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForEmailValidationTest")
+  void validateEmail(ContactDetails contactDetails, List<String> expectedResult) {
+    assertEquals(expectedResult, ContactDetailsValidator.validateContactDetails(contactDetails));
+  }
+
   private static Stream<Arguments> argumentsForEmailValidationTest() {
     return Stream.of(
         Arguments.of(new ContactDetails(null, validPhoneNumber, validWebsite, validAddress), Collections.singletonList("Email cannot be null")),
         Arguments.of(new ContactDetails("", validPhoneNumber, validWebsite, validAddress), Collections.singletonList("Email cannot be empty")),
         Arguments.of(new ContactDetails(validEmail, validPhoneNumber, validWebsite, validAddress), Collections.emptyList())
     );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForPhoneNumberValidationTest")
+  void validatePhoneNumber(ContactDetails contactDetails, List<String> expectedResult) {
+    System.out.println(validAddress);
+    assertEquals(expectedResult, ContactDetailsValidator.validateContactDetails(contactDetails));
   }
 
   private static Stream<Arguments> argumentsForPhoneNumberValidationTest() {
@@ -37,6 +50,12 @@ class ContactDetailsValidatorTest {
     );
   }
 
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForWebsiteValidationTest")
+  void validateWebsite(ContactDetails contactDetails, List<String> expectedResult) {
+    assertEquals(expectedResult, ContactDetailsValidator.validateContactDetails(contactDetails));
+  }
+
   private static Stream<Arguments> argumentsForWebsiteValidationTest() {
     return Stream.of(
         Arguments.of(new ContactDetails(validEmail, validPhoneNumber, null, validAddress), Collections.singletonList("Website cannot be null")),
@@ -46,36 +65,17 @@ class ContactDetailsValidatorTest {
     );
   }
 
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForAddressValidationTest")
+  void validateAddress(ContactDetails contactDetails, List<String> expectedResult) {
+    assertEquals(expectedResult, ContactDetailsValidator.validateContactDetails(contactDetails));
+  }
+
   private static Stream<Arguments> argumentsForAddressValidationTest() {
     return Stream.of(
         Arguments.of(new ContactDetails(validEmail, validPhoneNumber, validWebsite, null), Collections.singletonList("Address cannot be null")),
         Arguments.of(new ContactDetails(validEmail, validPhoneNumber, validWebsite, new Address("av", "1a", "21425", "2", "a")), Collections.emptyList())
     );
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForEmailValidationTest")
-  void validateEmail(ContactDetails contactDetails, List<String> expectedResult) {
-    assertEquals(expectedResult, ContactDetailsValidator.validateContactDetails(contactDetails));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForPhoneNumberValidationTest")
-  void validatePhoneNumber(ContactDetails contactDetails, List<String> expectedResult) {
-    System.out.println(validAddress);
-    assertEquals(expectedResult, ContactDetailsValidator.validateContactDetails(contactDetails));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForWebsiteValidationTest")
-  void validateWebsite(ContactDetails contactDetails, List<String> expectedResult) {
-    assertEquals(expectedResult, ContactDetailsValidator.validateContactDetails(contactDetails));
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForAddressValidationTest")
-  void validateAddress(ContactDetails contactDetails, List<String> expectedResult) {
-    assertEquals(expectedResult, ContactDetailsValidator.validateContactDetails(contactDetails));
   }
 
   @Test

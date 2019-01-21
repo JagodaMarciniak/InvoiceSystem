@@ -79,7 +79,7 @@ class InvoiceControllerTest {
   void shouldReturnInternalServerErrorDuringGettingAllInvoicesWhenSomethingWentWrongOnServer() throws Exception {
     //given
     when(invoiceService.getAllInvoices()).thenThrow(new ServiceOperationException());
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while getting invoices.");
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Internal server error while getting invoices.");
 
     //when
     MvcResult result = mockMvc
@@ -89,12 +89,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService).getAllInvoices();
   }
 
@@ -126,7 +126,7 @@ class InvoiceControllerTest {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(expectedInvoice.getId())).thenReturn(Optional.ofNullable(null));
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Invoice not found for passed id.");
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Invoice not found for passed id.");
 
     //when
     MvcResult result = mockMvc
@@ -136,12 +136,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.NOT_FOUND.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService).getInvoice(expectedInvoice.getId());
   }
 
@@ -150,7 +150,7 @@ class InvoiceControllerTest {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
-    ResponseMessage expectedResponseMessage = new ResponseMessage(String.format("Internal server error while getting invoice by id: %s",
+    ErrorMessage expectedErrorMessage = new ErrorMessage(String.format("Internal server error while getting invoice by id: %s",
         expectedInvoice.getId()));
 
     //when
@@ -161,12 +161,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService).getInvoice(expectedInvoice.getId());
   }
 
@@ -207,7 +207,7 @@ class InvoiceControllerTest {
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
     invoiceToAdd.setId(null);
     when(invoiceService.addInvoice(invoiceToAdd)).thenThrow(new ServiceOperationException());
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while saving specified invoice.");
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Internal server error while saving specified invoice.");
 
     String invoiceAsJson = mapper.writeValueAsString(invoiceToAdd);
 
@@ -221,12 +221,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService).addInvoice(invoiceToAdd);
   }
 
@@ -234,7 +234,7 @@ class InvoiceControllerTest {
   void shouldReturnBadRequestDuringAddingInvoiceWhenInvoiceContainsId() throws Exception {
     //given
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Passed invoice is invalid.",
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Passed invoice is invalid.",
         Collections.singletonList("Id must be null"));
 
     String invoiceAsJson = mapper.writeValueAsString(invoiceToAdd);
@@ -249,12 +249,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.BAD_REQUEST.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService, never()).addInvoice(invoiceToAdd);
   }
 
@@ -269,7 +269,7 @@ class InvoiceControllerTest {
     expectedDetailsOfValidation.add("Email is not valid");
     expectedDetailsOfValidation.add("Phone number can only be numbers");
 
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Passed invoice is invalid.",
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Passed invoice is invalid.",
         expectedDetailsOfValidation);
 
     String invoiceAsJson = mapper.writeValueAsString(invoiceToAdd);
@@ -284,12 +284,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.BAD_REQUEST.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService, never()).addInvoice(invoiceToAdd);
   }
 
@@ -337,14 +337,14 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.BAD_REQUEST.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
+    assertNotNull(actualErrorMessage);
     assertNotEquals(expectedInvoice.getId(), wrongInvoiceId);
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Passed data is invalid. Please verify invoice id.");
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Passed data is invalid. Please verify invoice id.");
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService, never()).updateInvoice(expectedInvoice);
   }
 
@@ -353,7 +353,7 @@ class InvoiceControllerTest {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.invoiceExists(expectedInvoice.getId())).thenReturn(false);
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Invoice not found.");
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Invoice not found.");
 
     String invoiceAsJson = mapper.writeValueAsString(expectedInvoice);
 
@@ -367,12 +367,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.NOT_FOUND.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService).invoiceExists(expectedInvoice.getId());
   }
 
@@ -387,7 +387,7 @@ class InvoiceControllerTest {
     expectedDetailsOfValidation.add("Email is not valid");
     expectedDetailsOfValidation.add("Phone number can only be numbers");
 
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Passed invoice is invalid.",
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Passed invoice is invalid.",
         expectedDetailsOfValidation);
 
     String invoiceAsJson = mapper.writeValueAsString(expectedInvoice);
@@ -402,12 +402,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.BAD_REQUEST.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService, never()).updateInvoice(expectedInvoice);
   }
 
@@ -416,7 +416,7 @@ class InvoiceControllerTest {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.invoiceExists(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while updating specified invoice.");
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Internal server error while updating specified invoice.");
 
     String invoiceAsJson = mapper.writeValueAsString(expectedInvoice);
 
@@ -430,12 +430,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService).invoiceExists(expectedInvoice.getId());
   }
 
@@ -468,7 +468,7 @@ class InvoiceControllerTest {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(expectedInvoice.getId())).thenReturn(Optional.ofNullable(null));
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Invoice not found.");
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Invoice not found.");
 
     //when
     MvcResult result = mockMvc
@@ -477,12 +477,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualResponseMessage = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualErrorMessage = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.NOT_FOUND.value(), httpStatus);
-    assertNotNull(actualResponseMessage);
-    assertEquals(expectedResponseMessage, actualResponseMessage);
+    assertNotNull(actualErrorMessage);
+    assertEquals(expectedErrorMessage, actualErrorMessage);
     verify(invoiceService).getInvoice(expectedInvoice.getId());
   }
 
@@ -491,7 +491,7 @@ class InvoiceControllerTest {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while deleting specified invoice.");
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Internal server error while deleting specified invoice.");
 
     //when
     MvcResult result = mockMvc
@@ -499,12 +499,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualInvoiceResponse = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualInvoiceResponse = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
     assertNotNull(actualInvoiceResponse);
-    assertEquals(expectedResponseMessage, actualInvoiceResponse);
+    assertEquals(expectedErrorMessage, actualInvoiceResponse);
     verify(invoiceService).getInvoice(expectedInvoice.getId());
   }
 
@@ -539,7 +539,7 @@ class InvoiceControllerTest {
     //given
     Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(invoiceToPdf.getId())).thenReturn(Optional.ofNullable(null));
-    final ResponseMessage expectedResponseMessage = new ResponseMessage("Invoice not found.");
+    final ErrorMessage expectedErrorMessage = new ErrorMessage("Invoice not found.");
 
     //when
     invoicePdfService.createPdf(invoiceToPdf);
@@ -548,12 +548,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualInvoiceResponse = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualInvoiceResponse = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.NOT_FOUND.value(), httpStatus);
     assertNotNull(actualInvoiceResponse);
-    assertEquals(expectedResponseMessage, actualInvoiceResponse);
+    assertEquals(expectedErrorMessage, actualInvoiceResponse);
     verify(invoiceService).getInvoice(invoiceToPdf.getId());
     verify(invoicePdfService).createPdf(invoiceToPdf);
   }
@@ -564,7 +564,7 @@ class InvoiceControllerTest {
     Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(invoiceToPdf.getId())).thenReturn(Optional.of(invoiceToPdf));
     when(invoicePdfService.createPdf(invoiceToPdf)).thenThrow(new ServiceOperationException());
-    ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while trying to get PDF of invoice.");
+    ErrorMessage expectedErrorMessage = new ErrorMessage("Internal server error while trying to get PDF of invoice.");
 
     //when
     MvcResult result = mockMvc
@@ -572,12 +572,12 @@ class InvoiceControllerTest {
         .andReturn();
 
     int httpStatus = result.getResponse().getStatus();
-    ResponseMessage actualInvoiceResponse = mapper.readValue(result.getResponse().getContentAsString(), ResponseMessage.class);
+    ErrorMessage actualInvoiceResponse = mapper.readValue(result.getResponse().getContentAsString(), ErrorMessage.class);
 
     //then
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
     assertNotNull(actualInvoiceResponse);
-    assertEquals(expectedResponseMessage, actualInvoiceResponse);
+    assertEquals(expectedErrorMessage, actualInvoiceResponse);
     verify(invoiceService).getInvoice(invoiceToPdf.getId());
     verify(invoicePdfService).createPdf(invoiceToPdf);
   }
