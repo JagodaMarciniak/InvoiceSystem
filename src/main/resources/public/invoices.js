@@ -1,7 +1,7 @@
 var app = angular.module('Invoices', []);
 
 app.controller('FindAll', function ($scope, $http, $window) {
-    $http.get(getBaseApiAddress()).
+    $http.get('http://localhost:8080/invoices').
         then(function (response) {
             $scope.InvoiceDatabase = response.data;
             $scope.empty = $scope.InvoiceDatabase.length;
@@ -10,7 +10,7 @@ app.controller('FindAll', function ($scope, $http, $window) {
         $http.delete(getBaseApiAddress() + id)
             .then(
                 function () {
-                    $http.get(getBaseApiAddress()).
+                    $http.get('http://localhost:8080/invoices').
                         then(function (response) {
                             $scope.InvoiceDatabase = response.data;
                             $scope.empty = $scope.InvoiceDatabase.length;
@@ -107,7 +107,7 @@ app.controller('AddInvoice', function ($scope, $http) {
 });
 
 function getBaseApiAddress() {
-    return 'http://127.0.0.1:8080/invoices/';
+    return 'http://localhost:8080/invoices/';
 }
 
 function getSampleNewInvoice() {
