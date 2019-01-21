@@ -516,7 +516,8 @@ class InvoiceControllerTest {
   }
 
   @Test
-  @WithMockUser()  void shouldThrowInternalServerErrorDuringDeletingWhenSomethingWentWrongOnServer() throws Exception {
+  @WithMockUser()
+  void shouldThrowInternalServerErrorDuringDeletingWhenSomethingWentWrongOnServer() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
@@ -538,6 +539,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldReturnSpecificPdf() throws Exception {
     //given
     byte[] expectedArray = new byte[10];
@@ -564,6 +566,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldThrowNotFoundExceptionWhenTryingToGetPdfWithInvalidInvoiceId() throws Exception {
     //given
     Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
@@ -588,6 +591,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser()
   void shouldThrowInternalServerErrorWhenTryingToGetPdfAndSomethingGoesWrongOnServer() throws Exception {
     //given
     Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
