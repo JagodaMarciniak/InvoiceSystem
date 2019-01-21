@@ -8,13 +8,18 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -39,7 +44,7 @@ import pl.coderstrust.service.ServiceOperationException;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestInstance(Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class InvoiceControllerTest {
 
   private ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
@@ -282,6 +287,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser
   void shouldReturnBadRequestDuringAddingInvoiceWithInvalidData() throws Exception {
     //given
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
@@ -403,6 +409,7 @@ class InvoiceControllerTest {
   }
 
   @Test
+  @WithMockUser
   void shouldReturnBadRequestDuringUpdatingInvalidInvoice() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
@@ -516,8 +523,7 @@ class InvoiceControllerTest {
   }
 
   @Test
-  @WithMockUser()
-  void shouldThrowInternalServerErrorDuringDeletingWhenSomethingWentWrongOnServer() throws Exception {
+  @WithMockUser()  void shouldThrowInternalServerErrorDuringDeletingWhenSomethingWentWrongOnServer() throws Exception {
     //given
     Invoice expectedInvoice = InvoiceGenerator.getRandomInvoice();
     when(invoiceService.getInvoice(expectedInvoice.getId())).thenThrow(new ServiceOperationException());
@@ -539,7 +545,7 @@ class InvoiceControllerTest {
   }
 
   @Test
-  @WithMockUser()
+  @WithMockUser
   void shouldReturnSpecificPdf() throws Exception {
     //given
     byte[] expectedArray = new byte[10];
@@ -566,7 +572,7 @@ class InvoiceControllerTest {
   }
 
   @Test
-  @WithMockUser()
+  @WithMockUser
   void shouldThrowNotFoundExceptionWhenTryingToGetPdfWithInvalidInvoiceId() throws Exception {
     //given
     Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
@@ -591,7 +597,7 @@ class InvoiceControllerTest {
   }
 
   @Test
-  @WithMockUser()
+  @WithMockUser
   void shouldThrowInternalServerErrorWhenTryingToGetPdfAndSomethingGoesWrongOnServer() throws Exception {
     //given
     Invoice invoiceToPdf = InvoiceGenerator.getRandomInvoice();
