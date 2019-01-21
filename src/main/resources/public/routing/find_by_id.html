@@ -6,203 +6,207 @@
 </head>
 
 <body>
-    <form ng-controller="FindById" ng-submit="submit()" ng-model="formData.answer">
-        <div>
-            <div class="alert alert-warning alert-dismissible fade show" id="allerts_error" role="alert" ng-if="formData.answer != 200 && formData.answer != undefined">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                Invoice not found.
-            </div>
-            <div class="input-group mb-3" style="margin-top:15px">
-                <input type="text" class="form-control" ng-model="invoice_id" placeholder="Type id here" aria-label="Type id here"
-                    aria-describedby="basic-addon2" required>
-                <button type="submit" id="submit" class="btn btn-primary">Search</button>
-            </div>
-            <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
-                <thead>
-                    <tr>
-                        <th scope="col" colspan="8" style="text-align:center; letter-spacing: 5px; background-color: rgb(91, 226, 226)">Invoice
-                            details</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Type</th>
-                        <th scope="col">Issue Date</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Buyer name</th>
-                        <th scope="col">Seller name</th>
-                        <th scope="col">Total net value</th>
-                        <th scope="col">Total gross value</th>
-                        <th scope="col">Comments</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{InvoiceDatabase.type}}</td>
-                        <td>{{InvoiceDatabase.issueDate}}</td>
-                        <td>{{InvoiceDatabase.dueDate}}</td>
-                        <td>{{InvoiceDatabase.buyer.name}}</td>
-                        <td>{{InvoiceDatabase.seller.name}}</td>
-                        <td>{{InvoiceDatabase.totalNetValue}}</td>
-                        <td>{{InvoiceDatabase.totalGrossValue}}</td>
-                        <td>{{InvoiceDatabase.comments}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
-                <thead>
-                    <tr>
-                        <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(91, 226, 226)">Seller
-                            details</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Tax identification number</th>
-                        <th scope="col">Iban number</th>
-                        <th scope="col">Local number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{InvoiceDatabase.seller.name}}</td>
-                        <td>{{InvoiceDatabase.seller.taxIdentificationNumber}}</td>
-                        <td>{{InvoiceDatabase.seller.accountNumber.ibanNumber}}</td>
-                        <td>{{InvoiceDatabase.seller.accountNumber.localNumber}}</td>
-                    </tr>
-                </tbody>
-                <thead>
-                    <tr>
-                        <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(211, 245, 245)">Contact
-                            details</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Email</th>
-                        <th scope="col">Phone number</th>
-                        <th scope="col">Website</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{InvoiceDatabase.seller.contactDetails.email}}</td>
-                        <td>{{InvoiceDatabase.seller.contactDetails.phoneNumber}}</td>
-                        <td>{{InvoiceDatabase.seller.contactDetails.website}}</td>
-                    </tr>
-                </tbody>
-                <thead>
-                    <tr>
-                        <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(211, 245, 245)">Address
-                            details</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Street</th>
-                        <th scope="col">Number</th>
-                        <th scope="col">Postal Code</th>
-                        <th scope="col">City</th>
-                        <th scope="col">Country</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{InvoiceDatabase.seller.contactDetails.address.street}}</td>
-                        <td>{{InvoiceDatabase.seller.contactDetails.address.number}}</td>
-                        <td>{{InvoiceDatabase.seller.contactDetails.address.postalCode}}</td>
-                        <td>{{InvoiceDatabase.seller.contactDetails.address.city}}</td>
-                        <td>{{InvoiceDatabase.seller.contactDetails.address.country}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
-                <thead>
-                    <tr>
-                        <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(91, 226, 226)">Buyer
-                            details</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Tax identification number</th>
-                        <th scope="col">Iban number</th>
-                        <th scope="col">Local number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{InvoiceDatabase.buyer.name}}</td>
-                        <td>{{InvoiceDatabase.buyer.taxIdentificationNumber}}</td>
-                        <td>{{InvoiceDatabase.buyer.accountNumber.ibanNumber}}</td>
-                        <td>{{InvoiceDatabase.buyer.accountNumber.localNumber}}</td>
-                    </tr>
-                </tbody>
-                <thead>
-                    <tr>
-                        <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(211, 245, 245)">Contact
-                            details</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Email</th>
-                        <th scope="col">Phone number</th>
-                        <th scope="col">Website</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{InvoiceDatabase.buyer.contactDetails.email}}</td>
-                        <td>{{InvoiceDatabase.buyer.contactDetails.phoneNumber}}</td>
-                        <td>{{InvoiceDatabase.buyer.contactDetails.website}}</td>
-                    </tr>
-                </tbody>
-                <thead>
-                    <tr>
-                        <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(211, 245, 245)">Address
-                            details</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Street</th>
-                        <th scope="col">Number</th>
-                        <th scope="col">Postal Code</th>
-                        <th scope="col">City</th>
-                        <th scope="col">Country</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{InvoiceDatabase.buyer.contactDetails.address.street}}</td>
-                        <td>{{InvoiceDatabase.buyer.contactDetails.address.number}}</td>
-                        <td>{{InvoiceDatabase.buyer.contactDetails.address.postalCode}}</td>
-                        <td>{{InvoiceDatabase.buyer.contactDetails.address.city}}</td>
-                        <td>{{InvoiceDatabase.buyer.contactDetails.address.country}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
-                <thead>
-                    <tr>
-                        <th scope="col" colspan="8" style="text-align:center; letter-spacing: 5px; background-color: rgb(91, 226, 226)">Invoice
-                            entries</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">Item</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Unit type</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Vat rate</th>
-                        <th scope="col">Net value</th>
-                        <th scope="col">Total gross value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="x in InvoiceDatabase.entries | orderBy:'category' | filter: {category: cat}" class="cat{{ $parent.$index + 1 }}">
-                        <td>{{x.item}}</td>
-                        <td>{{x.quantity}}</td>
-                        <td>{{x.unit}}</td>
-                        <td>{{x.price}}</td>
-                        <td>{{x.vatRate}}</td>
-                        <td>{{x.netValue}}</td>
-                        <td>{{x.grossValue}}</td>
-                    </tr>
-                </tbody>
-            </table>
+<form ng-controller="FindById" ng-submit="submit()" ng-model="formData.answer">
+    <div>
+        <div class="alert alert-warning alert-dismissible fade show" id="allerts_error" role="alert" ng-if="formData.answer != 200 && formData.answer != undefined">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{error.message}}
+
+            <li ng-repeat="detail in error.details track by $index">
+                {{detail}}
+            </li>
         </div>
-    </form>
+        <div class="input-group mb-3" style="margin-top:15px">
+            <input type="text" class="form-control" ng-model="invoice_id" placeholder="Type id here" aria-label="Type id here"
+                   aria-describedby="basic-addon2" required>
+            <button type="submit" id="submit" class="btn btn-primary">Search</button>
+        </div>
+        <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
+            <thead>
+            <tr>
+                <th scope="col" colspan="8" style="text-align:center; letter-spacing: 5px; background-color: rgb(91, 226, 226)">Invoice
+                    details</th>
+            </tr>
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Issue Date</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Buyer name</th>
+                <th scope="col">Seller name</th>
+                <th scope="col">Total net value</th>
+                <th scope="col">Total gross value</th>
+                <th scope="col">Comments</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{InvoiceDatabase.type}}</td>
+                <td>{{InvoiceDatabase.issueDate}}</td>
+                <td>{{InvoiceDatabase.dueDate}}</td>
+                <td>{{InvoiceDatabase.buyer.name}}</td>
+                <td>{{InvoiceDatabase.seller.name}}</td>
+                <td>{{InvoiceDatabase.totalNetValue}}</td>
+                <td>{{InvoiceDatabase.totalGrossValue}}</td>
+                <td>{{InvoiceDatabase.comments}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
+            <thead>
+            <tr>
+                <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(91, 226, 226)">Seller
+                    details</th>
+            </tr>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Tax identification number</th>
+                <th scope="col">Iban number</th>
+                <th scope="col">Local number</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{InvoiceDatabase.seller.name}}</td>
+                <td>{{InvoiceDatabase.seller.taxIdentificationNumber}}</td>
+                <td>{{InvoiceDatabase.seller.accountNumber.ibanNumber}}</td>
+                <td>{{InvoiceDatabase.seller.accountNumber.localNumber}}</td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(211, 245, 245)">Contact
+                    details</th>
+            </tr>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Phone number</th>
+                <th scope="col">Website</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{InvoiceDatabase.seller.contactDetails.email}}</td>
+                <td>{{InvoiceDatabase.seller.contactDetails.phoneNumber}}</td>
+                <td>{{InvoiceDatabase.seller.contactDetails.website}}</td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(211, 245, 245)">Address
+                    details</th>
+            </tr>
+            <tr>
+                <th scope="col">Street</th>
+                <th scope="col">Number</th>
+                <th scope="col">Postal Code</th>
+                <th scope="col">City</th>
+                <th scope="col">Country</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{InvoiceDatabase.seller.contactDetails.address.street}}</td>
+                <td>{{InvoiceDatabase.seller.contactDetails.address.number}}</td>
+                <td>{{InvoiceDatabase.seller.contactDetails.address.postalCode}}</td>
+                <td>{{InvoiceDatabase.seller.contactDetails.address.city}}</td>
+                <td>{{InvoiceDatabase.seller.contactDetails.address.country}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
+            <thead>
+            <tr>
+                <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(91, 226, 226)">Buyer
+                    details</th>
+            </tr>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Tax identification number</th>
+                <th scope="col">Iban number</th>
+                <th scope="col">Local number</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{InvoiceDatabase.buyer.name}}</td>
+                <td>{{InvoiceDatabase.buyer.taxIdentificationNumber}}</td>
+                <td>{{InvoiceDatabase.buyer.accountNumber.ibanNumber}}</td>
+                <td>{{InvoiceDatabase.buyer.accountNumber.localNumber}}</td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(211, 245, 245)">Contact
+                    details</th>
+            </tr>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Phone number</th>
+                <th scope="col">Website</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{InvoiceDatabase.buyer.contactDetails.email}}</td>
+                <td>{{InvoiceDatabase.buyer.contactDetails.phoneNumber}}</td>
+                <td>{{InvoiceDatabase.buyer.contactDetails.website}}</td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th scope="col" colspan="5" style="text-align:center; letter-spacing: 5px; background-color: rgb(211, 245, 245)">Address
+                    details</th>
+            </tr>
+            <tr>
+                <th scope="col">Street</th>
+                <th scope="col">Number</th>
+                <th scope="col">Postal Code</th>
+                <th scope="col">City</th>
+                <th scope="col">Country</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{InvoiceDatabase.buyer.contactDetails.address.street}}</td>
+                <td>{{InvoiceDatabase.buyer.contactDetails.address.number}}</td>
+                <td>{{InvoiceDatabase.buyer.contactDetails.address.postalCode}}</td>
+                <td>{{InvoiceDatabase.buyer.contactDetails.address.city}}</td>
+                <td>{{InvoiceDatabase.buyer.contactDetails.address.country}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered" id="records" ng-if="formData.answer == 200">
+            <thead>
+            <tr>
+                <th scope="col" colspan="8" style="text-align:center; letter-spacing: 5px; background-color: rgb(91, 226, 226)">Invoice
+                    entries</th>
+            </tr>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Unit type</th>
+                <th scope="col">Price</th>
+                <th scope="col">Vat rate</th>
+                <th scope="col">Net value</th>
+                <th scope="col">Total gross value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in InvoiceDatabase.entries | orderBy:'category' | filter: {category: cat}" class="cat{{ $parent.$index + 1 }}">
+                <td>{{x.item}}</td>
+                <td>{{x.quantity}}</td>
+                <td>{{x.unit}}</td>
+                <td>{{x.price}}</td>
+                <td>{{x.vatRate}}</td>
+                <td>{{x.netValue}}</td>
+                <td>{{x.grossValue}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
 </body>
 
 </html>

@@ -34,8 +34,14 @@ app.controller('FindById', function ($scope, $http) {
                         console.log(response.data.message);
                     },
                     function (response) {
-                        $scope.formData.answer = 400;
-                        console.log(response);
+                        $scope.formData.answer = response.status;
+                         $scope.error = {
+                             message : "An error occurred obtaining all invoices. Please contact with administrator."
+                         }
+                         if (response.data.details){
+                             $scope.error.message = response.data.message;
+                             $scope.error.details = response.data.details;
+                         }
                     })
                 .catch(function onError(response) {
                     console.log(response);
@@ -56,8 +62,14 @@ app.controller('Update', function ($scope, $http) {
                         console.log(response.data.message);
                     },
                     function (response) {
-                        $scope.formData.find_invoice = 400;
-                        console.log(response);
+                       $scope.formData.answer = response.status;
+                        $scope.error = {
+                            message : "An error occurred during updating invoice. Please contact with administrator."
+                        }
+                        if (response.data.details){
+                            $scope.error.message = response.data.message;
+                            $scope.error.details = response.data.details;
+                        }
                     })
                 .catch(function onError(response) {
                     console.log(response);
@@ -69,12 +81,18 @@ app.controller('Update', function ($scope, $http) {
         $http.put(getBaseApiAddress() + $scope.invoice_id, $scope.invoiceToUpdate)
             .then(
                 function (response) {
-                    $scope.formData.response_when_updating = 200;
+                    $scope.formData.answer = 200;
                     console.log(response.data.message);
                 },
                 function (response) {
-                    $scope.formData.response_when_updating = 400;
-                    console.log(response);
+                    $scope.formData.answer = response.status;
+                     $scope.error = {
+                         message : "An error occurred during updating invoice. Please contact with administrator."
+                     }
+                     if (response.data.details){
+                         $scope.error.message = response.data.message;
+                         $scope.error.details = response.data.details;
+                     }
                 })
             .catch(function onError(response) {
                 console.log(response);
@@ -93,8 +111,14 @@ app.controller('AddInvoice', function ($scope, $http) {
                         console.log(response.data.message);
                     },
                     function (response) {
-                        $scope.formData.answer = 400;
-                        console.log(response);
+                       $scope.formData.answer = response.status;
+                          $scope.error = {
+                              message : "An error occurred during adding invoice. Please contact with administrator."
+                          }
+                          if (response.data.details){
+                              $scope.error.message = response.data.message;
+                              $scope.error.details = response.data.details;
+                          }
                     })
                 .catch(function onError(response) {
                     console.log(response);
@@ -124,12 +148,12 @@ function getSampleNewInvoice() {
             },
             "contactDetails": {
                 "email": "contact@oracle.com",
-                "phoneNumber": "+1234567890",
-                "website": "www.oracle.com",
+                "phoneNumber": "1234567890",
+                "website": "http://www.oracle.com",
                 "address": {
                     "street": "Wyroczni",
                     "number": "13A",
-                    "postalCode": "34-760",
+                    "postalCode": "34760",
                     "city": "Gdynia",
                     "country": "Polska"
                 }
@@ -144,12 +168,12 @@ function getSampleNewInvoice() {
             },
             "contactDetails": {
                 "email": "contact@oracle.com",
-                "phoneNumber": "+1234567890",
-                "website": "www.oracle.com",
+                "phoneNumber": "1234567890",
+                "website": "http://www.oracle.com",
                 "address": {
                     "street": "Wyroczni",
                     "number": "13A",
-                    "postalCode": "34-760",
+                    "postalCode": "34760",
                     "city": "Gdynia",
                     "country": "Polska"
                 }
