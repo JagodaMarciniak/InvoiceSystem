@@ -1,3 +1,3 @@
 pl:
   coderstrust:
-    database: mongodb
+    database: in-memory

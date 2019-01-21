@@ -40,7 +40,6 @@ class InvoiceControllerTest {
 
   private ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String urlAddressTemplate = "/invoices/%s";
-  private ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String urlAddressTemplatePdf = "/invoices/pdf/%s";
 
   @Autowired
@@ -207,7 +206,7 @@ class InvoiceControllerTest {
     //given
     Invoice invoiceToAdd = InvoiceGenerator.getRandomInvoice();
     invoiceToAdd.setId(null);
-    when(invoiceService.addInvoice(invoiceToAdd)).thenThrow(new InvoiceServiceOperationException());
+    when(invoiceService.addInvoice(invoiceToAdd)).thenThrow(new ServiceOperationException());
     ResponseMessage expectedResponseMessage = new ResponseMessage("Internal server error while saving specified invoice.");
 
     String invoiceAsJson = mapper.writeValueAsString(invoiceToAdd);
