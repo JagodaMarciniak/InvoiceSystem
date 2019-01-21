@@ -55,7 +55,7 @@ public class InvoiceService {
     try {
       log.info(String.format("Checking if invoice is existing in database"));
       boolean invoiceExist = invoiceDatabase.existsById(invoiceId);
-      log.debug(String.format("Invoice with given id:%s exists: %s", invoiceExist));
+      log.debug(String.format("Invoice with given id:%s exists: %s", invoiceId, invoiceExist));
       return invoiceExist;
     } catch (DatabaseOperationException e) {
       log.error(String.format("An error occurred during checking if invoice exists in database. Invoice id: %s",
