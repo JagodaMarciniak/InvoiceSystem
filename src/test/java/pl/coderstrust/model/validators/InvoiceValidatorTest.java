@@ -154,6 +154,4 @@ class InvoiceValidatorTest {
   void validateBuyerSellerAndEntriesWhenIdExpected(Invoice invoice, List<String> expectedResult) {
     assertEquals(expectedResult, InvoiceValidator.validateInvoice(invoice, true));
   }
-
-
 }
