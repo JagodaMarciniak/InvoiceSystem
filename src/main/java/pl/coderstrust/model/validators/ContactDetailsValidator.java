@@ -44,7 +44,7 @@ public class ContactDetailsValidator extends Validator {
     if (phoneNumber.trim().isEmpty()) {
       return "Phone number cannot be empty";
     }
-    if (!phoneNumber.matches("[0-9]+")){
+    if (!phoneNumber.matches("[0-9]+")) {
       return "Phone number can only be numbers";
     }
     return null;
@@ -57,7 +57,7 @@ public class ContactDetailsValidator extends Validator {
     if (website.trim().isEmpty()) {
       return "Website cannot be empty";
     }
-    if (!website.matches("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")){
+    if (!website.matches("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")) {
       return "Website has invalid format";
     }
     return null;

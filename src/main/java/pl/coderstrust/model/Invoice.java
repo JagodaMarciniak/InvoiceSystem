@@ -72,6 +72,6 @@ public class Invoice {
   }
 
   public Invoice(Invoice that) {
-    this (that.getId(), that.getType(), that.getIssueDate(), that.getDueDate(), that.getSeller(), that.getBuyer(), that.getEntries(), that.getTotalNetValue(), that.getTotalGrossValue(), that.getComments());
+    this(that.getId(), that.getType(), that.getIssueDate(), that.getDueDate(), that.getSeller(), that.getBuyer(), that.getEntries(), that.getTotalNetValue(), that.getTotalGrossValue(), that.getComments());
   }
 }

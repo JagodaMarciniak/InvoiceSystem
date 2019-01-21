@@ -40,6 +40,7 @@ class InvoiceControllerTest {
 
   private ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String urlAddressTemplate = "/invoices/%s";
+  private ObjectMapper mapper = new ApplicationConfiguration().getObjectMapper();
   private final String urlAddressTemplatePdf = "/invoices/pdf/%s";
 
   @Autowired
@@ -270,7 +271,7 @@ class InvoiceControllerTest {
     expectedDetailsOfValidation.add("Phone number can only be numbers");
 
     ResponseMessage expectedResponseMessage = new ResponseMessage("Passed invoice is invalid.",
-    expectedDetailsOfValidation);
+        expectedDetailsOfValidation);
 
     String invoiceAsJson = mapper.writeValueAsString(invoiceToAdd);
 
@@ -410,6 +411,7 @@ class InvoiceControllerTest {
     assertEquals(expectedResponseMessage, actualResponseMessage);
     verify(invoiceService, never()).updateInvoice(expectedInvoice);
   }
+
   @Test
   void shouldThrowInternalServerErrorDuringUpdatingWhenSomethingWentWrongWithServer() throws Exception {
     //given

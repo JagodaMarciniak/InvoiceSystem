@@ -8,7 +8,7 @@ import pl.coderstrust.model.AccountNumber;
 public class AccountNumberValidator extends Validator {
 
   public static List<String> validateAccountNumber(AccountNumber accountNumber) {
-    if (accountNumber == null){
+    if (accountNumber == null) {
       return Collections.singletonList("Account number cannot be null");
     }
 
@@ -24,7 +24,7 @@ public class AccountNumberValidator extends Validator {
     return result;
   }
 
-  private static String validateIbanNumber(String ibanNumber){
+  private static String validateIbanNumber(String ibanNumber) {
     if (ibanNumber == null) {
       return "Iban number cannot be null";
     }
@@ -37,7 +37,7 @@ public class AccountNumberValidator extends Validator {
     return null;
   }
 
-  private static String validateLocalNumber(String localNumber){
+  private static String validateLocalNumber(String localNumber) {
     if (localNumber == null) {
       return "Local number cannot be null";
     }
@@ -51,7 +51,7 @@ public class AccountNumberValidator extends Validator {
   }
 
   private static String compareNumbers(String ibanNumber, String localNumber) {
-    if (!(ibanNumber.substring(2).equals(localNumber))){
+    if (!(ibanNumber.substring(2).equals(localNumber))) {
       return "Iban number and local number do not fit";
     }
     return null;

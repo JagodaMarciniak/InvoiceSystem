@@ -28,6 +28,12 @@ class FileHelperTestIT {
   private static final String INPUT_FILE = String.format("src%1$stest%1$sresources%1$shelpers%1$sinput_file", File.separator);
   private static final String EXPECTED_FILE = String.format("src%1$stest%1$sresources%1$shelpers%1$sexpected_file", File.separator);
 
+  private static Stream<Arguments> invalidArgumentsForRemovingSpecificLineFromFile() {
+    return Stream.of(
+        Arguments.of(Arrays.asList("1", "2", "3"), 5),
+        Arguments.of(Arrays.asList("1", "2", "3"), -5));
+  }
+
   @BeforeEach
   private void removeTestFiles() {
     File fileIn = new File(INPUT_FILE);
@@ -88,12 +94,6 @@ class FileHelperTestIT {
   @Test
   void shouldThrowExceptionWhenTryingToRemoveLineFromNotExistingFile() {
     assertThrows(FileNotFoundException.class, () -> new FileHelper(INPUT_FILE).removeLine(5));
-  }
-
-  private static Stream<Arguments> invalidArgumentsForRemovingSpecificLineFromFile() {
-    return Stream.of(
-        Arguments.of(Arrays.asList("1", "2", "3"), 5),
-        Arguments.of(Arrays.asList("1", "2", "3"), -5));
   }
 
   @Test

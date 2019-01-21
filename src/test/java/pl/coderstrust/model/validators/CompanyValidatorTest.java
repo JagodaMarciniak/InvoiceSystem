@@ -17,14 +17,8 @@ import pl.coderstrust.model.ContactDetails;
 class CompanyValidatorTest {
   private static String validName = "CD Projekt";
   private static String validTaxIdentificationNumber = "ABC123abc123";
-  private static AccountNumber validAccountNumber =  AccountNumberGenerator.getSampleAccountNumber();
+  private static AccountNumber validAccountNumber = AccountNumberGenerator.getSampleAccountNumber();
   private static ContactDetails validContactDetails = ContactDetailsGenerator.getSampleContactDetails();
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForNameValidationTest")
-  void validateName(Company company, List<String> expectedResult) {
-    assertEquals(expectedResult, CompanyValidator.validateCompany(company));
-  }
 
   private static Stream<Arguments> argumentsForNameValidationTest() {
     return Stream.of(
@@ -34,24 +28,12 @@ class CompanyValidatorTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForTaxIdentificationNumberValidationTest")
-  void validateTaxIdentificationNumber(Company company, List<String> expectedResult) {
-    assertEquals(expectedResult, CompanyValidator.validateCompany(company));
-  }
-
   private static Stream<Arguments> argumentsForTaxIdentificationNumberValidationTest() {
     return Stream.of(
-        Arguments.of(new Company(validName, null , validAccountNumber, validContactDetails), Collections.singletonList("Tax identification number cannot be null")),
+        Arguments.of(new Company(validName, null, validAccountNumber, validContactDetails), Collections.singletonList("Tax identification number cannot be null")),
         Arguments.of(new Company(validName, "", validAccountNumber, validContactDetails), Collections.singletonList("Tax identification number cannot be empty")),
         Arguments.of(new Company(validName, validTaxIdentificationNumber, validAccountNumber, validContactDetails), Collections.emptyList())
     );
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForAccountNumberValidationTest")
-  void validateAccountNumber(Company company, List<String> expectedResult) {
-    assertEquals(expectedResult, CompanyValidator.validateCompany(company));
   }
 
   private static Stream<Arguments> argumentsForAccountNumberValidationTest() {
@@ -61,16 +43,34 @@ class CompanyValidatorTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForContactDetailsValidationTest")
-  void validateContactDetails(Company company, List<String> expectedResult) {
-    assertEquals(expectedResult, CompanyValidator.validateCompany(company));
-  }
-
   private static Stream<Arguments> argumentsForContactDetailsValidationTest() {
     return Stream.of(
         Arguments.of(new Company(validName, validTaxIdentificationNumber, validAccountNumber, null), Collections.singletonList("Contact details cannot be null")),
         Arguments.of(new Company(validName, validTaxIdentificationNumber, validAccountNumber, validContactDetails), Collections.emptyList())
     );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForNameValidationTest")
+  void validateName(Company company, List<String> expectedResult) {
+    assertEquals(expectedResult, CompanyValidator.validateCompany(company));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForTaxIdentificationNumberValidationTest")
+  void validateTaxIdentificationNumber(Company company, List<String> expectedResult) {
+    assertEquals(expectedResult, CompanyValidator.validateCompany(company));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForAccountNumberValidationTest")
+  void validateAccountNumber(Company company, List<String> expectedResult) {
+    assertEquals(expectedResult, CompanyValidator.validateCompany(company));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForContactDetailsValidationTest")
+  void validateContactDetails(Company company, List<String> expectedResult) {
+    assertEquals(expectedResult, CompanyValidator.validateCompany(company));
   }
 }

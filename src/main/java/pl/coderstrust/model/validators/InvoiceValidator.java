@@ -9,7 +9,7 @@ import pl.coderstrust.model.Company;
 import pl.coderstrust.model.Invoice;
 import pl.coderstrust.model.InvoiceEntry;
 
-public class InvoiceValidator extends Validator{
+public class InvoiceValidator extends Validator {
 
   public static List<String> validateInvoice(Invoice invoice, boolean isIdExpected) {
     if (invoice == null) {

@@ -15,12 +15,6 @@ import pl.coderstrust.model.InvoiceEntry;
 
 class InvoiceEntriesValidatorTest {
 
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForItemsInEntriesValidationTest")
-  void validateItemsInEntries(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
-  }
-
   private static Stream<Arguments> argumentsForItemsInEntriesValidationTest() {
     List<InvoiceEntry> invoiceEntriesWithItemNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
     invoiceEntriesWithItemNull.get(0).setItem(null);
@@ -33,12 +27,6 @@ class InvoiceEntriesValidatorTest {
         Arguments.of(invoiceEntriesWithItemEmpty, Collections.singletonList("Item cannot be empty")),
         Arguments.of(validInvoiceEntries, Collections.emptyList())
     );
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForQuantitiesInEntriesValidationTest")
-  void validateQuantities(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
   }
 
   private static Stream<Arguments> argumentsForQuantitiesInEntriesValidationTest() {
@@ -55,12 +43,6 @@ class InvoiceEntriesValidatorTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForPricesInEntriesValidationTest")
-  void validatePrices(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
-  }
-
   private static Stream<Arguments> argumentsForPricesInEntriesValidationTest() {
     List<InvoiceEntry> invoiceEntriesWithPriceNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
     invoiceEntriesWithPriceNull.get(0).setPrice(null);
@@ -73,12 +55,6 @@ class InvoiceEntriesValidatorTest {
         Arguments.of(invoiceEntriesWithPriceNegative, Collections.singletonList("Price cannot be lower than zero")),
         Arguments.of(validInvoiceEntries, Collections.emptyList())
     );
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForNetValuesInEntriesValidationTest")
-  void validateNetValues(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
   }
 
   private static Stream<Arguments> argumentsForNetValuesInEntriesValidationTest() {
@@ -95,12 +71,6 @@ class InvoiceEntriesValidatorTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForGrossValuesInEntriesValidationTest")
-  void validateGrossValues(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
-    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
-  }
-
   private static Stream<Arguments> argumentsForGrossValuesInEntriesValidationTest() {
     List<InvoiceEntry> invoiceEntriesWithGrossValueNull = InvoiceEntriesGenerator.getSampleInvoiceEntries();
     invoiceEntriesWithGrossValueNull.get(0).setGrossValue(null);
@@ -113,6 +83,36 @@ class InvoiceEntriesValidatorTest {
         Arguments.of(invoiceEntriesWithGrossValueNegative, Collections.singletonList("Gross value cannot be lower than zero")),
         Arguments.of(validInvoiceEntries, Collections.emptyList())
     );
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForItemsInEntriesValidationTest")
+  void validateItemsInEntries(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForQuantitiesInEntriesValidationTest")
+  void validateQuantities(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForPricesInEntriesValidationTest")
+  void validatePrices(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForNetValuesInEntriesValidationTest")
+  void validateNetValues(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForGrossValuesInEntriesValidationTest")
+  void validateGrossValues(List<InvoiceEntry> invoiceEntries, List<String> expectedResult) {
+    assertEquals(expectedResult, InvoiceEntriesValidator.validateEntries(invoiceEntries));
   }
 
   @Test

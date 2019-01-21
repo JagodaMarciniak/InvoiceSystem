@@ -15,24 +15,12 @@ class AccountNumberValidatorTest {
   private static String validIbanNumber = "FR11111122233334455667777789";
   private static String validLocalNumber = validIbanNumber.substring(2);
 
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForIbanNumberValidationTest")
-  void validateIbanNumber(AccountNumber accountNumber, List<String> expectedResult) {
-    assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));
-  }
-
   private static Stream<Arguments> argumentsForIbanNumberValidationTest() {
     return Stream.of(
         Arguments.of(new AccountNumber(null, validLocalNumber), Collections.singletonList("Iban number cannot be null")),
         Arguments.of(new AccountNumber("", validLocalNumber), Collections.singletonList("Iban number cannot be empty")),
         Arguments.of(new AccountNumber("ABC123", validLocalNumber), Collections.singletonList("Iban number is invalid"))
-        );
-  }
-
-  @ParameterizedTest
-  @MethodSource(value = "argumentsForLocalNumberValidationTest")
-  void validateLocalNumber(AccountNumber accountNumber, List<String> expectedResult) {
-    assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));
+    );
   }
 
   private static Stream<Arguments> argumentsForLocalNumberValidationTest() {
@@ -43,11 +31,23 @@ class AccountNumberValidatorTest {
     );
   }
 
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForIbanNumberValidationTest")
+  void validateIbanNumber(AccountNumber accountNumber, List<String> expectedResult) {
+    assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "argumentsForLocalNumberValidationTest")
+  void validateLocalNumber(AccountNumber accountNumber, List<String> expectedResult) {
+    assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));
+  }
+
   @Test
-  void validateWhenIbanAndLocalNumberDoNotFit(){
+  void validateWhenIbanAndLocalNumberDoNotFit() {
     // Given
     List<String> expectedResult = Collections.singletonList("Iban number and local number do not fit");
-    AccountNumber accountNumber = new AccountNumber(validIbanNumber, validLocalNumber.replace("1","3"));
+    AccountNumber accountNumber = new AccountNumber(validIbanNumber, validLocalNumber.replace("1", "3"));
 
     // Then
     assertEquals(expectedResult, AccountNumberValidator.validateAccountNumber(accountNumber));

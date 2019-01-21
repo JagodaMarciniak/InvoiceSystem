@@ -48,7 +48,7 @@ public class CompanyValidator extends Validator {
   }
 
   private static List<String> validateAccountNumber(AccountNumber accountNumber) {
-   return AccountNumberValidator.validateAccountNumber(accountNumber);
+    return AccountNumberValidator.validateAccountNumber(accountNumber);
   }
 
   private static List<String> validateContactDetails(ContactDetails contactDetails) {

@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import pl.coderstrust.model.InvoiceEntry;
 
-public class InvoiceEntriesValidator extends Validator{
+public class InvoiceEntriesValidator extends Validator {
 
   public static List<String> validateEntries(List<InvoiceEntry> invoiceEntries) {
     if (invoiceEntries == null) {
@@ -15,12 +15,12 @@ public class InvoiceEntriesValidator extends Validator{
 
     List<String> result = new ArrayList<>();
     invoiceEntries.forEach(invoiceEntry -> {
-          addResultOfValidation(result, validateEntry(invoiceEntry));
-        });
+      addResultOfValidation(result, validateEntry(invoiceEntry));
+    });
     return result;
   }
 
-  public static List<String> validateEntry(InvoiceEntry invoiceEntry){
+  public static List<String> validateEntry(InvoiceEntry invoiceEntry) {
     if (invoiceEntry == null) {
       return Collections.singletonList("Invoice entry cannot be null");
     }

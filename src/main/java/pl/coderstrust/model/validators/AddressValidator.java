@@ -53,7 +53,7 @@ public class AddressValidator extends Validator {
     if (postalCode.trim().isEmpty()) {
       return "Postal code cannot be empty";
     }
-    if (!postalCode.matches("^([0-9]{2}[0-9]{3})")){
+    if (!postalCode.matches("^([0-9]{2}[0-9]{3})")) {
       return "Postal code has to contain only numbers";
     }
     return null;
