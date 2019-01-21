@@ -18,7 +18,7 @@ app.controller('FindAll', function ($scope, $http, $window) {
                 })
     };
     $scope.pdf = function (id) {
-            $window.open(getBaseApiAddress() + 'pdf/' + id, '_blank');
+        $window.open(getBaseApiAddress() + 'pdf/' + id, '_blank');
     };
 });
 
@@ -35,13 +35,13 @@ app.controller('FindById', function ($scope, $http) {
                     },
                     function (response) {
                         $scope.formData.answer = response.status;
-                         $scope.error = {
-                             message : "An error occurred obtaining all invoices. Please contact with administrator."
-                         }
-                         if (response.data.details){
-                             $scope.error.message = response.data.message;
-                             $scope.error.details = response.data.details;
-                         }
+                        $scope.error = {
+                            message: "An error occurred obtaining all invoices. Please contact with administrator."
+                        }
+                        if (response.data.details) {
+                            $scope.error.message = response.data.message;
+                            $scope.error.details = response.data.details;
+                        }
                     })
                 .catch(function onError(response) {
                     console.log(response);
@@ -62,11 +62,11 @@ app.controller('Update', function ($scope, $http) {
                         console.log(response.data.message);
                     },
                     function (response) {
-                       $scope.formData.answer = response.status;
+                        $scope.formData.answer = response.status;
                         $scope.error = {
-                            message : "An error occurred during updating invoice. Please contact with administrator."
+                            message: "An error occurred during updating invoice. Please contact with administrator."
                         }
-                        if (response.data.details){
+                        if (response.data.details) {
                             $scope.error.message = response.data.message;
                             $scope.error.details = response.data.details;
                         }
@@ -86,13 +86,13 @@ app.controller('Update', function ($scope, $http) {
                 },
                 function (response) {
                     $scope.formData.answer = response.status;
-                     $scope.error = {
-                         message : "An error occurred during updating invoice. Please contact with administrator."
-                     }
-                     if (response.data.details){
-                         $scope.error.message = response.data.message;
-                         $scope.error.details = response.data.details;
-                     }
+                    $scope.error = {
+                        message: "An error occurred during updating invoice. Please contact with administrator."
+                    }
+                    if (response.data.details) {
+                        $scope.error.message = response.data.message;
+                        $scope.error.details = response.data.details;
+                    }
                 })
             .catch(function onError(response) {
                 console.log(response);
@@ -111,14 +111,14 @@ app.controller('AddInvoice', function ($scope, $http) {
                         console.log(response.data.message);
                     },
                     function (response) {
-                       $scope.formData.answer = response.status;
-                          $scope.error = {
-                              message : "An error occurred during adding invoice. Please contact with administrator."
-                          }
-                          if (response.data.details){
-                              $scope.error.message = response.data.message;
-                              $scope.error.details = response.data.details;
-                          }
+                        $scope.formData.answer = response.status;
+                        $scope.error = {
+                            message: "An error occurred during adding invoice. Please contact with administrator."
+                        }
+                        if (response.data.details) {
+                            $scope.error.message = response.data.message;
+                            $scope.error.details = response.data.details;
+                        }
                     })
                 .catch(function onError(response) {
                     console.log(response);
