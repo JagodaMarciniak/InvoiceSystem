@@ -1,10 +1,8 @@
 ## Invoices System
 
-Accounting system featuring basic CRUD operations on invoices via AJAX-style frontend with authorization. There are four databases to choose form:
+Accounting system featuring basic CRUD operations on invoices via AJAX-style frontend with authorization. There are four databases to choose from: custom in-memory database, custom in-file database, h2 in-memory database and mongoDB database.
 
-custom in-memory database, custom in-file database, h2 in-memory database and mongoDB database.
-
-The Project contains over 340 test cases with over 90% test coverage.
+The project contains over 340 test cases with over 90% test coverage.
 
 
 
