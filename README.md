@@ -1,4 +1,6 @@
 ## Invoices System
+authors: Tomasz Szkopiński, Sławomir Prądziński, Arkadiusz Mika, Jagoda Marciniak 
+during study at Bootcamp Junior Java Developer by CodersTrust in 2018 r.
 
 Accounting system featuring basic CRUD operations on invoices via AngularJS-powered frontend with authorization. There are four databases to choose from: custom in-memory database, custom in-file database, h2 in-memory database and mongoDB database.
 
